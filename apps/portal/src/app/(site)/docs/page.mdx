@@ -1,0 +1,72 @@
+import { Callout } from "@/components/docs/callout";
+
+export const metadata = { title: "Quickstart" };
+
+<span className="label">Quickstart · 5 minutes</span>
+
+# Your game in the feed by Friday.
+
+Thumbcade games are small HTML5 games that run inside an infinite vertical feed. If it runs in a browser, it can run here: Canvas, WebGL, Phaser, PixiJS, Three.js, or plain DOM. The `@thumbcade/sdk` is the only API your game talks to — about 8 KB, no dependencies.
+
+## 1. Scaffold
+
+```bash
+npm create thumbcade-game@latest
+```
+
+Pick a name and a template — **Canvas 2D**, **Phaser**, **PixiJS**, **Three.js** or **Blank HTML** — and how your game is controlled. You get a Vite + TypeScript project with a small, complete game already wired to the SDK: an attract screen, a tap to start, a score, a game over, and a saved best score.
+
+## 2. Play it in the feed
+
+```bash
+cd my-game
+npx thumbcade dev
+```
+
+The simulator opens your game inside the real feed — top tabs, action rail, the tab bar turning into the Dock, the result card — with neighbouring cards so you can actually swipe. It runs the same [Swipe Contract](/docs/swipe-contract) state machine as the app and flags violations as they happen, next to a live FPS / long-task / heap / time-to-ready readout.
+
+On your phone: `npx thumbcade dev --device` prints a QR code. Open the Thumbcade app, tap the version number in Settings seven times to unlock the developer menu, and scan it.
+
+## 3. Wire the five calls that matter
+
+```ts
+import { thumbcade as tc } from "@thumbcade/sdk";
+
+const ctx = await tc.init();          // who's playing, insets, mute state, best score
+drawAttractMode();
+tc.ready();                           // first frame is on screen → the feed reveals your game
+
+canvas.addEventListener("pointerup", () => {
+  if (state === "title") {
+    tc.gameplay.start();              // a run begins — on a TAP, never a swipe
+    startRun();
+  }
+});
+
+function gameOver(score: number) {
+  tc.gameplay.end({ score });         // within a second of game over
+}
+
+tc.on("pause", () => stopLoopAndAudio());
+tc.on("resume", () => startLoop());
+```
+
+<Callout tone="rule">
+  A run starts with a tap. If your game uses vertical swipes or drags while playing, set `controls.vertical: true` in your manifest — the feed then gives you the whole screen during play.
+</Callout>
+
+## 4. Publish
+
+```bash
+npx thumbcade login      # opens the browser once, stores a token in your keychain
+npx thumbcade publish    # build → validate → upload → automated review
+```
+
+`publish` prints a link to your review report. Automated checks run in a minute or two: budgets, the SDK lifecycle, pause behaviour, errors. Then a human plays it. Approved versions go live in the feed immediately — no app update — and you can roll back to any earlier approved version from the dashboard.
+
+## Next
+
+- [The Swipe Contract](/docs/swipe-contract) — how the feed and your game share one thumb
+- [SDK reference](/docs/sdk) — every call, event and type
+- [Manifest](/docs/manifest) — `thumbcade.json`, field by field
+- [Designing for the feed](/docs/design) — attract modes, insets, session length

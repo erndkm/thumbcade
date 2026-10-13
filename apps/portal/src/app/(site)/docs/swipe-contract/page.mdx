@@ -1,0 +1,50 @@
+import { Callout } from "@/components/docs/callout";
+import { LifecycleDiagram } from "@/components/docs/lifecycle-diagram";
+import { OwnershipDiagram } from "@/components/docs/ownership-diagram";
+
+export const metadata = { title: "The Swipe Contract" };
+
+<span className="label">Guide</span>
+
+# The Swipe Contract
+
+The feed moves with vertical swipes. Some games need vertical swipes too — runners, snake, 2048. On Thumbcade a swipe never means two things: every card knows, at every moment, who owns the player's thumb. The app and the simulator run the **same** state machine, so what you see in `thumbcade dev` is what ships.
+
+## Phases
+
+<LifecycleDiagram />
+
+| Phase | Entered when | The player sees |
+| --- | --- | --- |
+| `LOADING` | The card mounts | Your poster with a shimmer in your accent color |
+| `PREVIEW` | You call `ready()` | Your attract screen, alive, under the full overlay |
+| `PLAYING` | You call `gameplay.start()` on a tap | Overlay recedes; the tab bar becomes the Dock |
+| `ENDED` | You call `gameplay.end()` | The result card over your game |
+| `PAUSED` | Backgrounded, a sheet opened, back pressed, or 20 s without a touch while playing | A *Resume* pill |
+
+## Who owns a vertical swipe
+
+<OwnershipDiagram />
+
+- **Outside a run** the feed owns vertical swipes everywhere. Taps and horizontal movement go to your game instantly.
+- **During a run, in a tap or horizontal game** (`controls.vertical: false`), a *deliberate* vertical swipe — at least 24 pt and clearly vertical — still moves the feed. Your game's input is cancelled the moment the feed takes it.
+- **During a run, in a swipe or drag game** (`controls.vertical: true`), the whole surface is yours. The player leaves through the **Dock** — the strip where the tab bar was — or with a two-finger swipe (unless you set `controls.multitouch: true`).
+- **The Dock always belongs to the feed.** There is always a way out.
+
+<Callout tone="note">
+  The feed never delays a tap to find out whether it's a swipe. Your game gets the touch immediately; if the feed claims the gesture later, the SDK sends `pointercancel` / `touchcancel` and fires `inputCancel`.
+</Callout>
+
+## The five rules
+
+1. **A run starts with a tap** — anywhere on screen, never with a swipe.
+2. **Declare `controls.vertical: true`** if play uses any vertical motion: swipes, drags, joysticks, pieces you drag.
+3. **Call `gameplay.start()`** on the tap that starts a run, and **`gameplay.end()`** within a second of game over.
+4. **Respect the insets.** Nothing essential under the overlay in your attract screen.
+5. **On `pause`, stop your loop and every sound.**
+
+The simulator flags violations live; the automated reviewer checks rules 1, 3 and 5 on every upload.
+
+## Why there's no double-tap-to-like
+
+Double-taps belong to your game. Likes live on the action rail and on the Dock.

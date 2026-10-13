@@ -10,7 +10,8 @@
     "./tokens.css": "./dist/tokens.css",
     "./theme.css": "./dist/theme.css",
     "./fonts/*": "./fonts/*",
-    "./brand/*": "./brand/*"
+    "./brand/*": "./brand/*",
+    "./package.json": "./package.json"
   },
   "scripts": {
     "build": "tsx scripts/build-css.ts",

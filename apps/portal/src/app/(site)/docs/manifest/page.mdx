@@ -1,0 +1,57 @@
+import { Callout } from "@/components/docs/callout";
+
+export const metadata = { title: "Manifest" };
+
+<span className="label">Reference · thumbcade.json</span>
+
+# Manifest
+
+Every bundle has a `thumbcade.json` at its root. Point your editor at the schema for autocomplete: [`/schema/manifest-v1.json`](/schema/manifest-v1.json).
+
+```json
+{
+  "$schema": "https://thumbcade.com/schema/manifest-v1.json",
+  "id": "lane-rush",
+  "name": "Lane Rush",
+  "version": "1.0.0",
+  "sdk": "^1.0.0",
+  "entry": "index.html",
+  "description": "Three lanes. Zero chill. Swipe to dodge, jump and slide.",
+  "tags": ["runner", "3d", "reflex"],
+  "accentColor": "#FF6A1A",
+  "icon": "assets/icon.png",
+  "poster": "assets/poster.jpg",
+  "ageRating": "9+",
+  "controls": { "vertical": true, "horizontal": true, "multitouch": false, "inputs": ["swipe"] },
+  "session": "short",
+  "audio": true,
+  "orientation": "portrait",
+  "score": { "order": "desc", "max": 1000000, "format": "integer" }
+}
+```
+
+| Field | Rules |
+| --- | --- |
+| `id` | 3–40 chars, lowercase, digits, dashes. **Permanent** — it becomes `<id>.thumbcade.gg`. |
+| `name` | 1–32 characters. |
+| `version` | Semver. Must increase with every publish. |
+| `sdk` | The SDK range you built against, e.g. `^1.0.0`. |
+| `entry` | Relative path to your HTML entry. Default `index.html`. |
+| `description` | 1–120 characters. Shown under your name in the feed. |
+| `tags` | 1–5 hashtags, lowercase `a–z 0–9 _`. The first is your primary tag. |
+| `accentColor` | `#RRGGBB`. Tints the Dock, chips and result card on your card. Needs 3:1 on near-black or the app falls back to paper. |
+| `icon` | Your game's profile picture. Square PNG, 1024 px. |
+| `poster` | 1080×1920 portrait still shown while you load. Captured from your attract mode by the reviewer if omitted. |
+| `ageRating` | `4+`, `9+`, `12+` or `17+`. Players below it never see your game. |
+| `controls.vertical` | **True if play uses any vertical motion.** See the [Swipe Contract](/docs/swipe-contract). |
+| `controls.horizontal` | True if you use horizontal swipes or drags. |
+| `controls.multitouch` | True if you need two or more fingers. Disables the two-finger escape. |
+| `controls.inputs` | Any of `tap`, `swipe`, `drag`, `longpress`, `hold`, `joystick`, `tilt`. Shown to players as a hint. |
+| `session` | Typical run: `short` (under a minute), `medium` (under five), `long`. |
+| `score.order` | `desc` — higher is better. `asc` — lower is better (times, moves). |
+| `score.max` | Scores above this are rejected. |
+| `score.format` | `integer` or `ms` (renders 12.34s). Optional `unit`, e.g. `"m"`. |
+
+<Callout tone="warn">
+  Unknown keys are rejected — there are no permission fields to request. Games get the SDK and nothing else.
+</Callout>

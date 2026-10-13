@@ -1,0 +1,354 @@
+@import "tailwindcss";
+@import "@thumbcade/design-tokens/tokens.css";
+@import "@thumbcade/design-tokens/theme.css";
+
+@source "../";
+
+/* ------------------------------------------------------------------------- */
+/* Base                                                                       */
+/* ------------------------------------------------------------------------- */
+
+html {
+  background: var(--tc-bg);
+  color: var(--tc-text);
+  font-family: var(--tc-font-sans);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  font-synthesis: none;
+  scroll-padding-top: 88px;
+}
+
+body {
+  min-height: 100dvh;
+  background: var(--tc-bg);
+}
+
+::selection {
+  background: var(--tc-accent);
+  color: var(--tc-on-accent);
+}
+
+:focus-visible {
+  outline: 2px solid var(--tc-accent);
+  outline-offset: 2px;
+}
+
+/* ------------------------------------------------------------------------- */
+/* Type helpers that Tailwind can't express from tokens alone                */
+/* ------------------------------------------------------------------------- */
+
+@utility font-wide {
+  font-stretch: 125%;
+}
+@utility font-semiwide {
+  font-stretch: 112.5%;
+}
+@utility font-narrow {
+  font-stretch: 87.5%;
+}
+
+/** Uppercase mono metadata label: "01 — FEED". */
+@utility label {
+  font-family: var(--tc-font-mono);
+  font-size: 11px;
+  line-height: 14px;
+  letter-spacing: 0.44px;
+  text-transform: uppercase;
+  color: var(--tc-text-mute);
+}
+
+/** Giant editorial display. */
+@utility display {
+  font-family: var(--tc-font-sans);
+  font-weight: 900;
+  font-stretch: 125%;
+  letter-spacing: -0.035em;
+  line-height: 0.92;
+}
+
+@utility tabular {
+  font-variant-numeric: tabular-nums;
+}
+
+/* ------------------------------------------------------------------------- */
+/* Hairline rules (editorial grid instead of card soup)                      */
+/* ------------------------------------------------------------------------- */
+
+@utility rule-t {
+  border-top: 1px solid var(--tc-line);
+}
+@utility rule-b {
+  border-bottom: 1px solid var(--tc-line);
+}
+
+/* ------------------------------------------------------------------------- */
+/* Scroll-driven reveal (progressive enhancement)                            */
+/* ------------------------------------------------------------------------- */
+
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .reveal {
+      animation: reveal linear both;
+      animation-timeline: view();
+      animation-range: entry 0% cover 28%;
+    }
+  }
+}
+
+@keyframes reveal {
+  from {
+    opacity: 0;
+    transform: translateY(28px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* Marquee for the cartridge shelf */
+@keyframes marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .marquee {
+    animation: marquee 48s linear infinite;
+  }
+  .marquee:hover {
+    animation-play-state: paused;
+  }
+}
+
+@keyframes spin-slow {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes caret {
+  50% {
+    opacity: 0;
+  }
+}
+
+@keyframes shimmer {
+  from {
+    background-position: -200% 0;
+  }
+  to {
+    background-position: 200% 0;
+  }
+}
+
+.skeleton {
+  background: linear-gradient(90deg, var(--tc-raised) 0%, var(--tc-line) 50%, var(--tc-raised) 100%);
+  background-size: 200% 100%;
+  animation: shimmer 1.6s linear infinite;
+}
+
+/* MDX docs prose */
+.prose-tc {
+  color: var(--tc-text-dim);
+  font-size: 16px;
+  line-height: 1.65;
+}
+.prose-tc h1 {
+  color: var(--tc-text);
+  font-weight: 900;
+  font-stretch: 125%;
+  letter-spacing: -0.03em;
+  font-size: clamp(36px, 5vw, 56px);
+  line-height: 1;
+  margin: 0 0 24px;
+}
+.prose-tc h2 {
+  color: var(--tc-text);
+  font-weight: 800;
+  font-stretch: 125%;
+  letter-spacing: -0.02em;
+  font-size: 26px;
+  line-height: 1.15;
+  margin: 56px 0 16px;
+  padding-top: 24px;
+  border-top: 1px solid var(--tc-line);
+}
+.prose-tc h3 {
+  color: var(--tc-text);
+  font-weight: 700;
+  font-size: 18px;
+  margin: 32px 0 8px;
+}
+.prose-tc p,
+.prose-tc ul,
+.prose-tc ol,
+.prose-tc table,
+.prose-tc pre {
+  margin: 0 0 18px;
+}
+.prose-tc ul {
+  list-style: none;
+  padding: 0;
+}
+.prose-tc ul > li {
+  position: relative;
+  padding-left: 20px;
+  margin: 6px 0;
+}
+.prose-tc ul > li::before {
+  content: "";
+  position: absolute;
+  left: 2px;
+  top: 0.72em;
+  width: 8px;
+  height: 2px;
+  background: var(--tc-accent);
+}
+.prose-tc ol {
+  padding-left: 22px;
+  list-style: decimal;
+}
+.prose-tc ol > li {
+  margin: 6px 0;
+  padding-left: 4px;
+}
+.prose-tc ol > li::marker {
+  font-family: var(--tc-font-mono);
+  color: var(--tc-text-mute);
+}
+.prose-tc a {
+  color: var(--tc-text);
+  text-decoration: underline;
+  text-decoration-color: var(--tc-accent);
+  text-underline-offset: 3px;
+  text-decoration-thickness: 2px;
+}
+.prose-tc strong {
+  color: var(--tc-text);
+  font-weight: 600;
+}
+.prose-tc code {
+  font-family: var(--tc-font-mono);
+  font-size: 0.86em;
+  color: var(--tc-text);
+  background: var(--tc-raised);
+  border: 1px solid var(--tc-line);
+  padding: 1px 6px;
+  border-radius: 6px;
+}
+.prose-tc pre {
+  font-family: var(--tc-font-mono);
+  font-size: 13px;
+  line-height: 1.7;
+  background: var(--tc-surface);
+  border: 1px solid var(--tc-line);
+  border-radius: 14px;
+  padding: 18px 20px;
+  overflow-x: auto;
+  color: var(--tc-text);
+}
+.prose-tc pre code {
+  background: none;
+  border: 0;
+  padding: 0;
+  font-size: inherit;
+}
+.prose-tc table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+  display: block;
+  overflow-x: auto;
+}
+.prose-tc th {
+  text-align: left;
+  font-family: var(--tc-font-mono);
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.44px;
+  color: var(--tc-text-mute);
+  font-weight: 400;
+  padding: 10px 14px 10px 0;
+  border-bottom: 1px solid var(--tc-line-strong);
+}
+.prose-tc td {
+  padding: 10px 14px 10px 0;
+  border-bottom: 1px solid var(--tc-line);
+  vertical-align: top;
+}
+.prose-tc blockquote {
+  border-left: 2px solid var(--tc-accent);
+  padding: 2px 0 2px 16px;
+  margin: 0 0 18px;
+  color: var(--tc-text);
+}
+.prose-tc hr {
+  border: 0;
+  border-top: 1px solid var(--tc-line);
+  margin: 40px 0;
+}
+
+@keyframes tc-scan {
+  from {
+    transform: translateY(-96px);
+    opacity: 1;
+  }
+  to {
+    transform: translateY(1000px);
+    opacity: 0.2;
+  }
+}
+
+@keyframes tc-stamp {
+  0% {
+    transform: scale(1.8) rotate(-14deg);
+    opacity: 0;
+  }
+  60% {
+    transform: scale(0.94) rotate(-8deg);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1) rotate(-8deg);
+    opacity: 1;
+  }
+}
+
+@keyframes tc-rise {
+  from {
+    transform: translateY(24px);
+    opacity: 0;
+  }
+  to {
+    transform: none;
+    opacity: 1;
+  }
+}
+
+@keyframes tc-nudge {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-6px);
+  }
+}
+
+/* Chart marks: a volt step validated for the chart lightness band on each surface. */
+:root,
+[data-theme="dark"] {
+  --tc-chart-1: #7ea40e;
+  --tc-chart-1-hover: #a8d41f;
+  --tc-chart-grid: #24242b;
+}
+[data-theme="light"] {
+  --tc-chart-1: #4a6400;
+  --tc-chart-1-hover: #5f7f00;
+  --tc-chart-grid: #e8e4d9;
+}

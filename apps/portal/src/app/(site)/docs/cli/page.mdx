@@ -1,0 +1,29 @@
+export const metadata = { title: "The CLI" };
+
+<span className="label">Reference</span>
+
+# The CLI
+
+Two packages: `create-thumbcade-game` scaffolds a project, `thumbcade` does everything after that. Both run with `npx`; templates install `thumbcade` as a dev dependency.
+
+| Command | What it does |
+| --- | --- |
+| `npm create thumbcade-game@latest` | Scaffold a project from a template (Canvas 2D · Phaser · PixiJS · Three.js · Blank HTML). |
+| `thumbcade dev` | Vite dev server with hot reload, opened inside the feed simulator. |
+| `thumbcade dev --device` | Serve on your LAN and print a QR code for the app's developer menu. |
+| `thumbcade validate` | Build, then check the manifest, size budgets and static rules. Human-readable fix-its. |
+| `thumbcade login` | Browser device-code login. Stores a creator token in your OS keychain. |
+| `thumbcade login --token tc_…` | Use a token you created in the dashboard (CI). |
+| `thumbcade publish` | Build → validate → zip → upload. Prints your review URL. |
+
+## Environment
+
+| Variable | Default | Use |
+| --- | --- | --- |
+| `THUMBCADE_TOKEN` | — | Token for CI; skips the keychain. |
+| `THUMBCADE_PORTAL_URL` | `https://thumbcade.com` | Where login happens. |
+| `THUMBCADE_FUNCTIONS_URL` | the Thumbcade API | Where bundles are uploaded. |
+
+## Versioning
+
+Every publish needs a new `version` in `thumbcade.json` (semver). The game's `id` is permanent after the first publish — it becomes your game's origin, `<id>.thumbcade.gg`.

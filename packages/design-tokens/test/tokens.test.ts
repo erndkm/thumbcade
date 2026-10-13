@@ -36,3 +36,14 @@ describe("css", () => {
     expect(buildTailwindTheme()).toContain("--color-accent: var(--tc-accent)");
   });
 });
+
+describe("icons", () => {
+  it("every icon has path data on the 24 grid", async () => {
+    const { icons } = await import("../src/icons.ts");
+    for (const [name, def] of Object.entries(icons)) {
+      expect(def.d.length, name).toBeGreaterThan(5);
+      const nums = (def.d.match(/-?\d+(\.\d+)?/g) ?? []).map(Number);
+      for (const n of nums) expect(n, `${name} coordinate ${n}`).toBeLessThanOrEqual(24);
+    }
+  });
+});

@@ -1,0 +1,27 @@
+import { BUDGETS } from "@thumbcade/protocol";
+
+export const metadata = { title: "Budgets" };
+
+<span className="label">Reference</span>
+
+# Budgets
+
+The next game should be alive before the player's thumb lifts. These limits are enforced by the reviewer on a mid-range phone profile (4× CPU throttle, Fast 4G) and shown live in the simulator.
+
+| Budget | Limit |
+| --- | --- |
+| Initial payload (gzipped, everything before `ready()`) | <span className="font-mono">{BUDGETS.initialPayloadGzipBytes / 1024 / 1024} MB</span> |
+| Total bundle (uncompressed) | <span className="font-mono">{BUDGETS.totalBundleBytes / 1024 / 1024} MB</span> |
+| Cold load to `ready()` | <span className="font-mono">{BUDGETS.readyMs / 1000} s</span> |
+| Frame rate in attract mode | <span className="font-mono">{BUDGETS.minFps}+ fps</span> |
+| Longest main-thread task after `ready()` | <span className="font-mono">{BUDGETS.longTaskMs} ms</span> |
+| JS heap | <span className="font-mono">{BUDGETS.heapBytes / 1024 / 1024} MB</span> |
+| `gameplay.end()` after game over | <span className="font-mono">{BUDGETS.gameplayEndMs / 1000} s</span> |
+| `tc.storage` per player per game | <span className="font-mono">{BUDGETS.storageBytesPerGame / 1024} KB</span> |
+
+## Staying inside them
+
+- Load the attract screen first and stream the rest after `ready()`.
+- Prefer procedural audio (WebAudio) and vector or generated art over large sprite sheets.
+- Ship compressed textures for 3D, and keep draw calls low — the next card is preloading while yours plays.
+- Stop everything on `pause`. A paused game that keeps rendering costs the player battery and costs you review.

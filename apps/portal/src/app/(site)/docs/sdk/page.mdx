@@ -1,0 +1,83 @@
+import { Callout } from "@/components/docs/callout";
+
+export const metadata = { title: "SDK reference" };
+
+<span className="label">Reference · @thumbcade/sdk v1</span>
+
+# SDK reference
+
+```ts
+import { thumbcade as tc } from "@thumbcade/sdk";
+```
+
+The SDK finds its host automatically: the Thumbcade app (a WebView), the simulator or web player (an iframe), or nothing at all — open your game directly in a browser tab and it runs against a built-in mock with a small dev HUD.
+
+## Lifecycle
+
+### `tc.init(): Promise<LaunchContext>`
+
+Call once, first. Resolves with everything you need to start:
+
+| Field | Type | Notes |
+| --- | --- | --- |
+| `player` | `{ id, name, avatarUrl, guest } \| null` | `id` is stable per player **and per game** — never the real account id. |
+| `best` | `number \| null` | The player's best score in your game. |
+| `audio.muted` | `boolean` | Start silent when true. |
+| `insets` | `{ preview, play, current }` | Areas covered by feed chrome. See [Designing for the feed](/docs/design). |
+| `challenge` | `{ fromName, score }?` | Present when the player arrived through a challenge link. Show the target. |
+| `launchReason` | `"feed" \| "gamePage" \| "challenge" \| "dev"` | |
+| `seed`, `dailySeed` | `number` | Random per launch / the same for everyone today (UTC). |
+| `reducedMotion`, `locale`, `host` | | |
+
+### `tc.ready()`
+
+Your first meaningful frame is on screen. Until you call it the player sees your poster; after it, the feed crossfades to the live game. Call it within 2.5 s on a mid-range phone.
+
+### `tc.gameplay.start()`
+
+A run begins. Call it on the **tap** that starts the run — the SDK records what input triggered it, and a swipe is a review failure. The feed now treats the card as *playing*: the overlay recedes, the tab bar becomes the Dock, and if your manifest declares `controls.vertical: true` you own the whole surface.
+
+### `tc.gameplay.end({ score, outcome?, stats? })`
+
+The run is over. Call it within a second of game over. The feed shows its result card — score, best, today's rank, *Play again*, *Challenge* — on top of your game, and takes the swipe back.
+
+### Events
+
+```ts
+tc.on("pause", ({ reason }) => {});  // stop your loop AND your audio
+tc.on("resume", () => {});
+tc.on("mute", () => {}); tc.on("unmute", () => {});
+tc.on("replay", () => {});           // "Play again" — start a fresh run and call gameplay.start()
+tc.on("inputCancel", () => {});      // the feed took the gesture — drop any half-finished input
+tc.on("insets", (insets) => {});     // overlay geometry changed
+```
+
+`reason` is one of `offscreen`, `background`, `sheet`, `back`, `idle`, `feedGesture`, `user`. Your game is paused whenever it isn't the card on screen — the next card preloads while the current one plays.
+
+### `tc.loop((dt) => {})`
+
+A `requestAnimationFrame` loop that stops on `pause` and resumes on `resume`. Optional, but it gets pausing right for free.
+
+## Services
+
+```ts
+await tc.storage.set("progress", { level: 4 });   // ≤ 64 KB per player per game, synced
+const progress = await tc.storage.get("progress");
+
+const { entries } = await tc.leaderboard.top({ scope: "daily", limit: 10 }); // "daily" | "allTime" | "friends"
+const me = await tc.leaderboard.me();             // { best, rank, percentile }
+
+tc.feedback("success");                           // "tap" | "success" | "fail" | "impact" — the app decides on haptics
+await tc.share.challenge({ score: 412 });         // opens the app's challenge share flow
+tc.analytics.track("level_complete", { level: 3 });
+```
+
+Analytics names are a fixed list: `level_start`, `level_complete`, `level_fail`, `tutorial_complete`, `powerup_used`, `milestone`.
+
+<Callout tone="warn">
+  Games can't make network requests to other origins — the content security policy blocks them. Everything a game needs comes through the SDK. No trackers, no ad SDKs, no remote code.
+</Callout>
+
+## Input the SDK manages for you
+
+The SDK sets `touch-action: none` and `overscroll-behavior: none` on your document and turns off text selection and the long-press callout. When the feed claims a gesture it dispatches `pointercancel` and `touchcancel` to whatever you were tracking, so a half-swipe never becomes a jump.

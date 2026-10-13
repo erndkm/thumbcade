@@ -1,0 +1,35 @@
+import { Callout } from "@/components/docs/callout";
+
+export const metadata = { title: "Designing for the feed" };
+
+<span className="label">Guide</span>
+
+# Designing for the feed
+
+Your game isn't launched — it's *scrolled into*. The player has already seen ten games this minute. These are the things that make one stick.
+
+## The attract screen is your thumbnail
+
+Short videos win in the first second; so do games. Your attract screen is what players see before they decide.
+
+- **Move.** A demo playing itself, an idle animation — anything but a static title card.
+- **Show the goal.** The player should understand what to do before tapping.
+- **Say "tap".** One short prompt, near the middle of the screen.
+
+## Respect the insets
+
+`tc.init()` returns two inset sets. In `preview` the feed's overlay covers the top tabs, the action rail on the right (about 72 pt) and the caption at the bottom-left (about 148 pt). Keep your title and your "tap to play" clear of them. During play (`insets.play`) only the status bar is covered; the Dock sits *below* your viewport, never on top of it. Your viewport never resizes.
+
+## Runs of 20–90 seconds
+
+Most sessions on Thumbcade are a run or three. Ramp difficulty early, end runs decisively, and make *Play again* irresistible. Long games work too — set `session` honestly and save progress with `tc.storage`.
+
+## Feel
+
+- Easing, particles, screen shake and hit-stop make tiny games feel expensive.
+- Use `tc.feedback()` for the moments that matter — a hit, a win — not every frame.
+- Audio starts muted in the feed until the player unmutes. Your game must be fun silent.
+
+<Callout tone="rule">
+  Everything stops on `pause`: loop, audio, timers. The next card is preloading behind yours.
+</Callout>

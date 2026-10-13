@@ -1,0 +1,30 @@
+export const metadata = { title: "Review guidelines" };
+
+<span className="label">Guide</span>
+
+# Review guidelines
+
+Every version is checked by a machine and then played by a person before it reaches the feed. Here's what both look for.
+
+## Automated checks
+
+| Check | Passes when |
+| --- | --- |
+| Manifest | `thumbcade.json` is valid and the `id` is yours |
+| Size | Inside the [budgets](/docs/budgets) |
+| Static scan | No remote URLs, `eval`, or network calls to other origins |
+| Loads & ready | The game calls `ready()` within budget, with no uncaught errors |
+| Tap starts a run | A synthetic tap triggers `gameplay.start()` — and a swipe doesn't |
+| Pause | Your loop and audio stop on `pause` |
+| Performance | Frame rate, long tasks and heap within budget |
+
+## A person plays it
+
+- **Fun first, fast.** Players decide in seconds. The attract screen should make the goal obvious without a word.
+- **Original.** No names, art, characters or sounds from existing games or brands. Clones of a genre are fine; clones of a product aren't.
+- **Age-appropriate.** Content matches the `ageRating` you declared. No sexual content, hate, or real-world violence glorification.
+- **Honest controls.** `controls` matches how the game actually plays.
+- **No dark patterns.** No fake buttons, no tricking players into sharing, no pretending to be the app's UI.
+- **No data collection.** Games can't collect personal data. The SDK's player id is already anonymous — keep it that way.
+
+Rejections always come with a note that says what to fix. Fix it, bump the version, publish again.

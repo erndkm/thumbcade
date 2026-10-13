@@ -23,3 +23,8 @@ test-results/
 .data/
 *.tsbuildinfo
 .pnpm-install.lock/
+apps/portal/public/brand/
+apps/portal/src/app/icon.svg
+apps/portal/src/app/apple-icon.png
+apps/portal/src/app/opengraph-image.png
+apps/portal/next-env.d.ts
