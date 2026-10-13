@@ -36,7 +36,7 @@ export function TokenForm() {
               {copied ? "Copied" : "Copy"}
             </Button>
           </div>
-          <code className="font-mono text-[13px] text-text-dim">npx thumbcade login --token {state.token.slice(0, 11)}…</code>
+          <code className="font-mono text-[13px] text-text-dim">npx thumbcade login --token {state.token}</code>
         </div>
       ) : null}
     </div>
