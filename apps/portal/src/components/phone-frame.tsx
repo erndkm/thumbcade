@@ -21,9 +21,10 @@ export function PhoneFrame({ children, className, maxWidth = 414 }: { children: 
   }, [outerW]);
 
   return (
-    <div ref={box} className={className} style={{ width: "100%", maxWidth, aspectRatio: `${outerW} / ${outerH}` }}>
+    <div ref={box} className={className} style={{ position: "relative", width: "100%", maxWidth, aspectRatio: `${outerW} / ${outerH}` }}>
+      {/* Absolutely positioned so its unscaled 414px width never widens the layout. */}
       <div
-        className="relative origin-top-left"
+        className="absolute left-0 top-0 origin-top-left"
         style={{
           width: outerW,
           height: outerH,

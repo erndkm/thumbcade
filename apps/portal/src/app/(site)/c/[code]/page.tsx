@@ -30,7 +30,7 @@ export default async function ChallengePage({ params }: { params: Promise<{ code
   const cards = [c.game, ...others.filter((g) => g.id !== c.game.id)];
   const score = c.score !== null ? formatScore(c.score, c.game.score) : null;
   return (
-    <section className="mx-auto grid max-w-[1280px] items-start gap-14 px-4 pb-10 pt-12 md:px-8 lg:grid-cols-[1fr_auto] lg:gap-20 lg:pt-16">
+    <section className="mx-auto grid max-w-[1280px] items-start gap-14 px-4 pb-10 pt-12 md:px-8 grid-cols-[minmax(0,1fr)] lg:grid-cols-[minmax(0,1fr)_auto] lg:gap-20 lg:pt-16">
       <GameHero
         card={c.game}
         leaders={leaders}

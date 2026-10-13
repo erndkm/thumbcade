@@ -81,7 +81,7 @@ export default async function CreatorGame({ params }: { params: Promise<{ slug: 
           <Stat label="Avg run" value={ends > 0 ? `${(sum("total_play_ms") / ends / 1000).toFixed(1)}s` : "—"} />
           <Stat label="Replay rate" value={pct(sum("replays"), ends)} />
           <Stat label="Fast skips" value={pct(sum("fast_skips"), impressions)} sub="left in < 1.5 s" />
-          <Stat label="Likes · shares" value={`${formatCount(sum("likes"))} · ${formatCount(sum("shares"))}`} />
+          <Stat label="Likes" value={formatCount(sum("likes"))} sub={`${formatCount(sum("shares"))} shares`} />
         </div>
         <DailyChart title="Runs started per day" unit="runs" points={days.map((d) => ({ day: d, value: Number(byDay.get(d)?.play_starts ?? 0) }))} />
         <p className="text-[13px] text-text-mute">

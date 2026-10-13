@@ -27,7 +27,7 @@ export default async function GamePage({ params }: { params: Promise<{ slug: str
   const [others, leaders, viewer] = await Promise.all([getLiveGames(24), getLeaders(game.id, game.score.order), getWebViewer()]);
   const cards = [game, ...others.filter((g) => g.id !== game.id)];
   return (
-    <section className="mx-auto grid max-w-[1280px] items-start gap-14 px-4 pb-10 pt-12 md:px-8 lg:grid-cols-[1fr_auto] lg:gap-20 lg:pt-16">
+    <section className="mx-auto grid max-w-[1280px] items-start gap-14 px-4 pb-10 pt-12 md:px-8 grid-cols-[minmax(0,1fr)] lg:grid-cols-[minmax(0,1fr)_auto] lg:gap-20 lg:pt-16">
       <GameHero
         card={game}
         leaders={leaders}

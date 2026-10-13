@@ -80,7 +80,11 @@ export function DailyChart({ title, points, unit }: { title: string; points: Dai
                   onBlur={() => setHover(null)}
                   className="outline-none"
                 />
-                {i % Math.ceil(points.length / 7) === 0 || i === points.length - 1 ? (
+                {(() => {
+                  const every = Math.ceil(points.length / 7);
+                  const last = points.length - 1;
+                  return i === last || (i % every === 0 && last - i >= every);
+                })() ? (
                   <text x={pad.left + i * slot + slot / 2} y={H - 8} textAnchor="middle" fontSize={11} fill="var(--tc-text-mute)" fontFamily="var(--tc-font-mono)">
                     {fmtDay(p.day)}
                   </text>

@@ -28,7 +28,7 @@ export default async function Landing() {
           className="pointer-events-none absolute inset-0"
           style={{ background: "radial-gradient(60% 50% at 78% 42%, rgba(212,255,61,0.10), transparent 70%)" }}
         />
-        <div className="relative mx-auto grid max-w-[1280px] items-center gap-14 px-4 pb-24 pt-14 md:px-8 lg:grid-cols-[1fr_auto] lg:gap-20 lg:pt-20">
+        <div className="relative mx-auto grid max-w-[1280px] grid-cols-[minmax(0,1fr)] items-center gap-14 px-4 pb-24 pt-14 md:px-8 lg:grid-cols-[minmax(0,1fr)_auto] lg:gap-20 lg:pt-20">
           <div className="flex flex-col gap-8">
             <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
               <span className="label flex items-center gap-2 !text-text-dim">

@@ -575,16 +575,30 @@ isOneToOne: false
       referencedColumns: ["id"]
     }
                   ]
-                },"notifications": {
+                },"moderation_words": {
                   Row: {
-                    "actor_id": string | null,"comment_id": string | null,"created_at": string,"game_id": string | null,"id": string,"payload": NonNullable<Json>,"read_at": string | null,"type": Database["public"]['Enums']["notification_type"],"user_id": string
+                    "created_at": string,"kind": string,"word": string
                   }
                   ComputedFields: never
                   Insert: {
-                    "actor_id"?: string | null,"comment_id"?: string | null,"created_at"?: string,"game_id"?: string | null,"id"?: string,"payload"?: NonNullable<Json>,"read_at"?: string | null,"type": Database["public"]['Enums']["notification_type"],"user_id": string
+                    "created_at"?: string,"kind"?: string,"word": string
                   }
                   Update: {
-                    "actor_id"?: string | null,"comment_id"?: string | null,"created_at"?: string,"game_id"?: string | null,"id"?: string,"payload"?: NonNullable<Json>,"read_at"?: string | null,"type"?: Database["public"]['Enums']["notification_type"],"user_id"?: string
+                    "created_at"?: string,"kind"?: string,"word"?: string
+                  }
+                  Relationships: [
+                    
+                  ]
+                },"notifications": {
+                  Row: {
+                    "actor_id": string | null,"comment_id": string | null,"created_at": string,"game_id": string | null,"id": string,"payload": NonNullable<Json>,"pushed_at": string | null,"read_at": string | null,"type": Database["public"]['Enums']["notification_type"],"user_id": string
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "actor_id"?: string | null,"comment_id"?: string | null,"created_at"?: string,"game_id"?: string | null,"id"?: string,"payload"?: NonNullable<Json>,"pushed_at"?: string | null,"read_at"?: string | null,"type": Database["public"]['Enums']["notification_type"],"user_id": string
+                  }
+                  Update: {
+                    "actor_id"?: string | null,"comment_id"?: string | null,"created_at"?: string,"game_id"?: string | null,"id"?: string,"payload"?: NonNullable<Json>,"pushed_at"?: string | null,"read_at"?: string | null,"type"?: Database["public"]['Enums']["notification_type"],"user_id"?: string
                   }
                   Relationships: [
                     {
@@ -803,10 +817,25 @@ isOneToOne: false
             [_ in never]: never
           }
           Functions: {
-            "approve_version":
+            "allowed_age_ratings":
+{ Args: { "p_band": Database["public"]['Enums']["age_band"] }; Returns: (Database["public"]['Enums']["age_rating"])[]
+                           },
+"approve_version":
 { Args: { "p_notes"?: string,"p_version_id": string }; Returns: undefined
                            },
 "become_creator":
+{ Args: Record<PropertyKey, never>; Returns: undefined
+                           },
+"beta_sample":
+{ Args: { "a": number,"b": number }; Returns: number
+                           },
+"claim_guest_scores":
+{ Args: Record<PropertyKey, never>; Returns: number
+                           },
+"cleanup_stale_sessions":
+{ Args: Record<PropertyKey, never>; Returns: undefined
+                           },
+"compute_trending":
 { Args: Record<PropertyKey, never>; Returns: undefined
                            },
 "create_creator_token":
@@ -814,17 +843,42 @@ isOneToOne: false
               "id": string,"token": string,"token_prefix": string
             }[]
                            },
+"decay_affinity":
+{ Args: Record<PropertyKey, never>; Returns: undefined
+                           },
+"dispatch_push":
+{ Args: Record<PropertyKey, never>; Returns: undefined
+                           },
 "ensure_feed_event_partitions":
 { Args: { "days_ahead"?: number }; Returns: undefined
                            },
 "enter_trusted":
 { Args: Record<PropertyKey, never>; Returns: undefined
                            },
+"feed_hydrate":
+{ Args: { "p_game_ids": (string)[],"p_viewer": string }; Returns: {
+              "accent_color": string,"age_rating": string,"allowed": boolean,"audio": boolean,"comment_count": number,"controls": Json,"creator_avatar_seed": string,"creator_avatar_url": string,"creator_display_name": string,"creator_handle": string,"creator_id": string,"creator_verified": boolean,"description": string,"entry": string,"following": boolean,"game_id": string,"icon_url": string,"like_count": number,"liked": boolean,"name": string,"play_count": number,"poster_url": string,"save_count": number,"saved": boolean,"score_config": Json,"sdk": string,"semver": string,"session_length": string,"share_count": number,"slug": string,"tags": (string)[],"top_score": number,"version_id": string,"viewer_best": number
+            }[]
+                           },
+"finish_play_session":
+{ Args: { "p_duration_ms": number,"p_outcome"?: string,"p_score": number,"p_session": string,"p_user": string }; Returns: {
+              "accepted": boolean,"best": number,"daily_rank": number,"is_new_best": boolean,"percentile": number,"reason": string
+            }[]
+                           },
+"game_top_score":
+{ Args: { "p_game": string }; Returns: number
+                           },
 "in_trusted_path":
 { Args: Record<PropertyKey, never>; Returns: boolean
                            },
+"ingest_events":
+{ Args: { "p_events": Json,"p_user": string }; Returns: number
+                           },
 "is_admin":
 { Args: Record<PropertyKey, never>; Returns: boolean
+                           },
+"is_blocked_between":
+{ Args: { "a": string,"b": string }; Returns: boolean
                            },
 "is_creator":
 { Args: Record<PropertyKey, never>; Returns: boolean
@@ -835,14 +889,52 @@ isOneToOne: false
 "is_service":
 { Args: Record<PropertyKey, never>; Returns: boolean
                            },
+"leaderboard":
+{ Args: { "p_game_id": string,"p_limit"?: number,"p_scope"?: string }; Returns: {
+              "avatar_seed": string,"avatar_url": string,"display_name": string,"handle": string,"is_me": boolean,"rank": number,"score": number,"user_id": string
+            }[]
+                           },
+"leaderboard_me":
+{ Args: { "p_game_id": string }; Returns: {
+              "best": number,"percentile": number,"rank": number
+            }[]
+                           },
+"rank_feed":
+{ Args: { "p_cursor"?: Json,"p_limit"?: number,"p_tab"?: string,"p_tag"?: string,"p_viewer": string }; Returns: {
+              "game_id": string,"score": number,"source": string
+            }[]
+                           },
 "reject_version":
 { Args: { "p_notes": string,"p_version_id": string }; Returns: undefined
+                           },
+"resolve_share":
+{ Args: { "p_code": string }; Returns: {
+              "code": string,"from_guest": boolean,"from_handle": string,"from_name": string,"game_id": string,"game_slug": string,"score": number
+            }[]
                            },
 "rollback_to_version":
 { Args: { "p_version_id": string }; Returns: undefined
                            },
+"rollup_game_stats":
+{ Args: { "p_days"?: number }; Returns: undefined
+                           },
+"score_better":
+{ Args: { "a": number,"b": number,"p_order": string }; Returns: boolean
+                           },
+"set_runtime_secret":
+{ Args: { "p_name": string,"p_value": string }; Returns: undefined
+                           },
+"start_play_session":
+{ Args: { "p_game": string,"p_reason"?: string,"p_user": string,"p_version": string }; Returns: string
+                           },
 "takedown_game":
 { Args: { "p_game_id": string,"p_reason": string }; Returns: undefined
+                           },
+"today_percentile":
+{ Args: { "p_exclude": string,"p_game": string,"p_score": number }; Returns: number
+                           },
+"viewer_best":
+{ Args: { "p_game": string,"p_viewer": string }; Returns: number
                            }
           }
           Enums: {
