@@ -1,0 +1,20 @@
+{
+  "name": "@thumbcade/protocol",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Thumbcade contracts: game manifest, shell<->game bridge messages, feed DTOs, publish API.",
+  "exports": {
+    ".": "./src/index.ts",
+    "./manifest-v1.schema.json": "./dist/manifest-v1.schema.json"
+  },
+  "scripts": {
+    "build": "tsx scripts/gen-json-schema.ts",
+    "typecheck": "tsc -p tsconfig.json",
+    "lint": "eslint .",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "zod": "4.6.7"
+  }
+}

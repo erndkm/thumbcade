@@ -1,0 +1,8 @@
+{
+  "name": "@thumbcade/scripts",
+  "private": true,
+  "type": "module",
+  "dependencies": {
+    "@thumbcade/protocol": "workspace:*"
+  }
+}

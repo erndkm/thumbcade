@@ -1,0 +1,6 @@
+dist
+.next
+pnpm-lock.yaml
+supabase/migrations
+apps/mobile/ios
+apps/mobile/android

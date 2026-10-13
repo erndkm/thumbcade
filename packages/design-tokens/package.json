@@ -1,0 +1,30 @@
+{
+  "name": "@thumbcade/design-tokens",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Thumbcade design tokens: color, type, space, radius, motion, layout. Exported for React Native and as CSS variables / a Tailwind v4 theme.",
+  "exports": {
+    ".": "./src/index.ts",
+    "./native-fonts": "./src/native-fonts.ts",
+    "./tokens.css": "./dist/tokens.css",
+    "./theme.css": "./dist/theme.css",
+    "./fonts/*": "./fonts/*",
+    "./brand/*": "./brand/*"
+  },
+  "scripts": {
+    "build": "tsx scripts/build-css.ts",
+    "typecheck": "tsc -p tsconfig.json",
+    "lint": "eslint .",
+    "test": "vitest run",
+    "brand": "tsx scripts/build-brand.ts"
+  },
+  "dependencies": {
+    "@thumbcade/protocol": "workspace:*"
+  },
+  "devDependencies": {
+    "opentype.js": "1.3.4",
+    "sharp": "0.35.5",
+    "@types/opentype.js": "1.3.10"
+  }
+}

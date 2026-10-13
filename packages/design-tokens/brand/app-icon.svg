@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1024" viewBox="0 0 1024 1024"><rect width="1024" height="1024" fill="#0D0D10"/><defs>
+  <radialGradient id="m-cap" cx="0.38" cy="0.32" r="0.85">
+    <stop offset="0" stop-color="#E9FF8A"/>
+    <stop offset="0.45" stop-color="#D4FF3D"/>
+    <stop offset="1" stop-color="#B4DE1E"/>
+  </radialGradient>
+  <linearGradient id="m-housing" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0" stop-color="#2E2E36"/>
+    <stop offset="1" stop-color="#141418"/>
+  </linearGradient>
+  <linearGradient id="m-side" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0" stop-color="#7E9C0E"/>
+    <stop offset="1" stop-color="#4E6305"/>
+  </linearGradient>
+  <clipPath id="m-clip"><circle cx="512" cy="500.56" r="312"/></clipPath>
+</defs>
+<g>
+  <circle cx="512" cy="512" r="357.76" fill="url(#m-housing)"/>
+  <circle cx="512" cy="512" r="356.2" fill="none" stroke="#3A3A44" stroke-width="3.12" stroke-opacity="0.9"/>
+  <circle cx="512" cy="512" r="331.76" fill="#08080A"/>
+  <circle cx="512" cy="523.44" r="312" fill="url(#m-side)"/>
+  <circle cx="512" cy="500.56" r="312" fill="url(#m-cap)"/>
+  <g clip-path="url(#m-clip)" fill="none" stroke="#0D0D10" stroke-width="26" stroke-linecap="round" stroke-opacity="0.94"><path d="M518.14 456.71 A35.36 38.19 0 1 1 489.27 523.57"/><path d="M574.42 566.61 A91.52 98.84 0 1 1 603.39 489.15"/><path d="M459.08 345.42 A147.68 159.49 0 1 1 391.03 402.84"/><path d="M370.40 652.68 A203.84 220.15 0 1 1 455.81 705.94"/><path d="M741.57 362.49 A260.00 280.80 0 1 1 672.07 273.05"/></g>
+  <path d="M318.56 307.12 A274.56 274.56 0 0 1 574.4 232.24" fill="none" stroke="#FBFFE6" stroke-width="7.28" stroke-linecap="round" stroke-opacity="0.32"/>
+</g></svg>
