@@ -1,0 +1,62 @@
+{
+  "name": "create-thumbcade-game",
+  "version": "1.0.0",
+  "description": "Scaffold a Thumbcade game: Vite + TypeScript, the SDK wired in, a small complete sample game, an icon and a poster.",
+  "keywords": [
+    "thumbcade",
+    "create",
+    "game",
+    "template",
+    "vite"
+  ],
+  "license": "MIT",
+  "homepage": "https://thumbcade.com/docs/quickstart",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/thumbcade/thumbcade.git",
+    "directory": "packages/create-game"
+  },
+  "type": "module",
+  "bin": {
+    "create-thumbcade-game": "./bin/create.js"
+  },
+  "exports": {
+    ".": "./src/index.ts",
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "bin",
+    "dist",
+    "templates",
+    "assets",
+    "README.md",
+    "LICENSE"
+  ],
+  "engines": {
+    "node": ">=20.12"
+  },
+  "scripts": {
+    "build": "tsdown",
+    "typecheck": "tsc -p tsconfig.json",
+    "lint": "eslint .",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@clack/prompts": "1.8.1",
+    "opentype.js": "1.3.4",
+    "sharp": "0.35.5"
+  },
+  "devDependencies": {
+    "@types/opentype.js": "1.3.10",
+    "tsdown": "0.23.1"
+  },
+  "publishConfig": {
+    "access": "public",
+    "exports": {
+      ".": {
+        "import": "./dist/index.js"
+      },
+      "./package.json": "./package.json"
+    }
+  }
+}

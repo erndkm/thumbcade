@@ -1,0 +1,123 @@
+:root {
+  --accent: #7CC4FF;
+  --ink: #08111D;
+  --deep: #0B1828;
+  --paper: #F3F0E8;
+  --dim: #8A96A8;
+  --tile: #1A2B42;
+  --tile-hi: #24395A;
+  --tile-lo: #111E30;
+  --open: #0D1726;
+  --cell: 44px;
+  --gap: 3px;
+}
+html, body { margin: 0; height: 100%; background: var(--ink); overflow: hidden; color: var(--paper); }
+#stage { position: fixed; inset: 0; font-family: "TC Mono", ui-monospace, Menlo, monospace; }
+#bg, #fx { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+#fx { pointer-events: none; z-index: 5; }
+
+#hud {
+  position: absolute; left: 0; right: 0; top: calc(var(--tc-play-inset-top, 0px) + 6px); height: 48px;
+  display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; padding: 0 16px; z-index: 3;
+  transition: opacity 220ms ease, transform 220ms ease;
+}
+html:not(.playing) #hud { opacity: 0; transform: translateY(-8px); }
+#score { font-size: 30px; letter-spacing: -0.02em; }
+.stat { font-size: 15px; color: var(--dim); display: flex; align-items: center; gap: 8px; letter-spacing: 0.04em; }
+#time { justify-content: flex-end; }
+.buoy-mini { width: 12px; height: 14px; background: linear-gradient(90deg, var(--paper) 0 2px, transparent 2px), linear-gradient(var(--accent), var(--accent)) 2px 0 / 10px 9px no-repeat; }
+.buoy-mini { clip-path: polygon(0 0, 2px 0, 100% 32%, 2px 64%, 2px 100%, 0 100%); }
+
+#board {
+  position: absolute; display: grid; grid-template-columns: repeat(8, var(--cell)); grid-auto-rows: var(--cell);
+  gap: var(--gap); z-index: 2; touch-action: none;
+}
+/* In attract the board idles small and dim under the title, then springs up into play. */
+#board-wrap { position: absolute; inset: 0; z-index: 2; transform-origin: 50% 62%;
+  transition: transform 520ms cubic-bezier(.2,.8,.2,1.15), opacity 320ms ease, filter 320ms ease; }
+html:not(.playing) #board-wrap { transform: translateY(40px) scale(0.86); opacity: 0.72; filter: saturate(0.8); }
+.cell {
+  position: relative; border-radius: 7px; background: var(--tile);
+  box-shadow: inset 0 2px 0 var(--tile-hi), inset 0 -3px 0 var(--tile-lo);
+  display: grid; place-items: center; font-size: calc(var(--cell) * 0.5); line-height: 1;
+  transition: background 120ms ease;
+}
+.cell.dealing { animation: deal 380ms cubic-bezier(.2,.8,.2,1.2) both; }
+@keyframes deal { from { transform: scale(0.3) translateY(10px); opacity: 0; } to { transform: none; opacity: 1; } }
+.cell.open { background: var(--open); box-shadow: inset 0 0 0 1px rgba(124,196,255,0.07); animation: pop 260ms cubic-bezier(.2,.8,.2,1.4) both; }
+@keyframes pop { 0% { transform: scale(0.72); } 100% { transform: scale(1); } }
+.cell.n1 { color: #7CC4FF; } .cell.n2 { color: #5CF2B8; } .cell.n3 { color: #FF6FB5; } .cell.n4 { color: #B79CFF; }
+.cell.n5 { color: #FFB547; } .cell.n6 { color: #4DE8E0; } .cell.n7 { color: #F3F0E8; } .cell.n8 { color: #8A96A8; }
+.cell.flag::after {
+  content: ""; position: absolute; left: 30%; top: 22%; width: 44%; height: 34%; background: var(--accent);
+  clip-path: polygon(0 0, 100% 50%, 0 100%);
+  animation: drop 300ms cubic-bezier(.2,.8,.2,1.5) both;
+}
+.cell.flag::before {
+  content: ""; position: absolute; left: 27%; top: 20%; width: 3px; height: 58%; background: var(--paper); border-radius: 2px;
+  box-shadow: 4px 22px 0 -1px rgba(243,240,232,0.0);
+  animation: drop 300ms cubic-bezier(.2,.8,.2,1.5) both;
+}
+@keyframes drop { from { transform: translateY(-40%) scale(1.4); opacity: 0; } to { transform: none; opacity: 1; } }
+.cell.holding::before {
+  content: ""; position: absolute; inset: 3px; border-radius: 50%; border: 2px solid var(--accent);
+  animation: hold 380ms linear both; opacity: 0.9;
+}
+@keyframes hold { from { transform: scale(0.2); opacity: 0.2; } to { transform: scale(1); opacity: 1; } }
+.cell.mine { background: #2A1420; }
+.cell.mine::after {
+  content: ""; width: 50%; height: 50%; border-radius: 50%; background: radial-gradient(circle at 35% 35%, #5B6B80, #1B2533 70%);
+  box-shadow: 0 0 0 2px #0D0D10, 0 -6px 0 -3px #5B6B80, 0 6px 0 -3px #5B6B80, 6px 0 0 -3px #5B6B80, -6px 0 0 -3px #5B6B80;
+  animation: pop 260ms cubic-bezier(.2,.8,.2,1.4) both;
+}
+.cell.boom { background: #FF4A3D; }
+.cell.wrong::after { background: #4A2430; }
+.cell.wrong::before { content: "×"; position: absolute; color: #FF4A3D; font-size: calc(var(--cell) * 0.7); z-index: 2; animation: none; background: none; width: auto; height: auto; top: auto; }
+.cell.win { animation: winwave 600ms ease both; }
+@keyframes winwave { 0% { transform: scale(1); } 40% { transform: scale(1.12); box-shadow: 0 0 0 2px var(--accent); } 100% { transform: scale(1); } }
+
+#attract, #over { position: absolute; inset: 0; z-index: 4; pointer-events: none; transition: opacity 260ms ease; }
+html.playing #attract, html:not(.ended) #over { opacity: 0; }
+#attract::before {
+  content: ""; position: absolute; inset: 0;
+  background: linear-gradient(180deg, rgba(8,17,29,0.92) 0%, rgba(8,17,29,0.55) 34%, rgba(8,17,29,0.3) 60%, rgba(8,17,29,0.85) 100%);
+}
+.title {
+  position: absolute; left: 0; right: var(--tc-preview-inset-right, 72px); top: calc(var(--tc-preview-inset-top, 91px) + 20px);
+  text-align: center; font: 900 64px/1 "TC Display", system-ui, sans-serif; letter-spacing: -0.02em; color: var(--accent);
+  text-shadow: 0 5px 0 #1E3A5C; animation: titlein 700ms cubic-bezier(.2,.8,.2,1.3) both;
+}
+@keyframes titlein { from { transform: scale(0.6) rotate(-4deg); opacity: 0; } to { transform: none; opacity: 1; } }
+.sub, .best {
+  position: absolute; left: 0; right: var(--tc-preview-inset-right, 72px); text-align: center; font-size: 12px; letter-spacing: 0.1em;
+  text-transform: uppercase; color: var(--dim);
+}
+.sub span, .best span { background: #08111D; padding: 4px 8px; border-radius: 6px; }
+.sub { top: calc(var(--tc-preview-inset-top, 91px) + 100px); }
+.best { top: calc(var(--tc-preview-inset-top, 91px) + 122px); color: var(--paper); font-size: 13px; }
+.prompt {
+  position: absolute; left: 50%; transform: translateX(calc(-50% - var(--tc-preview-inset-right, 72px) / 2)); bottom: calc(var(--tc-preview-inset-bottom, 148px) + 18px);
+  display: flex; justify-content: center; align-items: center; gap: 12px; font-size: 14px; letter-spacing: 0.18em; color: var(--paper);
+  padding: 12px 18px; border-radius: 999px; background: #08111D; box-shadow: inset 0 0 0 1px rgba(124,196,255,0.35); white-space: nowrap;
+}
+.prompt i { animation: breathe 1.5s ease-in-out infinite; }
+#over .prompt { transform: translateX(-50%); }
+.prompt i { width: 5px; height: 5px; background: var(--accent); }
+@keyframes breathe { 0%, 100% { opacity: 0.25; transform: scale(0.7); } 50% { opacity: 1; transform: scale(1.2); } }
+#over .stamp {
+  position: absolute; left: 0; right: 0; top: 38%; text-align: center; font: 900 52px/1 "TC Display", system-ui, sans-serif;
+  color: var(--accent); letter-spacing: -0.02em; transform: rotate(-6deg); text-shadow: 0 4px 0 #0D0D10;
+}
+html.ended #over .stamp { animation: stamp 420ms cubic-bezier(.2,.8,.2,1.4) both; }
+#over .stamp.lost { color: #FF4A3D; }
+@keyframes stamp { from { transform: scale(2.2) rotate(-6deg); opacity: 0; } to { transform: scale(1) rotate(-6deg); opacity: 1; } }
+#over::before { content: ""; position: absolute; inset: 0; background: rgba(8,17,29,0.45); }
+
+/* After a run the shell draws its result card over the game: the HUD gets out of the way (the top tabs return)
+   and our own stamp + retry prompt only exist in a bare browser tab. */
+html.ended #hud, html.ended #turn, html.ended #shelf { opacity: 0; transform: translateY(-8px); }
+html:not(.standalone) #over { display: none; }
+html.ended #over .prompt { animation: overprompt 300ms ease 700ms both; }
+@keyframes overprompt { from { opacity: 0; } to { opacity: 1; } }
+
+html.paused *, html.paused *::before, html.paused *::after { animation-play-state: paused !important; }

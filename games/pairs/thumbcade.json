@@ -1,0 +1,18 @@
+{
+  "$schema": "https://thumbcade.com/schema/manifest-v1.json",
+  "id": "pairs",
+  "name": "Pairs",
+  "version": "1.0.0",
+  "sdk": "^1.0.0",
+  "entry": "index.html",
+  "description": "Peek, flip, match. Every pair buys you two seconds. Your memory is better than you think. Probably.",
+  "tags": ["memory", "brain", "puzzle", "chill"],
+  "accentColor": "#FF6FB5",
+  "icon": "assets/icon.png",
+  "ageRating": "4+",
+  "controls": { "vertical": false, "horizontal": false, "multitouch": false, "inputs": ["tap"] },
+  "session": "short",
+  "audio": true,
+  "orientation": "portrait",
+  "score": { "order": "desc", "max": 1000000, "format": "integer" }
+}

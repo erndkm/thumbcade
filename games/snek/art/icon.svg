@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" width="1024" height="1024">
+  <rect width="1024" height="1024" fill="#06120C"/>
+  <g fill="#0C2015">
+    <rect x="0" y="0" width="128" height="128"/><rect x="256" y="0" width="128" height="128"/><rect x="512" y="0" width="128" height="128"/><rect x="768" y="0" width="128" height="128"/>
+    <rect x="128" y="128" width="128" height="128"/><rect x="384" y="128" width="128" height="128"/><rect x="640" y="128" width="128" height="128"/><rect x="896" y="128" width="128" height="128"/>
+    <rect x="0" y="256" width="128" height="128"/><rect x="256" y="256" width="128" height="128"/><rect x="512" y="256" width="128" height="128"/><rect x="768" y="256" width="128" height="128"/>
+    <rect x="128" y="384" width="128" height="128"/><rect x="384" y="384" width="128" height="128"/><rect x="640" y="384" width="128" height="128"/><rect x="896" y="384" width="128" height="128"/>
+    <rect x="0" y="512" width="128" height="128"/><rect x="256" y="512" width="128" height="128"/><rect x="512" y="512" width="128" height="128"/><rect x="768" y="512" width="128" height="128"/>
+    <rect x="128" y="640" width="128" height="128"/><rect x="384" y="640" width="128" height="128"/><rect x="640" y="640" width="128" height="128"/><rect x="896" y="640" width="128" height="128"/>
+    <rect x="0" y="768" width="128" height="128"/><rect x="256" y="768" width="128" height="128"/><rect x="512" y="768" width="128" height="128"/><rect x="768" y="768" width="128" height="128"/>
+    <rect x="128" y="896" width="128" height="128"/><rect x="384" y="896" width="128" height="128"/><rect x="640" y="896" width="128" height="128"/><rect x="896" y="896" width="128" height="128"/>
+  </g>
+  <!-- body shadow + body -->
+  <path d="M 128 1100 L 128 830 Q 128 704 254 704 L 640 704 Q 768 704 768 576 L 768 448 Q 768 320 640 320 L 448 320" fill="none" stroke="#000000" stroke-opacity="0.35" stroke-width="150" stroke-linecap="round" stroke-linejoin="round" transform="translate(0 18)"/>
+  <path d="M 128 1100 L 128 830 Q 128 704 254 704 L 640 704 Q 768 704 768 576 L 768 448 Q 768 320 640 320 L 448 320" fill="none" stroke="#139A55" stroke-width="150" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M 768 560 L 768 448 Q 768 320 640 320 L 448 320" fill="none" stroke="#4DFF88" stroke-width="150" stroke-linecap="round" stroke-linejoin="round"/>
+  <g fill="#0B5E33" opacity="0.6">
+    <circle cx="128" cy="900" r="22"/><circle cx="330" cy="704" r="22"/><circle cx="560" cy="704" r="22"/><circle cx="768" cy="520" r="22"/><circle cx="600" cy="320" r="22"/>
+  </g>
+  <!-- head -->
+  <circle cx="420" cy="320" r="104" fill="#4DFF88"/>
+  <circle cx="400" cy="262" r="34" fill="#F3F0E8"/><circle cx="400" cy="378" r="34" fill="#F3F0E8"/>
+  <circle cx="386" cy="262" r="15" fill="#0D0D10"/><circle cx="386" cy="378" r="15" fill="#0D0D10"/>
+  <!-- tongue -->
+  <path d="M 316 320 L 250 320 M 250 320 L 222 296 M 250 320 L 222 344" stroke="#FF4F6E" stroke-width="16" stroke-linecap="round" fill="none"/>
+  <!-- berry -->
+  <circle cx="200" cy="198" r="74" fill="#B8213F"/>
+  <circle cx="200" cy="186" r="74" fill="#FF4F6E"/>
+  <rect x="158" y="140" width="28" height="28" fill="#FFFFFF" opacity="0.7"/>
+  <ellipse cx="248" cy="104" rx="38" ry="16" fill="#7CF0A0" transform="rotate(-34 248 104)"/>
+</svg>

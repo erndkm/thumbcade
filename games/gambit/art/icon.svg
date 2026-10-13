@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" width="1024" height="1024">
+  <defs>
+    <radialGradient id="felt" cx="0.5" cy="0.55" r="0.75">
+      <stop offset="0" stop-color="#16302A"/>
+      <stop offset="1" stop-color="#070D0C"/>
+    </radialGradient>
+    <clipPath id="tile"><rect width="1024" height="1024"/></clipPath>
+  </defs>
+  <rect width="1024" height="1024" fill="url(#felt)"/>
+  <!-- board corner in perspective-free isometric tilt -->
+  <g transform="rotate(-18 512 760)" clip-path="url(#tile)">
+    <g>
+      <rect x="40" y="560" width="190" height="190" fill="#C7D6CC"/><rect x="230" y="560" width="190" height="190" fill="#4C7A6B"/>
+      <rect x="420" y="560" width="190" height="190" fill="#C7D6CC"/><rect x="610" y="560" width="190" height="190" fill="#4C7A6B"/>
+      <rect x="800" y="560" width="190" height="190" fill="#C7D6CC"/>
+      <rect x="40" y="750" width="190" height="190" fill="#4C7A6B"/><rect x="230" y="750" width="190" height="190" fill="#C7D6CC"/>
+      <rect x="420" y="750" width="190" height="190" fill="#4C7A6B"/><rect x="610" y="750" width="190" height="190" fill="#C7D6CC"/>
+      <rect x="800" y="750" width="190" height="190" fill="#4C7A6B"/>
+      <rect x="40" y="940" width="190" height="190" fill="#C7D6CC"/><rect x="230" y="940" width="190" height="190" fill="#4C7A6B"/>
+      <rect x="420" y="940" width="190" height="190" fill="#C7D6CC"/><rect x="610" y="940" width="190" height="190" fill="#4C7A6B"/>
+      <rect x="800" y="940" width="190" height="190" fill="#C7D6CC"/>
+      <rect x="610" y="560" width="190" height="190" fill="#5CF2B8" opacity="0.55"/>
+    </g>
+  </g>
+  <!-- mint target ring -->
+  <circle cx="560" cy="430" r="330" fill="none" stroke="#5CF2B8" stroke-width="22" opacity="0.9" stroke-dasharray="1500 574" transform="rotate(200 560 430)"/>
+  <!-- knight (Gambit piece set, scaled) -->
+  <g transform="translate(232 92) scale(6.6)">
+    <path d="M62 10 L68 22 C80 34 80 56 76 80 H30 C32 70 40 62 44 54 L36 58 C28 62 20 58 18 50 L24 38 C30 26 44 16 56 16 Z M20 80 h60 a4 4 0 0 1 4 4 v8 h-68 v-8 a4 4 0 0 1 4 -4 Z" fill="#0D0D10" stroke="#0D0D10" stroke-width="9" stroke-linejoin="round"/>
+    <path d="M62 10 L68 22 C80 34 80 56 76 80 H30 C32 70 40 62 44 54 L36 58 C28 62 20 58 18 50 L24 38 C30 26 44 16 56 16 Z M20 80 h60 a4 4 0 0 1 4 4 v8 h-68 v-8 a4 4 0 0 1 4 -4 Z" fill="#FBF7EE"/>
+    <path d="M46 30 h0.1 M60 22 C66 36 68 52 66 72" fill="none" stroke="#0D0D10" stroke-width="7" stroke-linecap="round"/>
+  </g>
+</svg>

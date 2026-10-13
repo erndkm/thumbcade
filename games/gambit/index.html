@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" />
+    <meta name="theme-color" content="#0A1311" />
+    <title>Gambit</title>
+  </head>
+  <body>
+    <div id="stage">
+      <canvas id="bg"></canvas>
+      <div id="hud">
+        <div id="timebar"><div id="timefill"></div></div>
+        <div id="row">
+          <div id="score">0</div>
+          <div id="tag"><span id="mate">MATE IN 1</span></div>
+          <div id="streak">×1</div>
+        </div>
+      </div>
+      <div id="board-wrap">
+        <div id="board"></div>
+        <div id="pieces"></div>
+      </div>
+      <div id="turn"><span class="dot" id="turn-dot"></span><span id="turn-text">White to move</span></div>
+      <div id="shelf"></div>
+      <canvas id="fx"></canvas>
+      <div id="popups"></div>
+      <div id="attract">
+        <div class="title">GAMBIT</div>
+        <div class="sub"><span>Mate in one · two · three</span></div>
+        <div class="best"><span id="best"></span></div>
+        <div class="daily"><span id="daily"></span></div>
+        <div class="prompt"><i></i>TAP TO PLAY<i></i></div>
+      </div>
+      <div id="over"><div class="stamp" id="stamp">TIME</div><div class="prompt"><i></i>TAP TO PLAY AGAIN<i></i></div></div>
+    </div>
+    <script type="module" src="./src/main.ts"></script>
+  </body>
+</html>

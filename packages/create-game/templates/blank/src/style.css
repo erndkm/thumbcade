@@ -1,0 +1,114 @@
+:root {
+  --accent: __ACCENT__;
+  --bg: __BG__;
+  --paper: #f3f0e8;
+}
+
+body {
+  font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+  color: var(--paper);
+  background: var(--bg);
+}
+
+/* The SDK sets --tc-inset-* (current), --tc-preview-inset-* and --tc-play-inset-* on <html>. */
+.stage {
+  position: fixed;
+  inset: 0;
+  display: grid;
+  grid-template-rows: auto 1fr auto auto;
+  align-items: center;
+  justify-items: center;
+  padding:
+    calc(var(--tc-inset-top, 0px) + 24px) calc(var(--tc-inset-right, 0px) + 24px)
+    calc(var(--tc-inset-bottom, 0px) + 32px) calc(var(--tc-inset-left, 0px) + 24px);
+}
+
+.title {
+  text-align: center;
+}
+
+.title h1 {
+  margin: 0;
+  font-size: clamp(28px, 11vw, 52px);
+  font-weight: 900;
+  letter-spacing: -0.02em;
+  color: var(--accent);
+}
+
+.best {
+  margin: 6px 0 0;
+  font-weight: 600;
+  min-height: 1.2em;
+}
+
+.score {
+  font-size: 72px;
+  font-weight: 900;
+  font-variant-numeric: tabular-nums;
+}
+
+.track {
+  position: relative;
+  width: 100%;
+  height: 56px;
+  border-radius: 14px;
+  background: rgba(243, 240, 232, 0.08);
+  overflow: hidden;
+}
+
+.zone {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  background: var(--accent);
+  opacity: 0.85;
+}
+
+.needle {
+  position: absolute;
+  top: -6px;
+  bottom: -6px;
+  width: 4px;
+  margin-left: -2px;
+  background: var(--paper);
+}
+
+.prompt {
+  margin: 24px 0 0;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  animation: pulse 1.4s ease-in-out infinite;
+}
+
+.stage[data-phase="playing"] .title,
+.stage[data-phase="playing"] .prompt,
+.stage[data-phase="over"] .prompt,
+.stage[data-phase="attract"] .score {
+  visibility: hidden;
+}
+
+.stage.paused * {
+  animation-play-state: paused !important;
+}
+
+.shake {
+  animation: shake 0.4s ease-out;
+}
+
+@keyframes pulse {
+  50% {
+    opacity: 0.5;
+  }
+}
+
+@keyframes shake {
+  20%,
+  60% {
+    transform: translateX(-8px);
+  }
+  40%,
+  80% {
+    transform: translateX(8px);
+  }
+}

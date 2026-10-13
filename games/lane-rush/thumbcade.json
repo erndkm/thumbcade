@@ -1,0 +1,18 @@
+{
+  "$schema": "https://thumbcade.com/schema/manifest-v1.json",
+  "id": "lane-rush",
+  "name": "Lane Rush",
+  "version": "1.0.0",
+  "sdk": "^1.0.0",
+  "entry": "index.html",
+  "description": "Three lanes. Zero chill. Swipe to dodge, jump and slide down a sunset viaduct. The cargo will not move for you.",
+  "tags": ["runner", "3d", "reflex", "arcade"],
+  "accentColor": "#FF6A1A",
+  "icon": "assets/icon.png",
+  "ageRating": "4+",
+  "controls": { "vertical": true, "horizontal": true, "multitouch": false, "inputs": ["swipe"] },
+  "session": "short",
+  "audio": true,
+  "orientation": "portrait",
+  "score": { "order": "desc", "max": 1000000, "format": "integer" }
+}

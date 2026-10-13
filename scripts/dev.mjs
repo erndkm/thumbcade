@@ -11,10 +11,11 @@ const args = new Set(process.argv.slice(2));
 const only = [...args].find((a) => a.startsWith("--only="))?.slice("--only=".length).split(",");
 
 const services = [
+  { name: "functions", cmd: ["supabase", "functions", "serve", "--env-file", "supabase/functions/.env"], dir: ".", color: 31 },
   { name: "game-host", dir: "services/game-host", script: "dev", color: 36 },
   { name: "portal", dir: "apps/portal", script: "dev", color: 33 },
   { name: "simulator", dir: "apps/simulator", script: "dev", color: 35 },
-  { name: "reviewer", dir: "services/reviewer", script: "dev", color: 34, skip: args.has("--no-reviewer") },
+  { name: "reviewer", dir: "services/reviewer", script: "worker", color: 34, skip: args.has("--no-reviewer") },
   { name: "metro", dir: "apps/mobile", script: "start", color: 32, skip: args.has("--no-mobile") },
 ];
 
@@ -47,11 +48,17 @@ ensureSupabase();
 const children = [];
 for (const s of services) {
   if (s.skip || (only && !only.includes(s.name))) continue;
-  const pkgPath = resolve(root, s.dir, "package.json");
-  if (!existsSync(pkgPath)) continue;
-  const pkg = JSON.parse(readFileSync(pkgPath, "utf8"));
-  if (!pkg.scripts?.[s.script]) continue;
-  const child = spawn("pnpm", ["run", s.script], {
+  if (!s.cmd) {
+    const pkgPath = resolve(root, s.dir, "package.json");
+    if (!existsSync(pkgPath)) continue;
+    const pkg = JSON.parse(readFileSync(pkgPath, "utf8"));
+    if (!pkg.scripts?.[s.script]) continue;
+  }
+  if (s.name === "functions" && !existsSync(resolve(root, "supabase/functions/.env"))) {
+    execSync("cp supabase/functions/.env.example supabase/functions/.env", { cwd: root });
+  }
+  const [bin, ...binArgs] = s.cmd ?? ["pnpm", "run", s.script];
+  const child = spawn(bin, binArgs, {
     cwd: resolve(root, s.dir),
     env: { ...process.env, FORCE_COLOR: "1", BROWSER: "none", CI: s.name === "metro" ? "" : process.env.CI },
     stdio: ["ignore", "pipe", "pipe"],

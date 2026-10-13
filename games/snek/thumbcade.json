@@ -1,0 +1,18 @@
+{
+  "$schema": "https://thumbcade.com/schema/manifest-v1.json",
+  "id": "snek",
+  "name": "Snek",
+  "version": "1.0.0",
+  "sdk": "^1.0.0",
+  "entry": "index.html",
+  "description": "Swipe to steer a very hungry snek. Eat fast for combos. Don't eat yourself, it's rude.",
+  "tags": ["arcade", "snake", "retro", "reflex"],
+  "accentColor": "#4DFF88",
+  "icon": "assets/icon.png",
+  "ageRating": "4+",
+  "controls": { "vertical": true, "horizontal": true, "multitouch": false, "inputs": ["swipe"] },
+  "session": "short",
+  "audio": true,
+  "orientation": "portrait",
+  "score": { "order": "desc", "max": 1000000, "format": "integer" }
+}

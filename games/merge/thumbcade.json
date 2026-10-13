@@ -1,0 +1,18 @@
+{
+  "$schema": "https://thumbcade.com/schema/manifest-v1.json",
+  "id": "merge",
+  "name": "Merge",
+  "version": "1.0.0",
+  "sdk": "^1.0.0",
+  "entry": "index.html",
+  "description": "Slide, merge, keep the fuse lit. Every merge buys you time. Every dud swipe burns it.",
+  "tags": ["puzzle", "merge", "brain", "numbers"],
+  "accentColor": "#B48CFF",
+  "icon": "assets/icon.png",
+  "ageRating": "4+",
+  "controls": { "vertical": true, "horizontal": true, "multitouch": false, "inputs": ["swipe"] },
+  "session": "short",
+  "audio": true,
+  "orientation": "portrait",
+  "score": { "order": "desc", "max": 10000000, "format": "integer" }
+}

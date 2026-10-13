@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" />
+    <meta name="theme-color" content="#08111D" />
+    <title>Mines</title>
+  </head>
+  <body>
+    <div id="stage">
+      <canvas id="bg"></canvas>
+      <div id="hud">
+        <div class="stat" id="left-wrap"><span class="buoy-mini"></span><span id="left">15</span></div>
+        <div id="score">0</div>
+        <div class="stat" id="time">0:00</div>
+      </div>
+      <div id="board-wrap"><div id="board"></div></div>
+      <canvas id="fx"></canvas>
+      <div id="attract">
+        <div class="title">MINES</div>
+        <div class="sub"><span>Tap to sweep · hold to flag</span></div>
+        <div class="best"><span id="best"></span></div>
+        <div class="prompt"><i></i>TAP TO PLAY<i></i></div>
+      </div>
+      <div id="over"><div class="stamp" id="stamp">CLEAR</div><div class="prompt"><i></i>TAP TO SWEEP AGAIN<i></i></div></div>
+    </div>
+    <script type="module" src="./src/main.ts"></script>
+  </body>
+</html>

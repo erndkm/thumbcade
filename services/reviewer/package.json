@@ -1,0 +1,31 @@
+{
+  "name": "@thumbcade/reviewer",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Automated game review: loads a build in headless Chromium at 390x844 with mid-tier throttling and enforces the budgets and the Swipe Contract.",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "bin": {
+    "thumbcade-reviewer": "./src/cli.ts"
+  },
+  "scripts": {
+    "review": "tsx src/cli.ts review",
+    "shoot": "tsx src/cli.ts shoot",
+    "worker": "tsx src/cli.ts worker",
+    "typecheck": "tsc -p tsconfig.json",
+    "lint": "eslint .",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@thumbcade/protocol": "workspace:*",
+    "@thumbcade/sdk": "workspace:*",
+    "@thumbcade/swipe-contract": "workspace:*",
+    "esbuild": "0.28.2",
+    "fflate": "0.8.3",
+    "playwright": "1.64.0",
+    "sharp": "0.35.5",
+    "@thumbcade/cli": "workspace:*"
+  }
+}

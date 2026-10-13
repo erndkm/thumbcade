@@ -1,0 +1,51 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" width="1024" height="1024">
+  <defs>
+    <radialGradient id="orb" cx="0.38" cy="0.34" r="0.7">
+      <stop offset="0" stop-color="#6E809A"/>
+      <stop offset="1" stop-color="#16202E"/>
+    </radialGradient>
+  </defs>
+  <rect width="1024" height="1024" fill="#08111D"/>
+  <!-- sonar rings -->
+  <g fill="none" stroke="#7CC4FF" stroke-opacity="0.12" stroke-width="6">
+    <circle cx="512" cy="512" r="160"/><circle cx="512" cy="512" r="300"/><circle cx="512" cy="512" r="440"/><circle cx="512" cy="512" r="580"/>
+  </g>
+  <path d="M512 512 L 512 -80 A 592 592 0 0 1 1010 190 Z" fill="#7CC4FF" opacity="0.16"/>
+  <!-- tile grid -->
+  <g>
+    <rect x="96" y="96" width="196" height="196" rx="34" fill="#1A2B42"/>
+    <rect x="316" y="96" width="196" height="196" rx="34" fill="#0D1726"/>
+    <rect x="536" y="96" width="196" height="196" rx="34" fill="#1A2B42"/>
+    <rect x="96" y="316" width="196" height="196" rx="34" fill="#0D1726"/>
+    <rect x="96" y="536" width="196" height="196" rx="34" fill="#0D1726"/>
+    <rect x="96" y="756" width="196" height="196" rx="34" fill="#1A2B42"/>
+    <rect x="316" y="756" width="196" height="196" rx="34" fill="#1A2B42"/>
+    <rect x="756" y="756" width="196" height="196" rx="34" fill="#1A2B42"/>
+    <rect x="756" y="96" width="196" height="196" rx="34" fill="#1A2B42"/>
+  </g>
+  <!-- numbers as pips -->
+  <g fill="#7CC4FF"><rect x="398" y="178" width="32" height="32" rx="6"/></g>
+  <g fill="#5CF2B8"><rect x="160" y="398" width="32" height="32" rx="6"/><rect x="196" y="398" width="32" height="32" rx="6"/></g>
+  <g fill="#FF6FB5"><rect x="146" y="618" width="28" height="28" rx="6"/><rect x="180" y="618" width="28" height="28" rx="6"/><rect x="214" y="618" width="28" height="28" rx="6"/></g>
+  <!-- mine -->
+  <g transform="translate(624 600)">
+    <g fill="#5B6B80">
+      <rect x="-26" y="-250" width="52" height="120" rx="20"/>
+      <rect x="-26" y="130" width="52" height="120" rx="20"/>
+      <rect x="-250" y="-26" width="120" height="52" rx="20"/>
+      <rect x="130" y="-26" width="120" height="52" rx="20"/>
+      <rect x="-26" y="-230" width="52" height="110" rx="20" transform="rotate(45)"/>
+      <rect x="-26" y="120" width="52" height="110" rx="20" transform="rotate(45)"/>
+      <rect x="-26" y="-230" width="52" height="110" rx="20" transform="rotate(-45)"/>
+      <rect x="-26" y="120" width="52" height="110" rx="20" transform="rotate(-45)"/>
+    </g>
+    <circle r="172" fill="url(#orb)"/>
+    <circle r="172" fill="none" stroke="#0D0D10" stroke-width="14"/>
+    <ellipse cx="-62" cy="-66" rx="44" ry="26" fill="#FFFFFF" opacity="0.35" transform="rotate(-35 -62 -66)"/>
+  </g>
+  <!-- buoy flag -->
+  <g transform="translate(854 214)">
+    <path d="M0 -92 L 80 -10 L 56 82 L -56 82 L -80 -10 Z" fill="#7CC4FF"/>
+    <rect x="-34" y="-30" width="68" height="22" rx="6" fill="#08111D"/>
+  </g>
+</svg>

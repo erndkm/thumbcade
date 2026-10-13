@@ -1,0 +1,18 @@
+{
+  "$schema": "https://thumbcade.com/schema/manifest-v1.json",
+  "id": "mines",
+  "name": "Mines",
+  "version": "1.0.0",
+  "sdk": "^1.0.0",
+  "entry": "index.html",
+  "description": "Sonar says 15 mines. Sonar has been wrong before. Tap to sweep, hold to plant a flag, clear the grid fast.",
+  "tags": ["puzzle", "logic", "brain", "classic"],
+  "accentColor": "#7CC4FF",
+  "icon": "assets/icon.png",
+  "ageRating": "4+",
+  "controls": { "vertical": false, "horizontal": false, "multitouch": false, "inputs": ["tap", "longpress"] },
+  "session": "medium",
+  "audio": true,
+  "orientation": "portrait",
+  "score": { "order": "desc", "max": 100000, "format": "integer" }
+}

@@ -10,6 +10,13 @@ import { z } from "zod";
  *     bundle:   application/zip — the built game; thumbcade.json at the zip root
  *     notes:    optional release notes (<= 500 chars)
  *
+ * Failures before anything is stored (bad token, invalid manifest, oversize bundle, slug owned by
+ * someone else, duplicate version) answer HTTP 4xx with `PublishErrorBody` — there is no version and
+ * no review link yet. `auto_failed` is set later by the reviewer callback.
+ *
+ * GET /functions/v1/creator-publish                 -> `CreatorWhoAmI` (token check for `thumbcade login`)
+ * GET /functions/v1/creator-publish?versionId=<id>  -> `VersionStatusResponse` (`thumbcade publish --wait`)
+ *
  * Bundles are stored immutably in the `game-bundles` bucket at `<slug>/<versionId>/<path>`
  * and served from the games origin at `<origin>/<versionId>/<path>` (prod: <slug>.thumbcade.gg,
  * local: game-host at http://<host>:5555/<slug>/<versionId>/<path>).
@@ -27,6 +34,13 @@ export const PublishResponseSchema = z.object({
 });
 export type PublishResponse = z.infer<typeof PublishResponseSchema>;
 
+export const PublishErrorBodySchema = z.object({
+  error: z.enum(["unauthorized", "invalid_manifest", "too_large", "slug_taken", "duplicate_version", "invalid_request", "internal"]).or(z.string()),
+  message: z.string(),
+  issues: z.array(z.string()).optional(),
+});
+export type PublishErrorBody = z.infer<typeof PublishErrorBodySchema>;
+
 export const VersionStatusSchema = z.enum([
   "uploaded",
   "auto_checking",
@@ -37,10 +51,20 @@ export const VersionStatusSchema = z.enum([
 ]);
 export type VersionStatus = z.infer<typeof VersionStatusSchema>;
 
+export const CreatorWhoAmISchema = z.object({
+  handle: z.string(),
+  displayName: z.string(),
+  role: z.enum(["user", "creator", "admin"]),
+  games: z.array(z.object({ slug: z.string(), name: z.string(), status: z.string(), liveVersionId: z.string().nullable() })),
+});
+export type CreatorWhoAmI = z.infer<typeof CreatorWhoAmISchema>;
+
 export const ReviewCheckIdSchema = z.enum([
   "manifest",
   "size",
   "static_scan",
+  /** Runtime requests to other origins (blocked by CSP, recorded by the probe). */
+  "network",
   "loads",
   "ready_budget",
   "tap_starts",
@@ -122,3 +146,14 @@ export const DeviceCodePollResponseSchema = z.union([
 export type DeviceCodePollResponse = z.infer<typeof DeviceCodePollResponseSchema>;
 
 
+
+export const VersionStatusResponseSchema = z.object({
+  versionId: z.string().uuid(),
+  slug: z.string(),
+  semver: z.string(),
+  status: VersionStatusSchema,
+  reviewUrl: z.string().url(),
+  reviewNotes: z.string().nullable(),
+  report: z.object({ passed: z.boolean(), checks: z.array(ReviewCheckSchema.partial({ value: true, budget: true, detail: true })) }).nullable(),
+});
+export type VersionStatusResponse = z.infer<typeof VersionStatusResponseSchema>;

@@ -1,0 +1,19 @@
+{
+  "name": "@thumbcade-games/gambit",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "typecheck": "tsc -p tsconfig.json",
+    "lint": "eslint .",
+    "test": "vitest run",
+    "puzzles": "tsx scripts/generate-puzzles.ts"
+  },
+  "dependencies": {
+    "@thumbcade-games/kit": "workspace:*",
+    "@thumbcade/sdk": "workspace:*",
+    "chess.js": "1.4.0"
+  }
+}

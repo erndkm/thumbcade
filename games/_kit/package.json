@@ -1,0 +1,31 @@
+{
+  "name": "@thumbcade-games/kit",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Shared, tree-shakable helpers for the Thumbcade launch games: session lifecycle, procedural SFX, particles, easing, input, screen shake, fonts.",
+  "exports": {
+    ".": "./src/index.ts",
+    "./vite": "./src/vite.ts",
+    "./*": "./src/*.ts",
+    "./assets/*": "./assets/*"
+  },
+  "scripts": {
+    "typecheck": "tsc -p tsconfig.json",
+    "lint": "eslint .",
+    "test": "vitest run",
+    "fonts": "tsx scripts/fonts.ts"
+  },
+  "dependencies": {
+    "@thumbcade/sdk": "workspace:*"
+  },
+  "devDependencies": {
+    "@thumbcade/protocol": "workspace:*",
+    "@types/subset-font": "2.3.0",
+    "playwright": "1.64.0",
+    "sharp": "0.35.5",
+    "subset-font": "2.9.0",
+    "vite": "8.3.4",
+    "happy-dom": "21.0.1"
+  }
+}

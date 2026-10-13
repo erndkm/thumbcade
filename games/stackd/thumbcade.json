@@ -1,0 +1,35 @@
+{
+  "$schema": "https://thumbcade.com/schema/manifest-v1.json",
+  "id": "stackd",
+  "name": "Stackd",
+  "version": "1.0.0",
+  "sdk": "^1.0.0",
+  "entry": "index.html",
+  "description": "Drop the slab, slice the overhang, build a skyscraper above the city lights. Perfect drops grow it back.",
+  "tags": [
+    "3d",
+    "stacking",
+    "onetap",
+    "chill",
+    "reflex"
+  ],
+  "accentColor": "#3DE0FF",
+  "icon": "assets/icon.png",
+  "ageRating": "4+",
+  "controls": {
+    "vertical": false,
+    "horizontal": false,
+    "multitouch": false,
+    "inputs": [
+      "tap"
+    ]
+  },
+  "session": "medium",
+  "audio": true,
+  "orientation": "portrait",
+  "score": {
+    "order": "desc",
+    "max": 5000,
+    "format": "integer"
+  }
+}

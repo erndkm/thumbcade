@@ -168,10 +168,17 @@ export const SessionEndRequestSchema = z.object({
 });
 export type SessionEndRequest = z.infer<typeof SessionEndRequestSchema>;
 
+/**
+ * Why `session-end` did not accept a score. A rejected score is still a 200 response with
+ * `accepted: false`, so the result card renders either way.
+ */
+export const SessionRejectReasonSchema = z.enum(["guest", "bad_token", "over_max", "invalid_score", "impossible_duration", "already_ended"]);
+export type SessionRejectReason = z.infer<typeof SessionRejectReasonSchema>;
+
 export const SessionEndResponseSchema = z.object({
   accepted: z.boolean(),
-  /** Reason when not accepted (guest, over_max, too_fast, bad_token). */
-  reason: z.string().optional(),
+  /** Present when `accepted` is false. */
+  reason: SessionRejectReasonSchema.optional(),
   best: z.number().nullable(),
   isNewBest: z.boolean(),
   /** Today's percentile of this score among all players (0-100, higher is better). */
@@ -193,3 +200,26 @@ export const ChallengeResolveResponseSchema = z.object({
   score: z.number().nullable(),
 });
 export type ChallengeResolveResponse = z.infer<typeof ChallengeResolveResponseSchema>;
+
+// ---------------------------------------------------------------------------
+// Shares  —  POST /functions/v1/share-create  (members only)
+// ---------------------------------------------------------------------------
+
+export const ShareChannelSchema = z.enum(["link", "challenge", "card", "system"]);
+export type ShareChannel = z.infer<typeof ShareChannelSchema>;
+
+export const ShareCreateRequestSchema = z.object({
+  gameId: z.string().uuid(),
+  channel: ShareChannelSchema,
+  /** Required for `challenge`; must not exceed the game's `score.max`. */
+  score: z.number().finite().nonnegative().optional(),
+});
+export type ShareCreateRequest = z.infer<typeof ShareCreateRequestSchema>;
+
+export const ShareCreateResponseSchema = z.object({
+  code: z.string(),
+  gameUrl: z.string().url(),
+  /** Set for `challenge` shares: `${shareBase}/c/<code>`. */
+  challengeUrl: z.string().url().nullable(),
+});
+export type ShareCreateResponse = z.infer<typeof ShareCreateResponseSchema>;

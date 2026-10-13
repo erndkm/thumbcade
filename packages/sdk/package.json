@@ -1,0 +1,77 @@
+{
+  "name": "@thumbcade/sdk",
+  "version": "1.0.0",
+  "description": "The Thumbcade game SDK: lifecycle, storage, leaderboards and the Swipe Contract for HTML5 games in the Thumbcade feed.",
+  "keywords": [
+    "thumbcade",
+    "html5",
+    "game",
+    "sdk",
+    "webview",
+    "minigame"
+  ],
+  "license": "MIT",
+  "homepage": "https://thumbcade.com/docs/sdk",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/thumbcade/thumbcade.git",
+    "directory": "packages/sdk"
+  },
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts",
+    "./host": "./src/host/index.ts",
+    "./probe": "./src/probe/index.ts",
+    "./package.json": "./package.json"
+  },
+  "publishConfig": {
+    "access": "public",
+    "exports": {
+      ".": {
+        "types": "./dist/index.d.ts",
+        "import": "./dist/index.js"
+      },
+      "./host": {
+        "types": "./dist/host.d.ts",
+        "import": "./dist/host.js"
+      },
+      "./probe": {
+        "types": "./dist/probe.d.ts",
+        "import": "./dist/probe.js"
+      },
+      "./package.json": "./package.json"
+    },
+    "module": "./dist/index.js",
+    "types": "./dist/index.d.ts"
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "sideEffects": true,
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "build": "tsdown",
+    "typecheck": "tsc -p tsconfig.json",
+    "lint": "eslint .",
+    "test": "vitest run"
+  },
+  "peerDependencies": {
+    "zod": "^4.0.0"
+  },
+  "peerDependenciesMeta": {
+    "zod": {
+      "optional": true
+    }
+  },
+  "devDependencies": {
+    "@thumbcade/design-tokens": "workspace:*",
+    "@thumbcade/protocol": "workspace:*",
+    "esbuild": "0.28.2",
+    "happy-dom": "21.0.1",
+    "tsdown": "0.23.1"
+  }
+}

@@ -24,14 +24,15 @@ shared. Never `git commit` unless you are the lead.
 
 | Service | URL |
 |---|---|
-| Supabase API / Functions | http://127.0.0.1:54321 (`/functions/v1/<name>`, served by `supabase start` with hot reload) |
+| Supabase API / Functions | http://127.0.0.1:54321 (`/functions/v1/<name>`; run `supabase functions serve --env-file supabase/functions/.env` — `pnpm dev` does) |
 | Supabase Studio / Mailpit | http://127.0.0.1:54323 / http://127.0.0.1:54324 |
 | Game host (`services/game-host`) | http://127.0.0.1:5555/<slug>/<versionId>/index.html |
 | Portal (`apps/portal`) | http://localhost:3000 |
 | Simulator (`apps/simulator`) | http://localhost:5173 |
 | Metro (`apps/mobile`) | http://localhost:8081 |
 
-Android emulator reaches the host at `10.0.2.2` — the mobile app rewrites local hosts in dev.
+Android emulator reaches the host at `10.0.2.2` — the mobile app rewrites local hosts in dev. Start the emulator with
+`-port 5562` (the default ADB port 5555 collides with the game host).
 iOS: Xcode 27 / iOS 27 simulators (`xcrun simctl list`). Android AVD: `thumbcade_pixel`. Maestro is installed.
 
 ## Ownership

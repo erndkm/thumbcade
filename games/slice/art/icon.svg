@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" width="1024" height="1024">
+  <defs>
+    <radialGradient id="glow" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0" stop-color="#FF3D6E" stop-opacity="0.45"/>
+      <stop offset="1" stop-color="#FF3D6E" stop-opacity="0"/>
+    </radialGradient>
+    <clipPath id="top"><polygon points="-200,-200 1224,-200 1224,250 -200,1060"/></clipPath>
+    <clipPath id="bot"><polygon points="-200,1110 1224,300 1224,1224 -200,1224"/></clipPath>
+  </defs>
+  <rect width="1024" height="1024" fill="#0C0912"/>
+  <g fill="#F3F0E8" opacity="0.07">
+    <rect x="96" y="96" width="8" height="8"/><rect x="224" y="96" width="8" height="8"/><rect x="352" y="96" width="8" height="8"/>
+    <rect x="96" y="224" width="8" height="8"/><rect x="96" y="352" width="8" height="8"/><rect x="928" y="928" width="8" height="8"/>
+    <rect x="800" y="928" width="8" height="8"/><rect x="928" y="800" width="8" height="8"/><rect x="672" y="928" width="8" height="8"/>
+  </g>
+  <circle cx="512" cy="540" r="460" fill="url(#glow)"/>
+  <!-- upper half (shifted up-left) -->
+  <g clip-path="url(#top)" transform="translate(-34 -40) rotate(-6 512 540)">
+    <polygon points="512,190 815,365 815,715 512,890 209,715 209,365" fill="#145C46" stroke="#2BFFB1" stroke-width="34" stroke-linejoin="round"/>
+    <polygon points="512,260 754,400 754,680 512,820 270,680 270,400" fill="#FF7FA8"/>
+    <g fill="#16121F"><ellipse cx="400" cy="470" rx="16" ry="26"/><ellipse cx="520" cy="400" rx="16" ry="26"/><ellipse cx="610" cy="330" rx="16" ry="26" transform="rotate(20 610 330)"/><ellipse cx="330" cy="600" rx="16" ry="26"/></g>
+  </g>
+  <!-- lower half (shifted down-right) -->
+  <g clip-path="url(#bot)" transform="translate(34 40) rotate(6 512 540)">
+    <polygon points="512,190 815,365 815,715 512,890 209,715 209,365" fill="#145C46" stroke="#2BFFB1" stroke-width="34" stroke-linejoin="round"/>
+    <polygon points="512,260 754,400 754,680 512,820 270,680 270,400" fill="#FF7FA8"/>
+    <g fill="#16121F"><ellipse cx="640" cy="640" rx="16" ry="26"/><ellipse cx="520" cy="740" rx="16" ry="26"/><ellipse cx="700" cy="520" rx="16" ry="26"/></g>
+  </g>
+  <!-- blade streak -->
+  <polygon points="40,1040 1000,240 1010,262 70,1060" fill="#FF3D6E"/>
+  <polygon points="150,960 990,250 996,262 166,972" fill="#FFFFFF"/>
+  <!-- juice -->
+  <g fill="#FF7FA8">
+    <circle cx="760" cy="230" r="22"/><circle cx="830" cy="170" r="14"/><circle cx="700" cy="160" r="10"/>
+    <circle cx="250" cy="880" r="18"/><circle cx="180" cy="820" r="12"/><circle cx="870" cy="330" r="10"/>
+  </g>
+</svg>

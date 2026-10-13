@@ -1,0 +1,82 @@
+{
+  "name": "@thumbcade/cli",
+  "version": "1.0.0",
+  "description": "The thumbcade CLI: dev (feed simulator + HMR), dev --device, validate, login, publish.",
+  "keywords": [
+    "thumbcade",
+    "cli",
+    "html5",
+    "game",
+    "publish"
+  ],
+  "license": "MIT",
+  "homepage": "https://thumbcade.com/docs/cli",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/thumbcade/thumbcade.git",
+    "directory": "packages/cli"
+  },
+  "type": "module",
+  "bin": {
+    "thumbcade": "./bin/thumbcade.js"
+  },
+  "exports": {
+    ".": "./src/index.ts",
+    "./checks": "./src/checks/index.ts",
+    "./vite": {
+      "types": "./types/vite.d.ts",
+      "default": "./dist/vite.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "publishConfig": {
+    "access": "public",
+    "exports": {
+      ".": {
+        "import": "./dist/index.js"
+      },
+      "./checks": {
+        "import": "./dist/checks.js"
+      },
+      "./vite": {
+        "types": "./types/vite.d.ts",
+        "import": "./dist/vite.js"
+      },
+      "./package.json": "./package.json"
+    }
+  },
+  "files": [
+    "bin",
+    "dist",
+    "types",
+    "README.md",
+    "LICENSE"
+  ],
+  "engines": {
+    "node": ">=20.12"
+  },
+  "scripts": {
+    "build": "tsdown && tsx scripts/copy-simulator.ts",
+    "typecheck": "tsc -p tsconfig.json",
+    "lint": "eslint .",
+    "test": "vitest run",
+    "dev-token": "tsx scripts/dev-token.ts"
+  },
+  "peerDependencies": {
+    "vite": ">=6"
+  },
+  "dependencies": {
+    "fflate": "0.8.3",
+    "qrcode": "1.5.4",
+    "zod": "4.6.7"
+  },
+  "devDependencies": {
+    "@thumbcade/protocol": "workspace:*",
+    "@thumbcade/sdk": "workspace:*",
+    "@types/qrcode": "1.5.6",
+    "playwright": "1.64.0",
+    "tsdown": "0.23.1",
+    "vite": "8.3.4",
+    "@thumbcade/simulator": "workspace:*"
+  }
+}

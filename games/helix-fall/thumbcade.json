@@ -1,0 +1,34 @@
+{
+  "$schema": "https://thumbcade.com/schema/manifest-v1.json",
+  "id": "helix-fall",
+  "name": "Helix Fall",
+  "version": "1.0.0",
+  "sdk": "^1.0.0",
+  "entry": "index.html",
+  "description": "Spin the tower, drop the ball, mind the red. Three gaps in a row smash anything. The heat is right behind you.",
+  "tags": [
+    "3d",
+    "arcade",
+    "reflex",
+    "chill"
+  ],
+  "accentColor": "#FFE14D",
+  "icon": "assets/icon.png",
+  "ageRating": "4+",
+  "controls": {
+    "vertical": false,
+    "horizontal": true,
+    "multitouch": false,
+    "inputs": [
+      "drag"
+    ]
+  },
+  "session": "short",
+  "audio": true,
+  "orientation": "portrait",
+  "score": {
+    "order": "desc",
+    "max": 1000000,
+    "format": "integer"
+  }
+}
