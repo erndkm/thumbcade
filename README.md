@@ -12,9 +12,17 @@ Requirements: Node 22+, pnpm 12, Docker (or Colima), the Supabase CLI. For the a
 bash scripts/safe-install.sh   # pnpm install, serialized
 pnpm games:build                # build the launch games → dist/games
 pnpm dev                        # Supabase, game host, portal, simulator, reviewer, Metro
-pnpm seed                       # load games, creators, players, comments, scores
-# press i in the Metro pane for the iOS Simulator (Expo Go), or open http://localhost:3000
+pnpm seed                       # in a second terminal: games, creators, players, comments, scores
 ```
+
+Open http://localhost:3000 for the portal and web player. To open the app in Expo Go on a booted iOS Simulator,
+run `xcrun simctl openurl booted exp://127.0.0.1:8081`. On Android, run `adb reverse tcp:8081 tcp:8081`, then open
+`exp://127.0.0.1:8081` in Expo Go. `pnpm dev` runs Metro headless. For Expo's interactive keys (`i`, `a`, `r`),
+run `pnpm dev --no-mobile` and `pnpm --filter @thumbcade/mobile start` in a second terminal. The first time,
+`pnpm --filter @thumbcade/mobile ios` (or `android`) installs Expo Go on the simulator.
+
+The seed includes a demo member, `demo@thumbcade.dev` (password `thumbcade-demo`, local only). In the app, the
+hidden developer menu (Settings → About, tap the version row seven times) has a button that signs in as it.
 
 `source scripts/env.sh` first if your Xcode / Android SDK aren't on the default paths.
 
@@ -50,5 +58,42 @@ Read `THUMBCADE_BUILD_PROMPT.md` for the full product spec, `docs/ARCHITECTURE.m
 ## Checks
 
 ```bash
-pnpm typecheck && pnpm lint && pnpm test
+pnpm typecheck && pnpm lint && pnpm test           # every workspace (unit, component, integration)
+pnpm exec tsx scripts/e2e-creator-loop.ts           # scaffold → publish → review → approve → in a guest's feed
+cd apps/mobile
+bash maestro/run.sh ios                             # 8 device flows (Swipe Contract, social, auth, deletion)
+bash maestro/run.sh android                         # same on the AVD (start it with -port 5562)
+bash maestro/perf/soak.sh                           # 100-swipe memory soak → docs/PERF.md
+npx expo export --platform ios --platform android   # production bundles
 ```
+
+The Maestro flows and the soak need the local stack (`pnpm dev`) and a seeded database (`pnpm seed`).
+`docs/handoff/A.md` and `docs/handoff/B.md` have the details for each half.
+
+## Going to production
+
+Everything above runs locally with no accounts. Shipping needs a person with these credentials:
+
+1. **Domains:** buy `thumbcade.com` (app, portal, share links) and `thumbcade.gg` (game origins). Both were available
+   at naming time.
+2. **Supabase:** create the cloud project, `supabase link`, `supabase db push`, `supabase config push`, then
+   `supabase functions deploy` and `supabase secrets set` with the keys in `supabase/functions/.env.example`
+   (`SESSION_SIGNING_SECRET` of at least 16 random characters, `GAME_HOST_BASE`, `PORTAL_URL`, `CORS_ORIGINS`,
+   `SUPABASE_PUBLIC_URL`, `EXPO_ACCESS_TOKEN`). Keep `[auth.email] enable_confirmations = true`.
+3. **Game hosting:** a Cloudflare R2 bucket behind wildcard DNS for `*.thumbcade.gg`, so every game gets its own
+   origin, with the CSP from `services/game-host` set as a response-header rule. Point `GAME_HOST_BASE` (functions)
+   and `NEXT_PUBLIC_GAME_HOST` (portal) at it.
+4. **Reviewer:** run `services/reviewer` as a worker on a host with a GPU (WebGL budgets) and the service-role key.
+5. **Portal:** deploy `apps/portal` to any Node host and set the env from `apps/portal/.env.example`. Serve
+   `/.well-known/apple-app-site-association` and `/.well-known/assetlinks.json` for Universal and App Links.
+6. **App:** create the EAS project and add `extra.eas.projectId`, then set up APNs and FCM credentials, the Apple
+   Services ID and key, and Google OAuth client IDs (turn on `EXPO_PUBLIC_AUTH_APPLE_ENABLED` /
+   `EXPO_PUBLIC_AUTH_GOOGLE_ENABLED`). Then `eas build` and `eas submit`. Listing copy, age rating, privacy labels
+   and App Review notes are in `docs/STORE.md`.
+7. **Platform programs:** apply to Apple's Mini Apps Partner Program (HTML5 games loaded at runtime, App Review
+   guideline 4.7) and file the Thumbcade trademark.
+8. **npm:** publish `@thumbcade/sdk`, `@thumbcade/cli` and `create-thumbcade-game` under the org with
+   `pnpm --filter <pkg> publish`, not `npm publish`. Only pnpm applies `publishConfig.exports`, which points
+   at `dist/`.
+
+`docs/GAPS.md` lists everything that could not be verified without these.

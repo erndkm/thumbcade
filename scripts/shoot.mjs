@@ -12,7 +12,9 @@ const page = await browser.newPage({ ...(process.env.STATE ? { storageState: pro
 const errors = [];
 page.on("pageerror", (e) => errors.push(String(e)));
 page.on("console", (m) => m.type() === "error" && errors.push(m.text()));
-await page.goto(url, { waitUntil: "networkidle" });
+await page.goto(url, { waitUntil: "load" });
+// Pages with live game iframes may never go fully idle; settle for a quiet moment when there is one.
+await page.waitForLoadState("networkidle", { timeout: 15000 }).catch(() => {});
 await page.waitForTimeout(Number(wait));
 await page.screenshot({ path: out, fullPage: full === "1" });
 await browser.close();

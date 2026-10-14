@@ -1,4 +1,4 @@
-// Copies generated brand assets from @thumbcade/design-tokens into the portal (run before dev/build).
+// Copies generated brand assets and font licenses from @thumbcade/design-tokens into the portal (run before dev/build).
 import { copyFileSync, mkdirSync } from "node:fs";
 import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -14,4 +14,8 @@ for (const f of ["mark.svg", "lockup.svg", "wordmark.svg", "wordmark-ink.svg", "
 copyFileSync(resolve(brand, "favicon.svg"), resolve(app, "icon.svg"));
 copyFileSync(resolve(brand, "favicon-180.png"), resolve(app, "apple-icon.png"));
 copyFileSync(resolve(brand, "og-default-1200.png"), resolve(app, "opengraph-image.png"));
+// The OFL requires the license text to travel with the fonts we serve.
+const licenses = resolve(here, "../public/licenses");
+mkdirSync(licenses, { recursive: true });
+for (const f of ["OFL-MonaSans.txt", "OFL-DepartureMono.txt"]) copyFileSync(resolve(brand, "../fonts", f), resolve(licenses, f));
 console.log("brand assets copied");

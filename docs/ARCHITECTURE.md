@@ -56,3 +56,8 @@ place (`profiles.is_guest` flips via trigger). RLS: social writes require `publi
 - Privileged columns (roles, counters, game status, live version) are protected by triggers; only the service
   role, admins, nested counter triggers and `enter_trusted()` RPCs may change them.
 - Creator API tokens are stored hashed; clients cannot select `token_hash`.
+- Scores are only ranked through server-issued play sessions: `session-start` signs an HMAC token,
+  `session-end` checks it against the caller, the manifest's `score.max` and the server clock. Challenge links
+  can only carry a score at or below the caller's verified best.
+- Client analytics (`events`) are capped per user per minute, because trending and ranking signals roll up
+  from them. Public play counts come from server sessions, not from events.

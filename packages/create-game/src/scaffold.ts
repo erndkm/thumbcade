@@ -13,8 +13,12 @@ export interface ScaffoldOptions {
   template: TemplateId;
   controls: ControlStyle;
   accent: string;
-  /** Use local checkouts of @thumbcade/sdk and @thumbcade/cli (monorepo development, e2e tests). */
-  local?: { sdk: string; cli: string };
+  /**
+   * Use local checkouts of @thumbcade/sdk and @thumbcade/cli (monorepo development, e2e tests). pnpm copies
+   * `file:` directories with only their published files (no `src/`, which the in-repo exports point at),
+   * so it gets `link:`; npm, yarn and bun symlink `file:` directories.
+   */
+  local?: { sdk: string; cli: string; protocol: "file" | "link" };
 }
 
 const TEXT = new Set([".ts", ".tsx", ".js", ".json", ".html", ".css", ".md", ""]);
@@ -50,8 +54,8 @@ export async function scaffold(o: ScaffoldOptions): Promise<string[]> {
   await copyTree(join(templatesDir, "_base"), o.dir, tokens);
   await copyTree(join(templatesDir, o.template), o.dir, tokens);
 
-  const sdk = o.local ? `file:${o.local.sdk}` : VERSIONS.sdk;
-  const cli = o.local ? `file:${o.local.cli}` : VERSIONS.cli;
+  const sdk = o.local ? `${o.local.protocol}:${o.local.sdk}` : VERSIONS.sdk;
+  const cli = o.local ? `${o.local.protocol}:${o.local.cli}` : VERSIONS.cli;
   const pkg = {
     name: o.slug,
     private: true,

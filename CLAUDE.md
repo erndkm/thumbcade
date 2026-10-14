@@ -15,7 +15,12 @@ pnpm --filter <pkg> <script>                               # one package
 supabase status -o env                # local keys/URLs (stack runs in Docker via Colima)
 supabase migration up                 # apply NEW migrations without wiping data
 pnpm games:build && pnpm seed         # build launch games, seed local DB + storage
+pnpm dev                              # whole platform; Metro runs headless (xcrun simctl openurl booted exp://127.0.0.1:8081)
+pnpm exec tsx scripts/e2e-creator-loop.ts            # creator loop end to end
+cd apps/mobile && bash maestro/run.sh ios|android    # device flows; bash maestro/perf/soak.sh for the memory soak
 ```
+
+Local auth requires email confirmation like production: sign-in and guest-upgrade codes arrive in Mailpit.
 
 Never run `supabase db reset` or `supabase stop` while other agents are working — the local stack is
 shared. Never `git commit` unless you are the lead.
@@ -32,7 +37,8 @@ shared. Never `git commit` unless you are the lead.
 | Metro (`apps/mobile`) | http://localhost:8081 |
 
 Android emulator reaches the host at `10.0.2.2` — the mobile app rewrites local hosts in dev. Start the emulator with
-`-port 5562` (the default ADB port 5555 collides with the game host).
+`-port 5562` (the default ADB port 5555 collides with the game host) and `-gpu host` (software rendering makes the
+WebGL games crawl): `emulator -avd thumbcade_pixel -port 5562 -no-window -no-audio -no-snapshot -memory 4096 -gpu host &`.
 iOS: Xcode 27 / iOS 27 simulators (`xcrun simctl list`). Android AVD: `thumbcade_pixel`. Maestro is installed.
 
 ## Ownership

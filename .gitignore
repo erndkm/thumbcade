@@ -11,8 +11,7 @@ coverage/
 .env.local
 .env.*.local
 !.env.example
-ios/
-android/
+# Expo prebuild output (a bare ios/ would also hide docs/screenshots/mobile/ios)
 apps/mobile/ios/
 apps/mobile/android/
 .setup-logs/
@@ -24,6 +23,7 @@ test-results/
 *.tsbuildinfo
 .pnpm-install.lock/
 apps/portal/public/brand/
+apps/portal/public/licenses/
 apps/portal/src/app/icon.svg
 apps/portal/src/app/apple-icon.png
 apps/portal/src/app/opengraph-image.png

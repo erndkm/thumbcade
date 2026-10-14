@@ -104,7 +104,10 @@ export async function main(argv = process.argv.slice(2)): Promise<number> {
 
   const slug = slugify(positionals[0] ? basename(positionals[0]) : name);
   const dir = resolve(positionals[0] ?? slug);
-  const local = values.local ? { sdk: resolve(values.local, "packages/sdk"), cli: resolve(values.local, "packages/cli") } : undefined;
+  const pm = packageManager();
+  const local = values.local
+    ? { sdk: resolve(values.local, "packages/sdk"), cli: resolve(values.local, "packages/cli"), protocol: pm === "pnpm" ? ("link" as const) : ("file" as const) }
+    : undefined;
 
   const spin = interactive ? p.spinner() : null;
   spin?.start("Drawing your icon and poster");
@@ -118,7 +121,6 @@ export async function main(argv = process.argv.slice(2)): Promise<number> {
   spin?.stop(`${name} is ready in ${c("cyan", relative(process.cwd(), dir) || ".")}`);
   if (!interactive) console.log(`Created ${name} (${TEMPLATES[template].label}) in ${dir}`);
 
-  const pm = packageManager();
   let installed = false;
   if (!values["no-install"]) {
     if (interactive) p.log.step(`Installing with ${pm}…`);

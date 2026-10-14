@@ -1,6 +1,8 @@
 // `pnpm dev` — brings up the whole local platform with prefixed logs:
 //   Supabase (Docker via Colima) · game host :5555 · portal :3000 · simulator :5173 · reviewer · Metro :8081
 // Flags: --no-mobile (skip Metro), --no-reviewer, --only=portal,game-host,...
+// Metro runs headless here (its output is prefixed, so Expo's keyboard shortcuts are off). For the
+// interactive Expo CLI, run `pnpm dev --no-mobile` and `pnpm --filter @thumbcade/mobile start` side by side.
 import { execSync, spawn } from "node:child_process";
 import { existsSync, readFileSync } from "node:fs";
 import { dirname, resolve } from "node:path";
@@ -60,7 +62,7 @@ for (const s of services) {
   const [bin, ...binArgs] = s.cmd ?? ["pnpm", "run", s.script];
   const child = spawn(bin, binArgs, {
     cwd: resolve(root, s.dir),
-    env: { ...process.env, FORCE_COLOR: "1", BROWSER: "none", CI: s.name === "metro" ? "" : process.env.CI },
+    env: { ...process.env, FORCE_COLOR: "1", BROWSER: "none" },
     stdio: ["ignore", "pipe", "pipe"],
   });
   children.push(child);
@@ -76,9 +78,22 @@ for (const s of services) {
   child.on("exit", (code) => log(s.name, s.color, `exited with ${code}`));
 }
 
+// SIGINT is what Ctrl+C sends; the Supabase CLI ignores SIGTERM. Anything still alive after 5 s is killed.
+let stopping = false;
 const stop = () => {
-  for (const c of children) c.kill("SIGTERM");
-  process.exit(0);
+  if (stopping) return;
+  stopping = true;
+  const alive = children.filter((c) => c.exitCode === null && c.signalCode === null);
+  if (alive.length === 0) process.exit(0);
+  let left = alive.length;
+  for (const c of alive) {
+    c.once("exit", () => --left === 0 && process.exit(0));
+    c.kill("SIGINT");
+  }
+  setTimeout(() => {
+    for (const c of alive) if (c.exitCode === null && c.signalCode === null) c.kill("SIGKILL");
+    process.exit(0);
+  }, 5000).unref();
 };
 process.on("SIGINT", stop);
 process.on("SIGTERM", stop);

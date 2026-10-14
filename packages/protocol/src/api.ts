@@ -211,7 +211,10 @@ export type ShareChannel = z.infer<typeof ShareChannelSchema>;
 export const ShareCreateRequestSchema = z.object({
   gameId: z.string().uuid(),
   channel: ShareChannelSchema,
-  /** Required for `challenge`; must not exceed the game's `score.max`. */
+  /**
+   * Required for `challenge`. Must not exceed the game's `score.max` (400 `over_max`) or beat the caller's
+   * verified best for the game (400 `unverified_score`).
+   */
   score: z.number().finite().nonnegative().optional(),
 });
 export type ShareCreateRequest = z.infer<typeof ShareCreateRequestSchema>;

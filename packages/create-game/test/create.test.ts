@@ -78,11 +78,19 @@ describe("scaffold", () => {
 
   it("links local checkouts with --local", async () => {
     const dir = join(await mkdtemp(join(tmpdir(), "tc-create-")), "linked");
-    await scaffold({ dir, name: "Linked", slug: "linked", template: "canvas", controls: "vertical", accent: "#FF6A1A", local: { sdk: "/repo/packages/sdk", cli: "/repo/packages/cli" } });
+    await scaffold({ dir, name: "Linked", slug: "linked", template: "canvas", controls: "vertical", accent: "#FF6A1A", local: { sdk: "/repo/packages/sdk", cli: "/repo/packages/cli", protocol: "file" } });
     const pkg = JSON.parse(await readFile(join(dir, "package.json"), "utf8"));
     expect(pkg.dependencies["@thumbcade/sdk"]).toBe("file:/repo/packages/sdk");
     const manifest = JSON.parse(await readFile(join(dir, "thumbcade.json"), "utf8"));
     expect(manifest.controls.vertical).toBe(true);
+  });
+
+  it("uses link: for local checkouts under pnpm (file: would copy the package without its sources)", async () => {
+    const dir = join(await mkdtemp(join(tmpdir(), "tc-create-")), "linked-pnpm");
+    await scaffold({ dir, name: "Linked", slug: "linked", template: "canvas", controls: "tap", accent: "#FF6A1A", local: { sdk: "/repo/packages/sdk", cli: "/repo/packages/cli", protocol: "link" } });
+    const pkg = JSON.parse(await readFile(join(dir, "package.json"), "utf8"));
+    expect(pkg.dependencies["@thumbcade/sdk"]).toBe("link:/repo/packages/sdk");
+    expect(pkg.devDependencies["@thumbcade/cli"]).toBe("link:/repo/packages/cli");
   });
 });
 
