@@ -1,0 +1,25 @@
+# A vertical swipe in PREVIEW belongs to the feed: the next card becomes active.
+appId: ${APP_ID}
+name: Swipe in preview
+---
+- stopApp
+- runFlow:
+    file: shared/open.yaml
+    env:
+      DEEPLINK: ""
+- runFlow: shared/wait-preview.yaml
+- copyTextFrom:
+    id: "caption-name"
+- evalScript: ${output.first = maestro.copiedText}
+- swipe:
+    start: 40%, 62%
+    end: 40%, 18%
+    duration: 350
+- extendedWaitUntil:
+    visible: ".*, (preview|loading)"
+    timeout: 10000
+- runFlow: shared/wait-preview.yaml
+- copyTextFrom:
+    id: "caption-name"
+- assertTrue: ${maestro.copiedText != output.first}
+- takeScreenshot: 02-next-card

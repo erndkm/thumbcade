@@ -1,0 +1,10 @@
+# Waits until the active card is live (game called ready()) with the full overlay.
+appId: ${APP_ID}
+---
+- extendedWaitUntil:
+    visible:
+      id: "action-rail"
+    timeout: 90000
+- extendedWaitUntil:
+    visible: ".*, preview"
+    timeout: 30000

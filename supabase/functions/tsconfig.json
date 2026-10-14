@@ -1,0 +1,23 @@
+{
+  "//": "Type-checks the Player Platform edge functions with tsc (run by `pnpm --filter @thumbcade/scripts typecheck`). Deno globals come from _shared/deno-env.d.ts; zod and supabase-js resolve from the workspace node_modules. creator-* functions are owned and checked by the Creator & Games stream.",
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "types": [],
+    "lib": [
+      "ES2023",
+      "DOM",
+      "DOM.Iterable"
+    ]
+  },
+  "include": [
+    "feed/index.ts",
+    "events/index.ts",
+    "session-start/index.ts",
+    "session-end/index.ts",
+    "challenge-resolve/index.ts",
+    "share-create/index.ts",
+    "account-delete/index.ts",
+    "notify/index.ts",
+    "_shared/*.ts"
+  ]
+}

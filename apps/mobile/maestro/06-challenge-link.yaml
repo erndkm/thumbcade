@@ -1,0 +1,20 @@
+# A challenge link opens its game first, with the challenge passed to the game.
+appId: ${APP_ID}
+name: Challenge link opens its game
+---
+- runScript:
+    file: scripts/challenge.js
+    env:
+      ANON_KEY: ${ANON_KEY}
+- stopApp
+- runFlow:
+    file: shared/open.yaml
+    env:
+      DEEPLINK: c/${output.code}
+- extendedWaitUntil:
+    visible:
+      id: "active-${output.gameSlug}"
+    timeout: 30000
+- runFlow: shared/wait-preview.yaml
+- assertVisible: "${output.gameName}, preview"
+- takeScreenshot: 06-challenge

@@ -1,0 +1,26 @@
+# Cold start -> a game is playing (Swipe Contract: LOADING -> PREVIEW -> PLAYING on a tap).
+appId: ${APP_ID}
+name: Cold start to a playing game
+---
+- stopApp
+- runFlow:
+    file: shared/open.yaml
+    env:
+      DEEPLINK: ""
+- runFlow: shared/wait-preview.yaml
+- assertVisible:
+    id: "tabbar"
+- tapOn:
+    point: 40%, 42%
+# ENDED and PAUSED are only reachable through PLAYING: short runs can end before the next poll, and on the
+# slow headless emulator a poll can take long enough for the 20 s idle pause to kick in.
+- extendedWaitUntil:
+    visible: ".*, (playing|ended|paused)"
+    timeout: 20000
+- runFlow:
+    when:
+      visible: ".*, playing"
+    commands:
+      - assertVisible:
+          id: "dock"
+- takeScreenshot: 01-playing

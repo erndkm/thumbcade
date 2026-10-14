@@ -1,0 +1,110 @@
+{
+  "generatedAt": "2026-10-13T19:49:16.387Z",
+  "games": [
+    {
+      "manifest": {
+        "$schema": "https://thumbcade.com/schema/manifest-v1.json",
+        "id": "fixture-tap",
+        "name": "Pulse Ring",
+        "version": "1.0.0",
+        "sdk": "^1.0.0",
+        "entry": "index.html",
+        "description": "Tap when the pulse kisses the ring. Perfect hits stack your combo. Three misses and you're out.",
+        "tags": [
+          "reflex",
+          "onetap",
+          "rhythm"
+        ],
+        "accentColor": "#3DFFB0",
+        "icon": "assets/icon.png",
+        "poster": "assets/poster.jpg",
+        "ageRating": "4+",
+        "controls": {
+          "vertical": false,
+          "horizontal": false,
+          "multitouch": false,
+          "inputs": [
+            "tap"
+          ]
+        },
+        "session": "short",
+        "audio": true,
+        "orientation": "portrait",
+        "score": {
+          "order": "desc",
+          "max": 100000,
+          "format": "integer"
+        }
+      },
+      "bundleDir": "tap-game",
+      "files": [
+        "assets/icon.png",
+        "assets/poster.jpg",
+        "bridge.js",
+        "game.js",
+        "index.html",
+        "kit.js",
+        "thumbcade.json"
+      ],
+      "icon": "tap-game/assets/icon.png",
+      "poster": "tap-game/assets/poster.jpg",
+      "sizeBytes": 143570,
+      "gzipBytes": 110545,
+      "creatorHandle": "pixelwitch",
+      "notes": "First pulse. Perfect-hit combos, three lives, procedural blips."
+    },
+    {
+      "manifest": {
+        "$schema": "https://thumbcade.com/schema/manifest-v1.json",
+        "id": "fixture-swipe",
+        "name": "Lane Flip",
+        "version": "1.0.0",
+        "sdk": "^1.0.0",
+        "entry": "index.html",
+        "description": "Three lanes, one thumb. Swipe up or down to flip lanes, grab sparks, dodge the walls.",
+        "tags": [
+          "arcade",
+          "runner",
+          "swipe"
+        ],
+        "accentColor": "#FFB547",
+        "icon": "assets/icon.png",
+        "poster": "assets/poster.jpg",
+        "ageRating": "4+",
+        "controls": {
+          "vertical": true,
+          "horizontal": false,
+          "multitouch": false,
+          "inputs": [
+            "swipe",
+            "tap"
+          ]
+        },
+        "session": "short",
+        "audio": true,
+        "orientation": "portrait",
+        "score": {
+          "order": "desc",
+          "max": 1000000,
+          "format": "integer"
+        }
+      },
+      "bundleDir": "swipe-game",
+      "files": [
+        "assets/icon.png",
+        "assets/poster.jpg",
+        "bridge.js",
+        "game.js",
+        "index.html",
+        "kit.js",
+        "thumbcade.json"
+      ],
+      "icon": "swipe-game/assets/icon.png",
+      "poster": "swipe-game/assets/poster.jpg",
+      "sizeBytes": 78656,
+      "gzipBytes": 34416,
+      "creatorHandle": "juicefactory",
+      "notes": "Three lanes, sparks, walls, and a speed curve that keeps climbing."
+    }
+  ]
+}

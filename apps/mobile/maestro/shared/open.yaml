@@ -1,0 +1,51 @@
+# Opens the app in Expo Go at ${DEEPLINK} (default: home), dismisses Expo Go's one-time developer
+# menu onboarding and finishes Thumbcade onboarding if it shows up.
+appId: ${APP_ID}
+---
+# Android: an openLink straight after stopApp can land on the launcher; start Expo Go first.
+- launchApp:
+    stopApp: false
+- openLink: exp://127.0.0.1:8081/--/${DEEPLINK}
+- extendedWaitUntil:
+    visible: "Continue|What year were you born\\?|For You|Developer"
+    timeout: 60000
+- runFlow:
+    when:
+      visible: "Continue"
+    commands:
+      - tapOn: "Continue"
+- waitForAnimationToEnd:
+    timeout: 3000
+- runFlow:
+    when:
+      visible: "Toggle performance monitor"
+    commands:
+      - tapOn: "Close"
+- runFlow:
+    when:
+      visible: "What year were you born?"
+    commands:
+      - tapOn:
+          id: "age-digits"
+      - inputText: "1996"
+      - tapOn:
+          id: "age-continue"
+      - extendedWaitUntil:
+          visible:
+            id: "interests-go"
+          timeout: 15000
+      # "Start playing" rather than "Skip": Expo Go's floating dev button covers Skip on Android.
+      - tapOn:
+          id: "interests-go"
+- runFlow:
+    when:
+      visible: "Toggle performance monitor"
+    commands:
+      - tapOn: "Close"
+- runFlow:
+    when:
+      visible:
+        id: "top-foryou"
+    commands:
+      - tapOn:
+          id: "top-foryou"

@@ -1,0 +1,28 @@
+# Signs out if a member session is active (Settings -> Sign out), leaving a fresh guest on Home.
+appId: ${APP_ID}
+---
+- openLink: exp://127.0.0.1:8081/--/settings
+- extendedWaitUntil:
+    visible:
+      id: "settings"
+    timeout: 20000
+- scrollUntilVisible:
+    element:
+      id: "version-row"
+    direction: DOWN
+- runFlow:
+    when:
+      visible: "Sign out"
+    commands:
+      - tapOn: "Sign out"
+      - extendedWaitUntil:
+          notVisible:
+            id: "settings"
+          timeout: 15000
+- runFlow:
+    when:
+      visible:
+        id: "settings"
+    commands:
+      - tapOn:
+          id: "header-back"

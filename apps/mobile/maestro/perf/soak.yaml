@@ -1,0 +1,60 @@
+# Performance soak: 100 feed swipes. Every round swipes away a card in PREVIEW, then starts the next
+# game and leaves it from PLAYING via the Dock (or from ENDED via the surface if the run already ended).
+# Run through soak.sh, which samples Expo Go and WebKit memory while this runs.
+appId: ${APP_ID}
+name: Perf soak (100 swipes)
+---
+- stopApp
+- runFlow:
+    file: ../shared/open.yaml
+    env:
+      DEEPLINK: ""
+- runFlow: ../shared/wait-preview.yaml
+- repeat:
+    times: 50
+    commands:
+      # 1. PREVIEW: a surface swipe moves the feed.
+      - swipe:
+          start: 40%, 62%
+          end: 40%, 18%
+          duration: 250
+      - extendedWaitUntil:
+          visible: ".*, (preview|loading)"
+          timeout: 10000
+      - extendedWaitUntil:
+          visible: ".*, preview"
+          timeout: 30000
+      # 2. PLAYING: tap to start, play for a moment, leave via the Dock.
+      - tapOn:
+          point: 40%, 42%
+      - waitForAnimationToEnd:
+          timeout: 1500
+      - evalScript: ${output.left = false}
+      - runFlow:
+          when:
+            visible:
+              id: "dock"
+          commands:
+            - swipe:
+                from:
+                  id: "dock"
+                direction: UP
+                duration: 250
+            - evalScript: ${output.left = true}
+      # The run already ended (or never started): the surface belongs to the feed again.
+      - runFlow:
+          when:
+            true: ${!output.left}
+          commands:
+            - swipe:
+                start: 40%, 62%
+                end: 40%, 18%
+                duration: 250
+      - extendedWaitUntil:
+          visible:
+            id: "tabbar"
+          timeout: 10000
+      - extendedWaitUntil:
+          visible: ".*, preview"
+          timeout: 30000
+- takeScreenshot: perf-soak-end

@@ -1,0 +1,195 @@
+# Design QA tour: visits every screen and state and takes screenshots (not part of the test suite).
+#   maestro test -e APP_ID=host.exp.Exponent --test-output-dir <dir> maestro/tour/tour.yaml
+appId: ${APP_ID}
+---
+- stopApp
+- runFlow:
+    file: ../shared/open.yaml
+    env:
+      DEEPLINK: "settings/dev"
+- tapOn:
+    id: "dev-demo-signin"
+- runFlow: ../shared/wait-preview.yaml
+- waitForAnimationToEnd
+- takeScreenshot: 01-feed-preview
+- runFlow:
+    when:
+      visible: "Unlike .*"
+    commands:
+      - tapOn:
+          id: "rail-like"
+- tapOn:
+    id: "rail-like"
+    waitToSettleTimeoutMs: 50
+- takeScreenshot: 01b-like-burst
+- tapOn:
+    id: "rail-comment"
+- extendedWaitUntil:
+    visible:
+      id: "comments-sheet"
+    timeout: 8000
+- waitForAnimationToEnd
+- takeScreenshot: 02-comments
+- tapOn:
+    id: "sheet-close"
+- tapOn:
+    id: "rail-share"
+- waitForAnimationToEnd
+- takeScreenshot: 03-share
+- tapOn:
+    id: "sheet-close"
+- tapOn:
+    id: "rail-cartridge"
+- extendedWaitUntil:
+    visible:
+      id: "game-page"
+    timeout: 8000
+- waitForAnimationToEnd
+- takeScreenshot: 04-game-page
+- scrollUntilVisible:
+    element: "LEADERBOARD"
+    direction: DOWN
+- takeScreenshot: 05-game-page-board
+- tapOn:
+    id: "header-back"
+# Mines has no clock, so the run stays in PLAYING for the Dock, the more sheet and the paused state.
+- openLink: exp://127.0.0.1:8081/--/g/mines
+- extendedWaitUntil:
+    visible:
+      id: "active-mines"
+    timeout: 30000
+- runFlow: ../shared/wait-preview.yaml
+- tapOn:
+    point: 40%, 42%
+- extendedWaitUntil:
+    visible:
+      id: "dock"
+    timeout: 8000
+- takeScreenshot: 06-playing-dock
+- tapOn:
+    id: "dock-more"
+- waitForAnimationToEnd
+- takeScreenshot: 07-more-sheet
+- tapOn:
+    id: "sheet-close"
+# Closing the sheet may resume the run; 20 s without a touch pauses it either way.
+- extendedWaitUntil:
+    visible:
+      id: "resume-pill"
+    timeout: 30000
+- waitForAnimationToEnd
+- takeScreenshot: 08-paused
+- tapOn:
+    id: "resume-pill"
+- openLink: exp://127.0.0.1:8081/--/g/flapjack
+- extendedWaitUntil:
+    visible:
+      id: "active-flapjack"
+    timeout: 30000
+- runFlow: ../shared/wait-preview.yaml
+- tapOn:
+    point: 40%, 42%
+- extendedWaitUntil:
+    visible:
+      id: "result-card"
+    timeout: 30000
+- waitForAnimationToEnd
+- takeScreenshot: 09-result
+- tapOn:
+    id: "tab-discover"
+- extendedWaitUntil:
+    visible:
+      id: "discover"
+    timeout: 8000
+- waitForAnimationToEnd
+- takeScreenshot: 10-discover
+- scrollUntilVisible:
+    element: "Under a minute|New this week|UNDER A MINUTE|NEW THIS WEEK"
+    direction: DOWN
+- takeScreenshot: 11-discover-rows
+- openLink: exp://127.0.0.1:8081/--/tag/arcade
+- extendedWaitUntil:
+    visible:
+      id: "tag-page"
+    timeout: 8000
+- waitForAnimationToEnd
+- takeScreenshot: 12-hashtag
+- openLink: exp://127.0.0.1:8081/--/search
+- tapOn:
+    id: "search-input"
+- inputText: "st"
+- waitForAnimationToEnd
+- takeScreenshot: 13-search
+- openLink: exp://127.0.0.1:8081/--/inbox
+- extendedWaitUntil:
+    visible:
+      id: "inbox"
+    timeout: 8000
+- waitForAnimationToEnd
+- takeScreenshot: 14-inbox
+- openLink: exp://127.0.0.1:8081/--/me
+- extendedWaitUntil:
+    visible:
+      id: "my-profile"
+    timeout: 8000
+- waitForAnimationToEnd
+- takeScreenshot: 15-my-profile
+- openLink: exp://127.0.0.1:8081/--/u/thumbcade
+- extendedWaitUntil:
+    visible:
+      id: "profile"
+    timeout: 8000
+- waitForAnimationToEnd
+- takeScreenshot: 16-creator-profile
+- openLink: exp://127.0.0.1:8081/--/create
+- extendedWaitUntil:
+    visible:
+      id: "create"
+    timeout: 8000
+- waitForAnimationToEnd
+- takeScreenshot: 17-create
+- openLink: exp://127.0.0.1:8081/--/settings
+- extendedWaitUntil:
+    visible:
+      id: "settings"
+    timeout: 8000
+- waitForAnimationToEnd
+- takeScreenshot: 18-settings
+- scrollUntilVisible:
+    element:
+      id: "version-row"
+    direction: DOWN
+- tapOn: "Sign out"
+- extendedWaitUntil:
+    visible:
+      id: "top-following"
+    timeout: 20000
+- tapOn:
+    id: "top-following"
+- extendedWaitUntil:
+    visible:
+      id: "feed-empty"
+    timeout: 15000
+- takeScreenshot: 18b-following-empty
+- tapOn:
+    id: "top-foryou"
+- runFlow: ../shared/wait-preview.yaml
+- tapOn:
+    id: "rail-like"
+- waitForAnimationToEnd
+- takeScreenshot: 19-auth-sheet
+- tapOn:
+    id: "sheet-close"
+- openLink: exp://127.0.0.1:8081/--/me
+- extendedWaitUntil:
+    visible:
+      id: "my-profile"
+    timeout: 8000
+- waitForAnimationToEnd
+- takeScreenshot: 20-guest-profile
+- openLink: exp://127.0.0.1:8081/--/onboarding
+- extendedWaitUntil:
+    visible: "What year were you born?"
+    timeout: 8000
+- waitForAnimationToEnd
+- takeScreenshot: 21-onboarding-age

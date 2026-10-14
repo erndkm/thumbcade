@@ -1,0 +1,20 @@
+# Guests can play but social writes need an account: liking opens the sign-up sheet.
+appId: ${APP_ID}
+name: Like asks a guest to sign up
+---
+- stopApp
+- runFlow:
+    file: shared/open.yaml
+    env:
+      DEEPLINK: ""
+- runFlow: shared/ensure-guest.yaml
+- runFlow: shared/wait-preview.yaml
+- tapOn:
+    id: "rail-like"
+- extendedWaitUntil:
+    visible: "Make it count."
+    timeout: 20000
+- assertVisible: "Sign up to like .*"
+- assertVisible:
+    id: "auth-email"
+- takeScreenshot: 04-signup-sheet

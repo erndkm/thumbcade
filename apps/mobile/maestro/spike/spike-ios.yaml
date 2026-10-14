@@ -1,0 +1,61 @@
+appId: host.exp.Exponent
+---
+- stopApp
+- openLink: exp://127.0.0.1:8081/--/dev/spike
+- extendedWaitUntil:
+    visible: "index 0 phase PREVIEW vertical false"
+    timeout: 30000
+# (b) feed claims a vertical swipe in PREVIEW
+- swipe:
+    start: 50%, 70%
+    end: 50%, 25%
+    duration: 400
+- extendedWaitUntil:
+    visible: "index 1 phase PREVIEW vertical true"
+    timeout: 5000
+- assertVisible: ".*claims 1"
+- takeScreenshot: spike-1-after-preview-swipe
+# (a) a tap reaches the swipe game and starts PLAYING
+- tapOn:
+    point: 50%, 50%
+- extendedWaitUntil:
+    visible: "index 1 phase PLAYING vertical true"
+    timeout: 5000
+- assertVisible: "taps 1 swipes 0.*"
+- takeScreenshot: spike-2-tap
+# (c) surface swipe goes to the game, not the feed
+- swipe:
+    start: 50%, 70%
+    end: 50%, 25%
+    duration: 400
+- assertVisible: "index 1 phase PLAYING vertical true"
+- assertVisible: "taps 1 swipes 1 cancels 0 claims 1"
+- takeScreenshot: spike-3-surface-swipe
+# (c) the Dock still drives the feed
+- swipe:
+    from:
+      id: "spike-dock"
+    direction: UP
+    duration: 400
+- extendedWaitUntil:
+    visible: "index 2 phase PREVIEW vertical false"
+    timeout: 5000
+- assertVisible: ".*claims 2"
+- takeScreenshot: spike-4-dock
+# (a) a tap on a tap game in PREVIEW is not swallowed by the feed pan
+- tapOn:
+    point: 50%, 50%
+- extendedWaitUntil:
+    visible: "index 2 phase PLAYING vertical false"
+    timeout: 5000
+- assertVisible: "taps 1 swipes 0 cancels 0 claims 2"
+- takeScreenshot: spike-5-tap-game
+# vertical:false in PLAYING: a deliberate vertical swipe still goes to the feed (stricter threshold)
+- swipe:
+    start: 50%, 30%
+    end: 50%, 75%
+    duration: 300
+- extendedWaitUntil:
+    visible: "index 1 phase PREVIEW vertical true"
+    timeout: 5000
+- takeScreenshot: spike-6-playing-swipe

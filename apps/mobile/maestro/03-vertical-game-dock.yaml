@@ -1,0 +1,56 @@
+# A `controls.vertical: true` game owns the surface while PLAYING; the Dock is the way out.
+# VERTICAL_SLUG defaults to merge (run.sh); with only the dev fixtures seeded use VERTICAL_SLUG=fixture-swipe.
+appId: ${APP_ID}
+name: Play a vertical game and leave via the Dock
+---
+- stopApp
+- runFlow:
+    file: shared/open.yaml
+    env:
+      DEEPLINK: g/${VERTICAL_SLUG}
+- extendedWaitUntil:
+    visible:
+      id: "active-${VERTICAL_SLUG}"
+    timeout: 30000
+- runFlow: shared/wait-preview.yaml
+- copyTextFrom:
+    id: "caption-name"
+- evalScript: ${output.vertical = maestro.copiedText}
+- tapOn:
+    point: 40%, 42%
+- extendedWaitUntil:
+    visible:
+      id: "dock"
+    timeout: 20000
+# A surface swipe is game input, not navigation: the same card stays active.
+- swipe:
+    start: 40%, 62%
+    end: 40%, 25%
+    duration: 300
+- assertVisible:
+    id: "active-${VERTICAL_SLUG}"
+# Short runs can end on that swipe; "Play again" puts the card back into PLAYING.
+- runFlow:
+    when:
+      visible:
+        id: "result-replay"
+    commands:
+      - tapOn:
+          id: "result-replay"
+- extendedWaitUntil:
+    visible:
+      id: "dock"
+    timeout: 20000
+# A pan that starts on the Dock always drives the feed.
+- swipe:
+    from:
+      id: "dock"
+    direction: UP
+    duration: 350
+- extendedWaitUntil:
+    visible:
+      id: "tabbar"
+    timeout: 10000
+- assertNotVisible:
+    id: "active-${VERTICAL_SLUG}"
+- takeScreenshot: 03-left-via-dock

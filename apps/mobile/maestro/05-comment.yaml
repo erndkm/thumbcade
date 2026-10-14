@@ -1,0 +1,34 @@
+# A member comments on the active game; the comment appears in the sheet.
+appId: ${APP_ID}
+name: Comment
+---
+- stopApp
+- runFlow:
+    file: shared/open.yaml
+    env:
+      DEEPLINK: "settings/dev"
+- extendedWaitUntil:
+    visible:
+      id: "dev-demo-signin"
+    timeout: 20000
+- tapOn:
+    id: "dev-demo-signin"
+- runFlow: shared/wait-preview.yaml
+- tapOn:
+    id: "rail-comment"
+- extendedWaitUntil:
+    visible:
+      id: "comments-sheet"
+    timeout: 20000
+- tapOn:
+    id: "comment-input"
+- evalScript: ${output.body = 'Maestro was here at ' + new Date().toISOString().slice(11, 19)}
+- inputText: ${output.body}
+- tapOn:
+    id: "comment-send"
+- extendedWaitUntil:
+    visible: ".*${output.body}.*"
+    timeout: 10000
+- assertNotVisible: "Sending…"
+- takeScreenshot: 05-commented
+- runFlow: shared/ensure-guest.yaml

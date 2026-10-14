@@ -1,0 +1,69 @@
+# In-app account deletion (App Store 5.1.1(v)): sign up, delete the account, land on a fresh guest.
+appId: ${APP_ID}
+name: Delete account
+---
+- stopApp
+- runFlow:
+    file: shared/open.yaml
+    env:
+      DEEPLINK: ""
+- runFlow: shared/ensure-guest.yaml
+- openLink: exp://127.0.0.1:8081/--/me
+- extendedWaitUntil:
+    visible:
+      id: "profile-signup"
+    timeout: 15000
+- tapOn:
+    id: "profile-signup"
+- extendedWaitUntil:
+    visible:
+      id: "auth-email"
+    timeout: 20000
+- waitForAnimationToEnd
+- evalScript: ${output.email = 'delete' + Date.now() + '@thumbcade.dev'}
+- tapOn:
+    id: "auth-email"
+- inputText: ${output.email}
+- tapOn:
+    id: "auth-send"
+- extendedWaitUntil:
+    visible:
+      id: "auth-code|auth-handle"
+    timeout: 15000
+- runFlow:
+    when:
+      visible:
+        id: "auth-code"
+    commands:
+      - runScript:
+          file: scripts/mailpit-code.js
+          env:
+            EMAIL: ${output.email}
+      - tapOn:
+          id: "auth-code"
+      - inputText: ${output.otp}
+- extendedWaitUntil:
+    visible:
+      id: "auth-handle"
+    timeout: 15000
+- tapOn: "Keep the generated one"
+- openLink: exp://127.0.0.1:8081/--/settings
+- extendedWaitUntil:
+    visible:
+      id: "settings"
+    timeout: 15000
+- scrollUntilVisible:
+    element:
+      id: "delete-account"
+    direction: DOWN
+- tapOn:
+    id: "delete-account"
+- tapOn:
+    id: "delete-confirm"
+- inputText: "DELETE"
+- tapOn:
+    id: "delete-go"
+- extendedWaitUntil:
+    visible: "What year were you born?"
+    timeout: 20000
+- takeScreenshot: 08-deleted

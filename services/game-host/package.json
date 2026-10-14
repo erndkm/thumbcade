@@ -1,0 +1,17 @@
+{
+  "name": "@thumbcade/game-host",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Local stand-in for *.thumbcade.gg: serves immutable, versioned game bundles from the game-bundles bucket with the game CSP.",
+  "scripts": {
+    "start": "tsx src/main.ts",
+    "dev": "tsx watch src/main.ts",
+    "typecheck": "tsc -p tsconfig.json",
+    "lint": "eslint .",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@thumbcade/protocol": "workspace:*"
+  }
+}

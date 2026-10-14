@@ -1,0 +1,52 @@
+# A guest upgrades in place with email OTP (code read from Mailpit); the pending like runs after sign-up.
+appId: ${APP_ID}
+name: Email sign-up from a like
+---
+- stopApp
+- runFlow:
+    file: shared/open.yaml
+    env:
+      DEEPLINK: ""
+- runFlow: shared/ensure-guest.yaml
+- runFlow: shared/wait-preview.yaml
+- tapOn:
+    id: "rail-like"
+- extendedWaitUntil:
+    visible:
+      id: "auth-email"
+    timeout: 20000
+- waitForAnimationToEnd
+- evalScript: ${output.email = 'maestro' + Date.now() + '@thumbcade.dev'}
+- tapOn:
+    id: "auth-email"
+- inputText: ${output.email}
+- tapOn:
+    id: "auth-send"
+- extendedWaitUntil:
+    visible:
+      id: "auth-code|auth-handle"
+    timeout: 15000
+# With email confirmations on (production), a 6-digit code arrives by mail (Mailpit locally).
+- runFlow:
+    when:
+      visible:
+        id: "auth-code"
+    commands:
+      - runScript:
+          file: scripts/mailpit-code.js
+          env:
+            EMAIL: ${output.email}
+      - tapOn:
+          id: "auth-code"
+      - inputText: ${output.otp}
+- extendedWaitUntil:
+    visible:
+      id: "auth-handle"
+    timeout: 15000
+- takeScreenshot: 07-handle-step
+- tapOn: "Keep the generated one"
+- extendedWaitUntil:
+    visible: "Unlike .*"
+    timeout: 10000
+- takeScreenshot: 07-liked-after-signup
+- runFlow: shared/ensure-guest.yaml

@@ -1,0 +1,19 @@
+{
+  "$schema": "https://thumbcade.com/schema/manifest-v1.json",
+  "id": "fixture-swipe",
+  "name": "Lane Flip",
+  "version": "1.0.0",
+  "sdk": "^1.0.0",
+  "entry": "index.html",
+  "description": "Three lanes, one thumb. Swipe up or down to flip lanes, grab sparks, dodge the walls.",
+  "tags": ["arcade", "runner", "swipe"],
+  "accentColor": "#FFB547",
+  "icon": "assets/icon.png",
+  "poster": "assets/poster.jpg",
+  "ageRating": "4+",
+  "controls": { "vertical": true, "horizontal": false, "multitouch": false, "inputs": ["swipe", "tap"] },
+  "session": "short",
+  "audio": true,
+  "orientation": "portrait",
+  "score": { "order": "desc", "max": 1000000, "format": "integer" }
+}
