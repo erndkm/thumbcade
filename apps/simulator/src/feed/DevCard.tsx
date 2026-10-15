@@ -13,7 +13,7 @@ export function DevCard({ sim, snap, iframeRef, top }: { sim: Simulator; snap: S
   const m = sim.manifest;
   const phase = snap.card.phase;
   const effective = phase === "OFFSCREEN" ? snap.card.resumeTo : phase;
-  const accent = safeAccent(m?.accentColor ?? "#D4FF3D");
+  const accent = safeAccent(m?.accentColor ?? "#FF4A3D");
   const live = snap.card.ready;
   const [wiped, setWiped] = useState(false);
   useEffect(() => {
@@ -64,7 +64,7 @@ export function DevCard({ sim, snap, iframeRef, top }: { sim: Simulator; snap: S
           name: m?.name ?? sim.game.source.name,
           description: m?.description ?? "Add a description to thumbcade.json.",
           tags: m?.tags ?? [],
-          accent: m?.accentColor ?? "#D4FF3D",
+          accent: m?.accentColor ?? "#FF4A3D",
           iconUrl: sim.game.source.iconUrl,
           meta,
           counts: { likes: 0, comments: 0, saves: 0, shares: 0 },

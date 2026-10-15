@@ -1,4 +1,5 @@
 /** Push notification copy. Short, a little playful, never shouty. */
+import { milestoneCopy, MilestoneKindSchema } from "./protocol.ts";
 
 export interface NotificationRow {
   type: string;
@@ -47,6 +48,13 @@ export function pushCopy(n: NotificationRow): PushCopy | null {
       return { title: "You're live", body: `${game} passed review and is in the feed.`, url: gameUrl };
     case "game_rejected":
       return { title: "Review notes", body: `${game} needs changes before it can go live.`, url: "/create" };
+    case "milestone": {
+      const kind = MilestoneKindSchema.safeParse(p.kind);
+      if (!kind.success || typeof p.threshold !== "number" || typeof p.value !== "number") return null;
+      const detail = typeof p.detail === "object" && p.detail !== null ? (p.detail as { players?: number; ratio?: number }) : {};
+      const copy = milestoneCopy({ kind: kind.data, threshold: p.threshold, value: p.value, detail }, game);
+      return { title: copy.title, body: copy.body, url: "/create" };
+    }
     default:
       return null;
   }

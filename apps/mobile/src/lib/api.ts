@@ -3,12 +3,14 @@ import {
   ChallengeResolveResponseSchema,
   FeedResponseSchema,
   SessionEndResponseSchema,
+  SessionProgressResponseSchema,
   SessionStartResponseSchema,
   ShareCreateResponseSchema,
   type ClientEvent,
   type FeedResponse,
   type FeedTab,
   type SessionEndRequest,
+  type SessionProgressRequest,
   type SessionStartRequest,
   type ShareCreateRequest,
   type ShareCreateResponse,
@@ -103,6 +105,10 @@ export function sessionEnd(req: SessionEndRequest) {
   return call("session-end", SessionEndResponseSchema, { body: req });
 }
 
+export function sessionProgress(req: SessionProgressRequest) {
+  return call("session-progress", SessionProgressResponseSchema, { body: req });
+}
+
 export function resolveChallenge(code: string) {
   return call("challenge-resolve", ChallengeResolveResponseSchema, { query: { code } });
 }
@@ -113,4 +119,9 @@ export function createShare(req: ShareCreateRequest): Promise<ShareCreateRespons
 
 export function deleteAccount() {
   return call("account-delete", z.object({ deleted: z.literal(true) }), { body: {} });
+}
+
+/** Everything stored about the caller (GDPR Art. 15/20); the shape is documented by the function. */
+export function exportAccount() {
+  return call("account-export", z.record(z.string(), z.unknown()));
 }

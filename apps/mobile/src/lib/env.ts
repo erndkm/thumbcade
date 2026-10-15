@@ -1,4 +1,5 @@
 import { Platform } from "react-native";
+import { OPERATOR } from "@thumbcade/legal";
 import { LOCAL_ENDPOINTS, PROD_ENDPOINTS } from "@thumbcade/protocol";
 
 /** Public configuration bundled into the app (EXPO_PUBLIC_*). */
@@ -14,7 +15,7 @@ export const env = {
   androidHostAlias: process.env.EXPO_PUBLIC_ANDROID_HOST_ALIAS ?? "10.0.2.2",
   docsUrl: process.env.EXPO_PUBLIC_DOCS_URL ?? `${process.env.EXPO_PUBLIC_SHARE_BASE ?? PROD_ENDPOINTS.portalUrl}/docs`,
   portalUrl: process.env.EXPO_PUBLIC_PORTAL_URL ?? process.env.EXPO_PUBLIC_SHARE_BASE ?? PROD_ENDPOINTS.portalUrl,
-  contactEmail: "safety@thumbcade.com",
+  contactEmail: OPERATOR.email.safety,
 } as const;
 
 const LOCAL_HOSTS = new Set(["127.0.0.1", "localhost", "0.0.0.0"]);

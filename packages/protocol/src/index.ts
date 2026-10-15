@@ -7,3 +7,4 @@ export * from "./publish.ts";
 export * from "./urls.ts";
 export * from "./games-index.ts";
 export * from "./format.ts";
+export * from "./analytics.ts";

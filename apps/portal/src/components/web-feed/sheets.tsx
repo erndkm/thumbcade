@@ -46,7 +46,7 @@ export function AuthPrompt({ action, onClose, next }: { action: string | null; o
         <h3 className="font-wide text-[24px] font-extrabold leading-7 tracking-tight text-paper">Sign in to {verb}.</h3>
         <p className="text-[14px] leading-5 text-paper/70">Guests can play everything. An account keeps your likes, your saves and your best scores — on the web and in the app.</p>
         <div className="mt-2 flex gap-3">
-          <Link href={`/login?next=${encodeURIComponent(next)}`} className="flex h-12 flex-1 items-center justify-center rounded-pill bg-volt font-semiwide text-[15px] font-bold text-ink-1">
+          <Link href={`/login?next=${encodeURIComponent(next)}`} className="flex h-12 flex-1 items-center justify-center rounded-pill bg-accent font-semiwide text-[15px] font-bold text-on-accent">
             Sign in
           </Link>
           <button type="button" onClick={onClose} className="h-12 flex-1 rounded-pill border border-white/15 font-semiwide text-[15px] font-bold text-paper">
@@ -165,7 +165,7 @@ export function CommentsSheet({
                   <div className="flex flex-wrap items-center gap-x-2 text-[13px] text-paper/60">
                     <span className="font-semibold text-paper/85">@{c.user?.handle ?? "player"}</span>
                     {c.score_badge !== null ? (
-                      <span className="rounded-[5px] bg-white/8 px-1.5 font-mono text-[11px] text-volt">{formatScore(c.score_badge, card?.score)}</span>
+                      <span className="rounded-[5px] bg-white/8 px-1.5 font-mono text-[11px] text-accent-text">{formatScore(c.score_badge, card?.score)}</span>
                     ) : null}
                     {c.is_pinned ? <span className="label !text-paper/50">Pinned</span> : null}
                     <span className="font-mono text-[11px]">{formatRelative(c.created_at)}</span>
@@ -197,7 +197,7 @@ export function CommentsSheet({
           className="h-11 flex-1 rounded-pill bg-white/8 px-4 text-[15px] text-paper placeholder:text-paper/40 focus:outline-none"
           aria-label="Write a comment"
         />
-        <button type="submit" disabled={!draft.trim() || posting} className="flex size-11 items-center justify-center rounded-full bg-volt text-ink-1 disabled:opacity-30" aria-label="Post comment">
+        <button type="submit" disabled={!draft.trim() || posting} className="flex size-11 items-center justify-center rounded-full bg-accent text-on-accent disabled:opacity-30" aria-label="Post comment">
           <Icon name="forward" size={20} />
         </button>
       </form>

@@ -28,7 +28,7 @@ export function ToastHost() {
           backgroundColor: c.raised,
           borderRadius: radius.sheetInner,
           borderWidth: 1,
-          borderColor: current.tone === "bad" ? c.heat : current.tone === "good" ? c.accent : c.line,
+          borderColor: current.tone === "bad" ? c.heat : current.tone === "good" ? c.success : c.line,
           paddingHorizontal: space[4],
           paddingVertical: space[3],
           maxWidth: 340,
@@ -37,7 +37,7 @@ export function ToastHost() {
           gap: space[2],
         }}
       >
-        <View style={{ width: 6, height: 6, backgroundColor: current.tone === "bad" ? c.heat : current.tone === "good" ? c.accent : c.textDim }} />
+        <View style={{ width: 6, height: 6, backgroundColor: current.tone === "bad" ? c.heat : current.tone === "good" ? c.success : c.textDim }} />
         <T variant="caption">{current.text}</T>
       </Animated.View>
     </View>

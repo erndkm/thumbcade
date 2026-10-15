@@ -17,7 +17,7 @@ const TABS = [
  */
 export function BottomBar({ sim, snap, mode }: { sim: Simulator; snap: SimSnapshot; mode: "tabbar" | "dock" }) {
   const dock = mode === "dock";
-  const accent = safeAccent(sim.manifest?.accentColor ?? "#D4FF3D");
+  const accent = safeAccent(sim.manifest?.accentColor ?? "#FF4A3D");
   const guard = (fn: () => void) => () => {
     if (!sim.shouldSuppressClick()) fn();
   };

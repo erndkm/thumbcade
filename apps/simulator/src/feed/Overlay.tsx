@@ -47,7 +47,7 @@ export function Overlay({ data, actions, hidden, interactive = true }: { data: O
         </button>
         <RailButton icon="like" label="Like" count={data.counts.likes + (actions.liked ? 1 : 0)} active={actions.liked} tone="heat" onClick={guard(actions.onLike)} />
         <RailButton icon="comment" label="Comments" count={data.counts.comments} onClick={guard(actions.onComment)} />
-        <RailButton icon="save" label="Save" count={data.counts.saves + (actions.saved ? 1 : 0)} active={actions.saved} tone="volt" onClick={guard(actions.onSave)} />
+        <RailButton icon="save" label="Save" count={data.counts.saves + (actions.saved ? 1 : 0)} active={actions.saved} tone="accent" onClick={guard(actions.onSave)} />
         <RailButton icon="share" label="Share" count={data.counts.shares} onClick={guard(actions.onShare)} />
         <span className="rail__cartridge" aria-hidden="true">
           {data.iconUrl ? <img src={data.iconUrl} alt="" /> : <span className="rail__cartridge-fallback" />}
@@ -76,7 +76,7 @@ export function Overlay({ data, actions, hidden, interactive = true }: { data: O
   );
 }
 
-function RailButton({ icon, label, count, active, tone, onClick }: { icon: "like" | "comment" | "save" | "share"; label: string; count: number; active?: boolean; tone?: "heat" | "volt"; onClick(): void }) {
+function RailButton({ icon, label, count, active, tone, onClick }: { icon: "like" | "comment" | "save" | "share"; label: string; count: number; active?: boolean; tone?: "heat" | "accent"; onClick(): void }) {
   return (
     <button className={`rail__btn ${active ? `is-active is-${tone}` : ""}`} onClick={onClick} aria-label={label} aria-pressed={active}>
       <span className="rail__icon">

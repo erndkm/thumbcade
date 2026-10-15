@@ -1,6 +1,6 @@
 /**
  * Thumbcade design tokens — "midnight arcade, editorial restraint".
- * The games bring the color; the chrome is ink, paper and one electric accent.
+ * The games bring the color; the chrome is ink, paper and one accent: arcade-button red (`heat`), the logo's color.
  *
  * Units are points (React Native) / CSS pixels (web).
  */
@@ -14,8 +14,6 @@ export const palette = {
   paper: "#F3F0E8",
   paperDim: "#A7A3AE",
   paperMute: "#6E6A78",
-  volt: "#D4FF3D",
-  voltDeep: "#4A6400",
   heat: "#FF4A3D",
   heatDeep: "#C42A1F",
   /** Light-theme surfaces (portal only). */
@@ -67,14 +65,14 @@ export const colors: Record<ThemeName, SemanticColors> = {
     text: palette.paper,
     textDim: palette.paperDim,
     textMute: palette.paperMute,
-    accent: palette.volt,
+    accent: palette.heat,
     onAccent: palette.ink1,
-    accentText: palette.volt,
+    accentText: palette.heat,
     heat: palette.heat,
     onHeat: palette.paper,
     scrim: "rgba(0,0,0,0.62)",
     captionScrim: ["rgba(0,0,0,0)", "rgba(0,0,0,0.55)"],
-    success: palette.volt,
+    success: "#4CC38A",
     warning: "#FFB547",
     danger: palette.heat,
   },
@@ -87,9 +85,9 @@ export const colors: Record<ThemeName, SemanticColors> = {
     text: palette.ink,
     textDim: palette.inkDim,
     textMute: palette.inkMute,
-    accent: palette.volt,
+    accent: palette.heat,
     onAccent: palette.ink,
-    accentText: palette.voltDeep,
+    accentText: palette.heatDeep,
     heat: palette.heatDeep,
     onHeat: palette.paper0,
     scrim: "rgba(13,13,16,0.42)",

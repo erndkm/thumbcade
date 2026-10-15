@@ -66,7 +66,7 @@ export interface CommentRow {
 export interface NotificationRow {
   id: string;
   user_id: string;
-  type: "follow" | "comment_like" | "comment_reply" | "score_beaten" | "new_game" | "game_approved" | "game_rejected" | "challenge_accepted";
+  type: "follow" | "comment_like" | "comment_reply" | "score_beaten" | "new_game" | "game_approved" | "game_rejected" | "challenge_accepted" | "milestone";
   actor_id: string | null;
   game_id: string | null;
   comment_id: string | null;

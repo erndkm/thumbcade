@@ -26,7 +26,7 @@ export function ReviewReportView({ report, status }: { report: unknown; status: 
   return (
     <div className="flex flex-col gap-10">
       <div className="flex flex-wrap items-center gap-x-8 gap-y-3 border-y border-line py-5">
-        <span className="flex items-center gap-2 font-semiwide text-[17px] font-bold" style={{ color: r.passed ? "var(--tc-accent-text)" : "var(--tc-heat)" }}>
+        <span className="flex items-center gap-2 font-semiwide text-[17px] font-bold" style={{ color: r.passed ? "var(--tc-success)" : "var(--tc-heat)" }}>
           <Icon name={r.passed ? "check" : "close"} size={20} />
           {r.passed ? "Automated checks passed" : `${failed.length} check${failed.length === 1 ? "" : "s"} failed`}
         </span>
@@ -55,7 +55,7 @@ export function ReviewReportView({ report, status }: { report: unknown; status: 
       <ul className="rule-t">
         {r.checks.map((c) => (
           <li key={c.id} className="rule-b grid grid-cols-[20px_1fr_auto] items-start gap-4 py-3.5">
-            <span className="mt-0.5" style={{ color: c.status === "pass" ? "var(--tc-accent-text)" : c.status === "fail" ? "var(--tc-heat)" : c.status === "warn" ? "var(--tc-warning)" : "var(--tc-text-mute)" }}>
+            <span className="mt-0.5" style={{ color: c.status === "pass" ? "var(--tc-success)" : c.status === "fail" ? "var(--tc-heat)" : c.status === "warn" ? "var(--tc-warning)" : "var(--tc-text-mute)" }}>
               <Icon name={c.status === "pass" ? "check" : c.status === "fail" ? "close" : c.status === "warn" ? "flag" : "more"} size={18} />
             </span>
             <span>

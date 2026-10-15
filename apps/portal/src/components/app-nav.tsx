@@ -13,6 +13,7 @@ const creatorLinks: { href: string; label: string; icon: IconName }[] = [
   { href: "/creator/tokens", label: "API tokens", icon: "lock" },
   { href: "/docs", label: "Docs", icon: "code" },
 ];
+const accountLinks: { href: string; label: string; icon: IconName }[] = [{ href: "/account", label: "Account", icon: "profile" }];
 const adminLinks: { href: string; label: string; icon: IconName }[] = [
   { href: "/admin", label: "Review queue", icon: "eye" },
   { href: "/admin/reports", label: "Reports", icon: "flag" },
@@ -42,6 +43,10 @@ export function AppNav({ viewer }: { viewer: Viewer | null }) {
       <nav className="flex gap-1 overflow-x-auto px-3 pb-3 lg:flex-1 lg:flex-col lg:overflow-visible lg:pb-0">
         <span className="label hidden px-3 pb-2 pt-4 lg:block">Create</span>
         {creatorLinks.map((l) => (
+          <Item key={l.href} l={l} />
+        ))}
+        <span className="label hidden px-3 pb-2 pt-6 lg:block">You</span>
+        {accountLinks.map((l) => (
           <Item key={l.href} l={l} />
         ))}
         {viewer?.role === "admin" ? (

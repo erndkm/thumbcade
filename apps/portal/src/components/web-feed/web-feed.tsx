@@ -295,7 +295,7 @@ export function WebFeed({
               <Icon name="home" size={24} active detailColor="#000" />
               <span className="text-[10px] font-semibold">For you</span>
             </span>
-            <Link href="/docs" className="mx-auto flex h-8 w-12 items-center justify-center rounded-[10px] bg-volt text-ink-1" aria-label="Build a game">
+            <Link href="/docs" className="mx-auto flex h-8 w-12 items-center justify-center rounded-[10px] bg-accent text-on-accent" aria-label="Build a game">
               <Icon name="plus" size={20} />
             </Link>
             <Link href={viewer ? "/creator" : `/login?next=${encodeURIComponent(pathname ?? "/")}`} className="flex flex-col items-center gap-0.5 text-paper/60">

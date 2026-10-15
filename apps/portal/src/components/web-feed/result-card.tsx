@@ -1,30 +1,8 @@
 "use client";
 import { formatScore, safeAccent, type Challenge } from "@thumbcade/protocol";
-import { useEffect, useState } from "react";
+import { useOdometer } from "@/lib/use-odometer";
 import { Icon } from "../icon";
 import type { WebCard } from "./types";
-
-/** Rolls digits up to the final score like an odometer. */
-function useOdometer(target: number, ms = 700) {
-  const [value, setValue] = useState(0);
-  useEffect(() => {
-    if (typeof matchMedia !== "undefined" && matchMedia("(prefers-reduced-motion: reduce)").matches) {
-      setValue(target);
-      return;
-    }
-    let raf = 0;
-    const start = performance.now();
-    const tick = (t: number) => {
-      const p = Math.min(1, (t - start) / ms);
-      const eased = 1 - Math.pow(1 - p, 3);
-      setValue(target * eased);
-      if (p < 1) raf = requestAnimationFrame(tick);
-    };
-    raf = requestAnimationFrame(tick);
-    return () => cancelAnimationFrame(raf);
-  }, [target, ms]);
-  return value;
-}
 
 export function ResultCard({
   card,
@@ -53,7 +31,7 @@ export function ResultCard({
         <div className="mb-1 flex items-center justify-between">
           <span className="label">Run over · {card.name}</span>
           {isNewBest ? (
-            <span className="rounded-[6px] border-2 border-volt px-2 py-0.5 font-mono text-[12px] uppercase tracking-wider text-volt [animation:tc-stamp_480ms_cubic-bezier(0.34,1.56,0.64,1)_200ms_both]">
+            <span className="rounded-[6px] border-2 border-accent px-2 py-0.5 font-mono text-[12px] uppercase tracking-wider text-accent-text [animation:tc-stamp_480ms_cubic-bezier(0.34,1.56,0.64,1)_200ms_both]">
               New best
             </span>
           ) : null}
@@ -64,7 +42,7 @@ export function ResultCard({
         <div className="mt-1 flex items-center gap-3 font-mono text-[13px] text-paper/60">
           <span>BEST {formatScore(best, card.score)}</span>
           {challenge ? (
-            <span style={{ color: beatChallenge ? "var(--color-volt)" : undefined }}>
+            <span style={{ color: beatChallenge ? "var(--color-accent-text)" : undefined }}>
               · {beatChallenge ? `BEAT ${challenge.fromName.toUpperCase()}` : `${challenge.fromName.toUpperCase()}: ${formatScore(challenge.score, card.score)}`}
             </span>
           ) : null}

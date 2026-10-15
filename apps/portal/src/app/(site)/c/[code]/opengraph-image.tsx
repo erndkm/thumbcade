@@ -11,7 +11,7 @@ export const alt = "A Thumbcade challenge";
 export default async function Image({ params }: { params: Promise<{ code: string }> }) {
   const { code } = await params;
   const [c, fonts, mark] = await Promise.all([getChallenge(code), ogFonts(), brandMarkDataUrl()]);
-  const accent = c ? safeAccent(c.game.accentColor) : "#D4FF3D";
+  const accent = c ? safeAccent(c.game.accentColor) : "#FF4A3D";
   const score = c && c.score !== null ? formatScore(c.score, c.game.score) : null;
   return new ImageResponse(
     (

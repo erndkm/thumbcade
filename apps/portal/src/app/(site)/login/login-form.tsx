@@ -1,4 +1,5 @@
 "use client";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useMemo, useState } from "react";
 import { Icon } from "@/components/icon";
@@ -53,6 +54,17 @@ export function LoginForm({ next }: { next: string }) {
           <Button type="submit" size="lg" disabled={busy || !email.includes("@")}>
             {busy ? "Sending…" : "Email me a code"}
           </Button>
+          <p className="text-[13px] leading-5 text-text-mute">
+            By continuing you agree to the{" "}
+            <Link href="/legal/terms" className="underline hover:text-text">
+              Terms
+            </Link>{" "}
+            and confirm you&apos;ve read the{" "}
+            <Link href="/legal/privacy" className="underline hover:text-text">
+              Privacy Policy
+            </Link>
+            . Accounts are for ages 13 and up.
+          </p>
         </form>
       ) : (
         <form onSubmit={verify} className="flex flex-col gap-6">

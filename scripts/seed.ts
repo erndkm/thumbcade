@@ -22,6 +22,7 @@ import { GamesIndexSchema, SEED_CREATORS, bundleObjectPath, type GamesIndexEntry
 import { CREATOR_REPLIES, poolFor } from "./seed/comments.ts";
 import { DEMO_PEOPLE, DEMO_PLAYER } from "./seed/people.ts";
 import { formatSeedScore, int, mulberry32, pick, plausibleScore, sample, worseScore, type Rng, type ScoreShape } from "./seed/random.ts";
+import { seedStatDays, seedTotals, type SeedStatDay, type SeedTotals } from "./seed/stats.ts";
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const DIST_INDEX = join(ROOT, "dist/games/games-index.json");
@@ -200,6 +201,7 @@ interface SeededGame {
   slug: string;
   name: string;
   creatorId: string;
+  versionId: string;
   shape: ScoreShape;
   tags: string[];
   vertical: boolean;
@@ -367,12 +369,15 @@ async function main(): Promise<void> {
       `insert version ${m.id}`,
     );
     must(await db.rpc("approve_version", { p_version_id: versionId, p_notes: "Launch build" }), `approve ${m.id}`);
+    // The launch build went live when the game did (dashboards mark releases on their day).
+    must(await db.from("game_versions").update({ approved_at: publishedAt.toISOString() }).eq("id", versionId), `approved_at ${m.id}`);
 
     seeded.push({
       id: gameId,
       slug: m.id,
       name: m.name,
       creatorId: creator.id,
+      versionId,
       shape: { order: m.score.order, max: m.score.max, format: m.score.format },
       tags: m.tags,
       vertical: m.controls.vertical,
@@ -449,14 +454,21 @@ async function main(): Promise<void> {
         const startedAt = isBest ? bestAt : Date.now() - rng() * Math.min(ageDays, 30) * DAY;
         const duration = g.shape.format === "ms" && g.shape.order === "asc" ? Math.max(1500, score + int(rng, 800, 4000)) : int(rng, 14_000, 95_000);
         if (isBest) bestSession = sid;
+        const source = rng();
         sessions.push({
           id: sid,
           user_id: p.id,
           game_id: g.id,
-          launch_reason: "feed",
+          version_id: g.versionId,
+          launch_reason: source < 0.75 ? "feed" : source < 0.9 ? "gamePage" : "challenge",
           started_at: new Date(startedAt).toISOString(),
           ended_at: new Date(startedAt + duration).toISOString(),
           duration_ms: duration,
+          // Active playtime: the run minus a pause now and then. The game ended it, so it is a play.
+          active_ms: Math.round(duration * (0.85 + rng() * 0.13)),
+          qualified_at: new Date(startedAt + duration).toISOString(),
+          // A creator's own runs never count (play_sessions_analytics skips excluded sessions).
+          excluded: p.id === g.creatorId,
           score,
           outcome: "lose",
           accepted: true,
@@ -626,52 +638,28 @@ async function main(): Promise<void> {
   });
   must(await db.from("notifications").update({ pushed_at: new Date().toISOString() }).is("pushed_at", null).in("user_id", everyone.map((p) => p.id)), "mark pushed");
 
-  // --- stats (days -15..-1; today comes from real events via the rollup, which also takes over a seeded
-  // day once real events exist for it) ---------------------------------------------------------------
-  // Social numbers come from the rows seeded above (the counters are final by now), so a creator's
-  // 14-day likes never exceed the game's all-time likes.
-  type Counters = { id: string; like_count: number; share_count: number; save_count: number; comment_count: number };
+  // --- stats (the last 28 days including today). Synthetic, but they follow the counting rules (scripts/seed/stats.ts), and
+  // the rollup replaces a seeded day as soon as real events exist for it. Social numbers come from the rows
+  // seeded above (the counters are final by now), so a creator's 14-day likes never exceed all-time likes.
+  type Counters = { id: string; like_count: number; share_count: number; save_count: number; comment_count: number; play_count: number; player_count: number };
   const counters = new Map(
-    (must(await db.from("games").select("id, like_count, share_count, save_count, comment_count").in("id", seeded.map((g) => g.id)), "game counters") as Counters[]).map((r) => [r.id, r]),
+    (
+      must(
+        await db.from("games").select("id, like_count, share_count, save_count, comment_count, play_count, player_count").in("id", seeded.map((g) => g.id)),
+        "game counters",
+      ) as Counters[]
+    ).map((r) => [r.id, r]),
   );
   const RECENT_SOCIAL_SHARE = 0.6;
-  type StatRow = { game_id: string; play_starts: number; likes: number; shares: number; saves: number; comments: number } & Record<string, unknown>;
+  type StatRow = SeedStatDay & { game_id: string; version_id: string; likes: number; shares: number; saves: number; comments: number };
   const statRows: StatRow[] = [];
-  const playCounts = new Map<string, number>();
+  const totals = new Map<string, SeedTotals>();
+  const now = new Date();
   for (const g of seeded) {
-    const pubDay = Math.floor((Date.now() - g.publishedAt.getTime()) / DAY);
-    let sum = 0;
-    // New releases have only a trickle of traffic, so they qualify for exploration slots (< maxImpressions).
-    const isNew = pubDay <= 5;
-    const base = isNew ? 40 + 60 * rng() : 250 + 900 * g.quality * (0.6 + rng() * 0.8);
-    for (let d = 15; d >= 1; d--) {
-      if (d > pubDay) continue;
-      const day = new Date(Date.now() - d * DAY).toISOString().slice(0, 10);
-      const ramp = Math.min(1, (pubDay - d + 1) / 4);
-      const impressions = Math.round(base * ramp * (0.8 + rng() * 0.4));
-      const playStartRate = 0.4 + 0.35 * g.quality;
-      const play_starts = Math.round(impressions * playStartRate * (0.9 + rng() * 0.2));
-      const play_ends = Math.round(play_starts * (0.85 + rng() * 0.1));
-      sum += play_starts;
-      statRows.push({
-        game_id: g.id,
-        day,
-        impressions,
-        ready_count: Math.round(impressions * 0.98),
-        play_starts,
-        play_ends,
-        total_play_ms: play_ends * int(rng, 22_000, 70_000),
-        replays: Math.round(play_starts * (0.1 + 0.3 * g.quality) * (0.8 + rng() * 0.4)),
-        likes: 0,
-        shares: 0,
-        saves: 0,
-        comments: 0,
-        fast_skips: Math.round(impressions * (0.32 - 0.22 * g.quality) * (0.8 + rng() * 0.4)),
-        load_failures: Math.round(impressions * 0.002),
-        unique_players: Math.round(play_starts * 0.68),
-      });
-    }
-    const rows = statRows.filter((r) => r.game_id === g.id);
+    const shape = { quality: g.quality, publishedDaysAgo: Math.floor((Date.now() - g.publishedAt.getTime()) / DAY) };
+    const rows: StatRow[] = seedStatDays(rng, shape, now).map((d) => ({ ...d, game_id: g.id, version_id: g.versionId, likes: 0, shares: 0, saves: 0, comments: 0 }));
+    statRows.push(...rows);
+    const sum = rows.reduce((a, r) => a + r.play_starts, 0);
     const c = counters.get(g.id);
     if (c && sum > 0) {
       // Largest-remainder split: the days add up to exactly 60 % of the all-time count.
@@ -690,13 +678,88 @@ async function main(): Promise<void> {
       spread(c.save_count, "saves");
       spread(c.comment_count, "comments");
     }
-    const lifetimeFactor = Math.max(1, pubDay / 14);
-    playCounts.set(g.id, Math.round(sum * lifetimeFactor * (6 + g.quality * 30)) + sessions.filter((s) => (s as { game_id: string }).game_id === g.id).length);
+    // play_count and player_count already hold the real seeded sessions (the session trigger counted them).
+    totals.set(g.id, seedTotals(rng, shape, rows, { plays: c?.play_count ?? 0, players: c?.player_count ?? 0 }));
   }
   await insertChunks(db, "game_stats_daily", statRows);
+  // Locally, playtime counts from the first seeded launch, so the dashboard's "measured since" matches the demo history.
+  if (/127\.0\.0\.1|localhost/.test(url) && seeded.length) {
+    const first = new Date(Math.min(...seeded.map((g) => g.publishedAt.getTime()))).toISOString().slice(0, 10);
+    const cfg = must(await db.from("feed_config").select("value").eq("key", "analytics").single(), "analytics config") as { value: Record<string, unknown> };
+    must(await db.from("feed_config").update({ value: { ...cfg.value, playtimeSince: first } }).eq("key", "analytics"), "playtimeSince");
+  }
   await pMap(seeded, 6, async (g) => {
-    must(await db.from("games").update({ play_count: playCounts.get(g.id) ?? 0 }).eq("id", g.id), `play_count ${g.slug}`);
+    const t = totals.get(g.id)!;
+    must(await db.from("games").update({ play_count: t.play_count, player_count: t.player_count, play_ms_total: t.play_ms_total }).eq("id", g.id), `totals ${g.slug}`);
   });
+
+  // --- milestones: everything award_milestones would hand out for these totals, spread over each game's
+  // life and already seen, except the newest one of the biggest game, so the portal opens with a celebration.
+  const milestoneCfg = (must(await db.from("feed_config").select("value").eq("key", "milestones").single(), "milestone config") as { value: { players: number[]; playtimeHours: number[] } }).value;
+  const engaged = async (table: "likes" | "comments" | "shares", g: SeededGame) => {
+    let q = db.from(table).select("game_id", { count: "exact", head: true }).eq("game_id", g.id).neq("user_id", g.creatorId);
+    if (table === "shares") q = q.eq("channel", "challenge");
+    if (table === "comments") q = q.eq("status", "visible");
+    const { count } = await q;
+    return (count ?? 0) > 0;
+  };
+  type MilestoneRow = { game_id: string; creator_id: string; kind: string; threshold: number; value: number; detail: object; reached_at: string; seen_at: string | null; is_seed: true };
+  const milestoneRows: MilestoneRow[] = [];
+  for (const g of seeded) {
+    const t = totals.get(g.id)!;
+    const life = Date.now() - g.publishedAt.getTime();
+    const at = (progress: number) => new Date(g.publishedAt.getTime() + life * Math.min(0.97, Math.max(0.002, progress))).toISOString();
+    const earned: { kind: string; threshold: number; value: number; progress: number }[] = [
+      { kind: "first_player", threshold: 1, value: 1, progress: 0.002 },
+      ...((await engaged("likes", g)) ? [{ kind: "first_like", threshold: 1, value: 1, progress: 0.01 + rng() * 0.02 }] : []),
+      ...((await engaged("comments", g)) ? [{ kind: "first_comment", threshold: 1, value: 1, progress: 0.02 + rng() * 0.04 }] : []),
+      ...((await engaged("shares", g)) ? [{ kind: "first_challenge", threshold: 1, value: 1, progress: 0.04 + rng() * 0.06 }] : []),
+      ...milestoneCfg.players
+        .filter((n) => n <= t.player_count)
+        .map((n) => ({ kind: "players", threshold: n, value: Math.round(n * (1 + rng() * 0.02)), progress: (n / t.player_count) ** 0.7 })),
+      ...milestoneCfg.playtimeHours
+        .filter((h) => h * 3_600_000 <= t.play_ms_total)
+        .map((h) => ({ kind: "playtime", threshold: h, value: h, progress: ((h * 3_600_000) / t.play_ms_total) ** 0.7 })),
+    ];
+    for (const e of earned) {
+      const reached = at(e.progress);
+      milestoneRows.push({
+        game_id: g.id,
+        creator_id: g.creatorId,
+        kind: e.kind,
+        threshold: e.threshold,
+        value: e.value,
+        detail: {},
+        reached_at: reached,
+        seen_at: new Date(new Date(reached).getTime() + 3_600_000).toISOString(),
+        is_seed: true,
+      });
+    }
+  }
+  const biggest = [...seeded].sort((a, b) => totals.get(b.id)!.player_count - totals.get(a.id)!.player_count)[0];
+  if (biggest) {
+    const top = milestoneRows.filter((m) => m.game_id === biggest.id && m.kind === "players").sort((a, b) => b.threshold - a.threshold)[0];
+    if (top) {
+      top.reached_at = new Date(Date.now() - 3 * 3_600_000).toISOString();
+      top.seen_at = null;
+    }
+    const bestDay = statRows.filter((r) => r.game_id === biggest.id && r.day < now.toISOString().slice(0, 10)).sort((a, b) => b.players - a.players)[0];
+    if (bestDay) {
+      milestoneRows.push({
+        game_id: biggest.id,
+        creator_id: biggest.creatorId,
+        kind: "best_day",
+        threshold: Number(bestDay.day.replaceAll("-", "")),
+        value: bestDay.players,
+        detail: { players: bestDay.players },
+        reached_at: `${bestDay.day}T20:00:00.000Z`,
+        seen_at: `${bestDay.day}T21:00:00.000Z`,
+        is_seed: true,
+      });
+    }
+  }
+  await insertChunks(db, "creator_milestones", milestoneRows);
+  const celebrating = biggest ? people.find((p) => p.id === biggest.creatorId)?.handle : undefined;
 
   // --- editorial rows ------------------------------------------------------------------------
   const byQuality = [...seeded].sort((a, b) => b.quality - a.quality);
@@ -720,8 +783,10 @@ async function main(): Promise<void> {
   console.log(
     `seed: done in ${((Date.now() - t0) / 1000).toFixed(1)}s — ${seeded.length} games, ${everyone.length} accounts, ${follows.size} follows, ` +
       `${likes.length} likes, ${saves.length} saves, ${commentRows.length + replyRows.length} comments, ${commentLikes.size} comment likes, ` +
-      `${bestRows.length} best scores, ${shareRows.length} shares, ${sessions.length} sessions, ${statRows.length} stat days, ${editorial.length} editorial rows`,
+      `${bestRows.length} best scores, ${shareRows.length} shares, ${sessions.length} sessions, ${statRows.length} stat days, ${editorial.length} editorial rows, ` +
+      `${milestoneRows.length} milestones`,
   );
+  if (celebrating) console.log(`seed: @${celebrating} (${celebrating}@${SEED_EMAIL_DOMAIN}, sign-in code via Mailpit) has an unseen milestone to celebrate in the portal`);
 }
 
 main().catch((e: unknown) => {

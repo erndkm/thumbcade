@@ -58,7 +58,7 @@ export function MetadataForm({
             hint={ratio >= 3 ? `${ratio.toFixed(1)}:1 on ink — good` : "Below 3:1 on ink; the app falls back to paper"}
           >
             <div className="flex items-center gap-2">
-              <input type="color" value={/^#[0-9A-Fa-f]{6}$/.test(accent) ? accent : "#D4FF3D"} onChange={(e) => setAccent(e.target.value.toUpperCase())} className="h-12 w-12 shrink-0 cursor-pointer rounded-input border border-line bg-surface p-1" aria-label="Pick accent color" />
+              <input type="color" value={/^#[0-9A-Fa-f]{6}$/.test(accent) ? accent : "#FF4A3D"} onChange={(e) => setAccent(e.target.value.toUpperCase())} className="h-12 w-12 shrink-0 cursor-pointer rounded-input border border-line bg-surface p-1" aria-label="Pick accent color" />
               <Input name="accentColor" value={accent} onChange={(e) => setAccent(e.target.value)} className="font-mono uppercase" maxLength={7} />
             </div>
           </Field>
@@ -74,7 +74,7 @@ export function MetadataForm({
             {pending ? "Saving…" : "Save changes"}
           </Button>
           {state?.error ? <span className="text-[14px] text-heat">{state.error}</span> : null}
-          {state?.ok ? <span className="text-[14px] text-accent-text">{state.ok}</span> : null}
+          {state?.ok ? <span className="text-[14px] text-success">{state.ok}</span> : null}
         </div>
       </div>
     </form>

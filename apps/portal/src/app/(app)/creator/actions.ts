@@ -73,3 +73,21 @@ export async function revokeToken(form: FormData) {
   await supabase.from("creator_tokens").update({ revoked_at: new Date().toISOString() }).eq("id", id);
   revalidatePath("/creator/tokens");
 }
+
+/** Makes a milestone public as a share card and returns its code (the same code on every call). */
+export async function shareMilestone(id: string): Promise<{ code: string } | { error: string }> {
+  await requireViewer("/creator");
+  const supabase = await createClient();
+  const { data, error } = await supabase.rpc("share_milestone", { p_id: id });
+  if (error || typeof data !== "string") return { error: "Couldn't create the share card. Try again." };
+  return { code: data };
+}
+
+/** The celebration was dismissed: it doesn't come back. */
+export async function markMilestonesSeen(ids: string[]): Promise<void> {
+  await requireViewer("/creator");
+  if (ids.length === 0) return;
+  const supabase = await createClient();
+  await supabase.rpc("mark_milestones_seen", { p_ids: ids });
+  revalidatePath("/creator");
+}

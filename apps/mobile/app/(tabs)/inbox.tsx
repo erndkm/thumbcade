@@ -2,7 +2,7 @@ import { useCallback, useMemo } from "react";
 import { RefreshControl, SectionList, View } from "react-native";
 import { router, useFocusEffect } from "expo-router";
 import { useQuery } from "@tanstack/react-query";
-import { formatRelative } from "@thumbcade/protocol";
+import { formatRelative, milestoneCopy, MilestoneKindSchema } from "@thumbcade/protocol";
 import { qk, queryClient } from "../../src/lib/query";
 import { supabase } from "../../src/lib/supabase";
 import type { NotificationRow } from "../../src/lib/types";
@@ -20,7 +20,7 @@ import { Press } from "../../src/ui/Press";
 import { Header, Screen, SectionTitle } from "../../src/ui/Screen";
 import { Skeleton } from "../../src/ui/Skeleton";
 import { T } from "../../src/ui/Text";
-import { c, layout, radius, space } from "../../src/ui/theme";
+import { accentOf, c, layout, radius, space } from "../../src/ui/theme";
 
 type Item = NotificationRow & {
   actor: { id: string; handle: string; display_name: string; avatar_url: string | null; avatar_seed: string } | null;
@@ -31,7 +31,7 @@ type Item = NotificationRow & {
 const SELECT =
   "*, actor:profiles!notifications_actor_id_fkey(id, handle, display_name, avatar_url, avatar_seed), game:games(slug, name, icon_url, accent_color, score_config), comment:comments(body)";
 
-function copyFor(n: Item): { text: string; quote?: string } {
+function copyFor(n: Item): { text: string; quote?: string; figure?: string } {
   const who = n.actor ? `@${n.actor.handle}` : "Someone";
   const game = n.game?.name ?? "a game";
   const p = n.payload as Record<string, unknown>;
@@ -53,6 +53,13 @@ function copyFor(n: Item): { text: string; quote?: string } {
       return { text: `${game}${p.semver ? ` v${String(p.semver)}` : ""} needs changes before it can go live.`, ...(p.notes ? { quote: String(p.notes) } : null) };
     case "challenge_accepted":
       return { text: p.beat ? `${who} took your challenge on ${game} and beat it with ${fmt(p.score)}.` : `${who} took your challenge on ${game} and scored ${fmt(p.score)}. Yours stands.` };
+    case "milestone": {
+      const kind = MilestoneKindSchema.safeParse(p.kind);
+      if (!kind.success) return { text: `${game} hit a milestone.` };
+      const detail = typeof p.detail === "object" && p.detail !== null ? (p.detail as { players?: number; ratio?: number }) : {};
+      const m = milestoneCopy({ kind: kind.data, threshold: Number(p.threshold ?? 0), value: Number(p.value ?? 0), detail }, game);
+      return { text: m.body, figure: m.figureText };
+    }
   }
 }
 
@@ -138,9 +145,10 @@ export default function Inbox() {
 }
 
 function NotificationRowView({ n }: { n: Item }) {
-  const { text, quote } = copyFor(n);
+  const { text, quote, figure } = copyFor(n);
   const open = () => {
-    if (n.type === "follow" && n.actor) router.push(`/u/${n.actor.handle}`);
+    if (n.type === "milestone") router.push("/create");
+    else if (n.type === "follow" && n.actor) router.push(`/u/${n.actor.handle}`);
     else if ((n.type === "score_beaten" || n.type === "challenge_accepted") && n.game) router.push({ pathname: "/play", params: { first: n.game.slug, title: n.game.name } });
     else if (n.game) router.push(`/game/${n.game.slug}`);
   };
@@ -165,6 +173,10 @@ function NotificationRowView({ n }: { n: Item }) {
         <Button label="Follow back" small kind="secondary" onPress={() => requireMember("Sign up to follow.", () => void setFollow(n.actor!.id, true))} />
       ) : n.type === "score_beaten" && n.game ? (
         <Button label="Rematch" small kind="secondary" icon="bolt" onPress={open} />
+      ) : figure ? (
+        <T variant="headline" color={accentOf(n.game?.accent_color)} style={{ alignSelf: "center" }}>
+          {figure}
+        </T>
       ) : n.game ? (
         <GameIcon url={n.game.icon_url} size={40} accent={n.game.accent_color} />
       ) : null}

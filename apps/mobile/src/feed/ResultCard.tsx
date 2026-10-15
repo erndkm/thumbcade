@@ -28,7 +28,7 @@ export interface ResultCardProps {
   onSignUp: () => void;
 }
 
-/** Signature moment #4: score odometer, NEW BEST stamp in volt, today's percentile, the challenge CTA. */
+/** Signature moment #4: score odometer, NEW BEST stamp in the accent, today's percentile, the challenge CTA. */
 export const ResultCard = memo(function ResultCard({ card, result, guest, onReplay, onChallenge, onSignUp }: ResultCardProps) {
   const reduce = useReduceMotion();
   const accent = accentOf(card.game.accentColor);

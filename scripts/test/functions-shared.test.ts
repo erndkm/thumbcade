@@ -82,4 +82,15 @@ describe("push copy", () => {
     expect(pushCopy({ type: "challenge_accepted", payload: { beat: false, score: 10, challengeScore: 20 }, actorHandle: "x", gameName: "Snek", gameSlug: "snek" })?.title).toBe("Challenge held");
     expect(pushCopy({ type: "mystery", payload: null, actorHandle: null, gameName: null, gameSlug: null })).toBeNull();
   });
+
+  it("announces milestones in the creator's terms and opens the Creator Hub", () => {
+    expect(
+      pushCopy({ type: "milestone", payload: { kind: "players", threshold: 10000, value: 10012, detail: {} }, actorHandle: null, gameName: "Lane Rush", gameSlug: "lane-rush" }),
+    ).toEqual({ title: "10K players", body: "Lane Rush just passed 10,000 players.", url: "/create" });
+    expect(
+      pushCopy({ type: "milestone", payload: { kind: "taking_off", threshold: 20261014, value: 3.4, detail: { players: 680, ratio: 3.4 } }, actorHandle: null, gameName: "Snek", gameSlug: "snek" })
+        ?.body,
+    ).toBe("Snek is taking off: 3.4× your usual players today.");
+    expect(pushCopy({ type: "milestone", payload: { kind: "nope", threshold: 1, value: 1 }, actorHandle: null, gameName: "Snek", gameSlug: "snek" })).toBeNull();
+  });
 });

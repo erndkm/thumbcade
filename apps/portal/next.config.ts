@@ -3,7 +3,7 @@ import type { NextConfig } from "next";
 
 const config: NextConfig = {
   pageExtensions: ["ts", "tsx", "mdx"],
-  transpilePackages: ["@thumbcade/protocol", "@thumbcade/design-tokens", "@thumbcade/swipe-contract", "@thumbcade/sdk"],
+  transpilePackages: ["@thumbcade/protocol", "@thumbcade/design-tokens", "@thumbcade/legal", "@thumbcade/swipe-contract", "@thumbcade/sdk"],
   typedRoutes: false,
   agentRules: false,
   images: {

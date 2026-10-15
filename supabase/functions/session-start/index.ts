@@ -13,12 +13,13 @@ serve(["POST"], async (req) => {
   const caller = await requireCaller(req);
   const body = SessionStartRequestSchema.safeParse(await readJson(req));
   if (!body.success) throw new HttpError(400, "invalid_request", body.error.issues.map((i) => `${i.path.join(".")}: ${i.message}`).join("; "));
-  const { gameId, versionId, launchReason } = body.data;
+  const { gameId, versionId, launchReason, cardId } = body.data;
   const { data, error } = await adminClient().rpc("start_play_session", {
     p_user: caller.id,
     p_game: gameId,
     p_version: versionId,
     p_reason: launchReason,
+    p_card: cardId ?? null,
   });
   if (error) {
     if (/game_not_live|version_mismatch/.test(error.message)) throw new HttpError(404, "not_found", "That game version is not live.");

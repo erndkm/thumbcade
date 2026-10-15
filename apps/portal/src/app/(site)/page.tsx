@@ -26,13 +26,13 @@ export default async function Landing() {
         <div
           aria-hidden
           className="pointer-events-none absolute inset-0"
-          style={{ background: "radial-gradient(60% 50% at 78% 42%, rgba(212,255,61,0.10), transparent 70%)" }}
+          style={{ background: "radial-gradient(60% 50% at 78% 42%, rgba(255,74,61,0.10), transparent 70%)" }}
         />
         <div className="relative mx-auto grid max-w-[1280px] grid-cols-[minmax(0,1fr)] items-center gap-14 px-4 pb-24 pt-14 md:px-8 lg:grid-cols-[minmax(0,1fr)_auto] lg:gap-20 lg:pt-20">
           <div className="flex flex-col gap-8">
             <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
               <span className="label flex items-center gap-2 !text-text-dim">
-                <span className="inline-block size-2 rounded-full bg-volt shadow-[0_0_0_4px_rgba(212,255,61,0.18)]" />
+                <span className="inline-block size-2 rounded-full bg-accent shadow-[0_0_0_4px_rgba(255,74,61,0.18)]" />
                 Now playing
               </span>
               <span className="label">{stats.games} games live</span>
@@ -120,15 +120,15 @@ export default async function Landing() {
             </p>
             <ul className="mt-2 flex flex-col gap-3 text-[15px] text-text-dim">
               <li className="flex gap-3">
-                <Icon name="bolt" size={18} className="mt-0.5 shrink-0 text-volt" active />
+                <Icon name="bolt" size={18} className="mt-0.5 shrink-0 text-accent-text" active />
                 Taps are never delayed. The game gets your touch instantly.
               </li>
               <li className="flex gap-3">
-                <Icon name="bolt" size={18} className="mt-0.5 shrink-0 text-volt" active />
+                <Icon name="bolt" size={18} className="mt-0.5 shrink-0 text-accent-text" active />
                 There&apos;s always a way out: the Dock at the bottom edge.
               </li>
               <li className="flex gap-3">
-                <Icon name="bolt" size={18} className="mt-0.5 shrink-0 text-volt" active />
+                <Icon name="bolt" size={18} className="mt-0.5 shrink-0 text-accent-text" active />
                 No double-tap-to-like. Your double-taps belong to the game.
               </li>
             </ul>
@@ -207,12 +207,12 @@ export default async function Landing() {
             { n: "03", title: "Ship", cmd: "thumbcade publish", body: "Automated review checks budgets and the contract. A human plays it. Then it's live — no app update." },
           ].map((s) => (
             <div key={s.n} className="reveal flex flex-col gap-5 bg-bg p-7">
-              <span className="font-mono text-[13px] text-volt">{s.n}</span>
+              <span className="font-mono text-[13px] text-accent-text">{s.n}</span>
               <h3 className="font-wide text-[24px] font-extrabold tracking-tight text-text">{s.title}</h3>
               <code className="block rounded-[12px] border border-line bg-surface px-4 py-3 font-mono text-[13px] text-text">
                 <span className="text-text-mute">$ </span>
                 {s.cmd}
-                <span className="ml-0.5 inline-block h-4 w-2 translate-y-0.5 bg-volt [animation:caret_1s_steps(1)_infinite]" />
+                <span className="ml-0.5 inline-block h-4 w-2 translate-y-0.5 bg-accent [animation:caret_1s_steps(1)_infinite]" />
               </code>
               <p className="text-[15px] leading-6 text-text-dim">{s.body}</p>
             </div>
@@ -244,16 +244,16 @@ export default async function Landing() {
 
       {/* ------------------------------------------------------------------ GET */}
       <section id="get" className="mx-auto max-w-[1280px] px-4 pt-32 md:px-8">
-        <div className="reveal relative overflow-hidden rounded-[32px] bg-volt p-8 text-ink-1 sm:p-14">
+        <div className="reveal relative overflow-hidden rounded-[32px] bg-accent p-8 text-on-accent sm:p-14">
           <div className="grid items-center gap-10 md:grid-cols-[1fr_auto]">
             <div className="flex flex-col gap-5">
-              <span className="font-mono text-[12px] uppercase tracking-wider text-ink-1/60">Get Thumbcade</span>
+              <span className="font-mono text-[12px] uppercase tracking-wider text-ink-1/80">Get Thumbcade</span>
               <h2 className="display text-[clamp(44px,6.4vw,96px)]">
                 One thumb.
                 <br />
                 No end.
               </h2>
-              <p className="max-w-[460px] text-[17px] leading-7 text-ink-1/75">
+              <p className="max-w-[460px] text-[17px] leading-7 text-ink-1/90">
                 Scan to play on your phone right now. The iPhone and Android apps add your feed, your saves and your scores.
               </p>
               <div className="flex flex-wrap gap-3">
@@ -274,7 +274,7 @@ export default async function Landing() {
             </div>
             <div className="flex flex-col items-center gap-3">
               <div className="size-44 rounded-[20px] bg-paper p-4" dangerouslySetInnerHTML={{ __html: qr }} aria-label="QR code to play Thumbcade on your phone" role="img" />
-              <span className="font-mono text-[11px] uppercase tracking-wider text-ink-1/60">Point your camera here</span>
+              <span className="font-mono text-[11px] uppercase tracking-wider text-ink-1/80">Point your camera here</span>
             </div>
           </div>
         </div>
@@ -289,8 +289,8 @@ function ContractPanel({ step, title, body, owner }: { step: string; title: stri
       <div className="relative aspect-[9/19] overflow-hidden rounded-[22px] border border-line-strong bg-black">
         {owner === "feed" ? (
           <>
-            <div className="absolute inset-0 bg-[repeating-linear-gradient(135deg,rgba(212,255,61,0.16)_0_6px,transparent_6px_14px)]" />
-            <div className="absolute inset-x-[30%] top-[38%] flex flex-col items-center gap-1 text-volt">
+            <div className="absolute inset-0 bg-[repeating-linear-gradient(135deg,rgba(243,240,232,0.14)_0_6px,transparent_6px_14px)]" />
+            <div className="absolute inset-x-[30%] top-[38%] flex flex-col items-center gap-1 text-paper">
               <Icon name="swipeUp" size={28} />
               <span className="font-mono text-[9px] uppercase tracking-wider">feed</span>
             </div>
@@ -309,8 +309,8 @@ function ContractPanel({ step, title, body, owner }: { step: string; title: stri
               <Icon name="grid" size={26} />
               <span className="font-mono text-[9px] uppercase tracking-wider">game</span>
             </div>
-            <div className="absolute inset-x-0 bottom-0 flex h-[9%] items-center justify-center border-t border-volt/60 bg-volt/20">
-              <span className="block h-1 w-1/4 rounded-full bg-volt" />
+            <div className="absolute inset-x-0 bottom-0 flex h-[9%] items-center justify-center border-t border-paper/40 bg-paper/10">
+              <span className="block h-1 w-1/4 rounded-full bg-paper" />
             </div>
           </>
         ) : (
@@ -318,13 +318,13 @@ function ContractPanel({ step, title, body, owner }: { step: string; title: stri
             <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black/60" />
             <div className="absolute inset-x-[8%] bottom-[14%] flex flex-col gap-2 rounded-[12px] border border-white/10 bg-ink-2 p-3">
               <span className="font-mono text-[18px] leading-none text-paper">412</span>
-              <span className="block h-1 w-2/3 rounded bg-volt" />
+              <span className="block h-1 w-2/3 rounded bg-accent" />
               <div className="mt-1 grid grid-cols-2 gap-1.5">
                 <span className="block h-3 rounded-full bg-paper/80" />
                 <span className="block h-3 rounded-full border border-paper/40" />
               </div>
             </div>
-            <div className="absolute inset-x-[30%] top-[28%] flex flex-col items-center gap-1 text-volt">
+            <div className="absolute inset-x-[30%] top-[28%] flex flex-col items-center gap-1 text-paper">
               <Icon name="swipeUp" size={24} />
             </div>
           </>

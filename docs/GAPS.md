@@ -33,3 +33,18 @@ What could not be finished or verified, and exactly what a human must do.
 - **Entry-file warming** uses the app's HTTP stack (`fetch`), which warms DNS/TLS and the CDN edge but not the WebView's own cache (separate process on both platforms). The next card itself is fully preloaded (`OFFSCREEN`, ready, paused) so the landing card is always alive.
 - **Haptics in the simulator/emulator** can't be felt; the mapping is unit-tested and matches the design tokens.
 - **Maestro on the headless Android emulator** occasionally fails to start its on-device driver ("did not start up in time"); rerun. Use `-gpu host` (see CLAUDE.md); with software rendering the flows time out. `maestro/run.sh` works around adb's phantom `emulator-5554` (see docs/handoff/A.md).
+
+## Creator analytics (lead, 2026-10-14)
+- **Plays in the web player** (thumbcade.com share and challenge pages) don't open a server session, so they count toward nothing on the creator dashboard. Needs a session flow for the web host.
+- **Playtime before the analytics migration is unknown:** old sessions have no active time. Dashboards say "measured since" the migration date and never estimate earlier playtime.
+- **Version attribution is by day:** a release or rollback mid-day credits that day to whichever version was live at its last rollup.
+- **Docs pages log a hydration mismatch** in the browser console (all of `/docs/*`, before and after this work); the pages render, but the cause in the docs layout wasn't tracked down.
+- **Milestone pushes need the same EAS setup as every push** (see Player Platform); locally they land in the inbox.
+
+## EU / German compliance (lead, 2026-10-14)
+- **Launch blocker: operator details.** `packages/legal/src/operator.ts` holds bracketed placeholders (company name and legal form, address, managing director, phone, register court and number, VAT ID). Fill them in (set unused optional fields to `null`); `operatorHasPlaceholders()` reports leftovers. The same details go into the App Store / Play trader information.
+- **Organisational, not code:** sign data processing agreements (Art. 28) with Supabase, Cloudflare, the website host, the email provider and Expo; create the Supabase project in an EU region; keep request logs and backups within the 30-day bounds the Privacy Policy states (`RETENTION`); keep a record of processing activities (Art. 30).
+- **DSA statement of reasons (Art. 17):** when a moderator hides a comment the author isn't told why (no notification type for it). Game rejections already carry review notes; takedowns only set `status = 'removed'`. Needs a `content_removed` notification (enum change in the init contract) plus inbox copy.
+- **Rectification on the web:** the portal shows account data but profile edits are app-only; email changes go through privacy@.
+- **Web sign-ups have no age step:** the portal states accounts are for 13+ but doesn't ask for a birth year; their `age_band` stays null until they open the app.
+

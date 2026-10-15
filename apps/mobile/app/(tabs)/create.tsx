@@ -2,7 +2,7 @@ import { RefreshControl, ScrollView, View } from "react-native";
 import { router } from "expo-router";
 import * as WebBrowser from "expo-web-browser";
 import { useQuery } from "@tanstack/react-query";
-import { formatCount, formatRelative } from "@thumbcade/protocol";
+import { CreatorOverviewSchema, formatCount, formatRelative, milestoneCopy, type CreatorOverview } from "@thumbcade/protocol";
 import { env } from "../../src/lib/env";
 import { qk } from "../../src/lib/query";
 import { supabase } from "../../src/lib/supabase";
@@ -19,7 +19,7 @@ import { Press } from "../../src/ui/Press";
 import { Header, Screen, SectionTitle } from "../../src/ui/Screen";
 import { Skeleton } from "../../src/ui/Skeleton";
 import { T } from "../../src/ui/Text";
-import { c, layout, radius, space } from "../../src/ui/theme";
+import { accentOf, c, layout, radius, space } from "../../src/ui/theme";
 
 /** Creator Hub: pitches building a game to players; shows games, review status and today's stats to creators. */
 export default function Create() {
@@ -107,10 +107,7 @@ function Step({ icon, title, body }: { icon: IconName; title: string; body: stri
   );
 }
 
-type HubGame = Pick<GameRow, "id" | "slug" | "name" | "icon_url" | "accent_color" | "status" | "play_count" | "like_count"> & {
-  versions: { semver: string; status: string; created_at: string }[];
-  stats: { day: string; impressions: number; play_starts: number; likes: number; shares: number }[];
-};
+type HubVersions = Pick<GameRow, "id"> & { versions: { semver: string; status: string; created_at: string }[] };
 
 const STATUS_COPY: Record<string, { label: string; tone: "good" | "wait" | "bad" | "mute" }> = {
   approved: { label: "Live", tone: "good" },
@@ -121,36 +118,42 @@ const STATUS_COPY: Record<string, { label: string; tone: "good" | "wait" | "bad"
   rejected: { label: "Changes needed", tone: "bad" },
 };
 
+function nextLabel(next: CreatorOverview["games"][number]["next"]): string | null {
+  if (!next) return null;
+  return next.kind === "players"
+    ? `${formatCount(next.current)} / ${formatCount(next.target)} players`
+    : `${formatCount(next.current)} / ${formatCount(next.target)} hours played`;
+}
+
 function CreatorHub() {
   const userId = useAuth((s) => s.userId);
-  const today = new Date().toISOString().slice(0, 10);
   const q = useQuery({
     queryKey: [...qk.creatorHub, userId],
     enabled: !!userId,
     queryFn: async () => {
-      const { data, error } = await supabase
-        .from("games")
-        .select("id, slug, name, icon_url, accent_color, status, play_count, like_count, versions:game_versions(semver, status, created_at), stats:game_stats_daily(day, impressions, play_starts, likes, shares)")
-        .eq("creator_id", userId!)
-        .order("created_at", { ascending: false });
-      if (error) throw error;
-      return (data ?? []) as unknown as HubGame[];
+      const [overview, versions] = await Promise.all([
+        supabase.rpc("creator_overview"),
+        supabase.from("games").select("id, versions:game_versions(semver, status, created_at)").eq("creator_id", userId!),
+      ]);
+      if (overview.error) throw overview.error;
+      if (versions.error) throw versions.error;
+      const byGame = new Map(((versions.data ?? []) as unknown as HubVersions[]).map((g) => [g.id, g.versions]));
+      return { overview: CreatorOverviewSchema.parse(overview.data), byGame };
     },
   });
-  const games = q.data ?? [];
-  const todays = games.flatMap((g) => g.stats.filter((s) => s.day === today));
-  const sum = (k: "impressions" | "play_starts" | "likes" | "shares") => todays.reduce((a, s) => a + s[k], 0);
+  const o = q.data?.overview;
+  const latest = o?.milestones[0] ?? null;
+  const latestCopy = latest ? milestoneCopy(latest, latest.gameName) : null;
   return (
     <ScrollView refreshControl={<RefreshControl refreshing={q.isRefetching} onRefresh={() => void q.refetch()} tintColor={c.textDim} />} contentContainerStyle={{ paddingBottom: space[16] }}>
       <View style={{ flexDirection: "row", marginHorizontal: layout.gutter, borderWidth: 1, borderColor: c.line, borderRadius: radius.sheetInner, backgroundColor: c.surface }}>
         {[
-          { k: "impressions" as const, label: "Seen" },
-          { k: "play_starts" as const, label: "Plays" },
-          { k: "likes" as const, label: "Likes" },
-          { k: "shares" as const, label: "Shares" },
+          { label: "Players today", value: o?.today.players },
+          { label: "Plays today", value: o?.today.plays },
+          { label: "All-time players", value: o?.totals.players },
         ].map((s, i) => (
-          <View key={s.k} style={{ flex: 1, padding: space[3], borderLeftWidth: i ? 1 : 0, borderLeftColor: c.line, gap: 2 }}>
-            <T variant="headline">{formatCount(sum(s.k))}</T>
+          <View key={s.label} style={{ flex: 1, padding: space[3], borderLeftWidth: i ? 1 : 0, borderLeftColor: c.line, gap: 2 }}>
+            {s.value === undefined ? <Skeleton style={{ height: 24, width: 48 }} /> : <T variant="headline">{formatCount(s.value)}</T>}
             <T variant="monoLabel" color="textDim">
               {s.label}
             </T>
@@ -158,8 +161,27 @@ function CreatorHub() {
         ))}
       </View>
       <T variant="mono" color="textDim" style={{ paddingHorizontal: layout.gutter, marginTop: space[2] }}>
-        Today, all games · updates every 10 minutes
+        All your games · updates every 10 minutes
       </T>
+      {latest && latestCopy ? (
+        <Press
+          onPress={() => open(`${env.portalUrl}/creator`)}
+          scaleTo={0.99}
+          accessibilityLabel={`Latest milestone: ${latestCopy.body}, ${formatRelative(latest.reachedAt)}`}
+          style={{ marginHorizontal: layout.gutter, marginTop: space[4], padding: space[4], borderRadius: radius.sheetInner, borderWidth: 1, borderColor: c.line, flexDirection: "row", gap: space[3], alignItems: "center" }}
+        >
+          <GameIcon url={latest.iconUrl} size={48} accent={latest.accentColor} />
+          <View style={{ flex: 1, gap: 2 }}>
+            <T variant="monoLabel" color="textDim">
+              {latestCopy.title} · {formatRelative(latest.reachedAt)}
+            </T>
+            <T variant="body">{latestCopy.body}</T>
+          </View>
+          <T variant="headline" color={accentOf(latest.accentColor)}>
+            {latestCopy.figureText}
+          </T>
+        </Press>
+      ) : null}
       <SectionTitle>Your games</SectionTitle>
       {q.isPending ? (
         <View style={{ paddingHorizontal: layout.gutter, gap: space[3] }}>
@@ -168,7 +190,7 @@ function CreatorHub() {
         </View>
       ) : q.isError ? (
         <ErrorState what="Your games" onRetry={() => void q.refetch()} />
-      ) : games.length === 0 ? (
+      ) : !o || o.games.length === 0 ? (
         <View style={{ paddingHorizontal: layout.gutter, gap: space[3] }}>
           <T variant="body" color="textDim">
             Nothing published yet. Run `thumbcade publish` from your project and it shows up here with its review status.
@@ -176,19 +198,38 @@ function CreatorHub() {
           <Button label="Read the quickstart" small onPress={() => open(`${env.docsUrl}/quickstart`)} style={{ alignSelf: "flex-start" }} />
         </View>
       ) : (
-        games.map((g) => {
-          const latest = [...g.versions].sort((a, b) => b.created_at.localeCompare(a.created_at))[0];
-          const st = latest ? (STATUS_COPY[latest.status] ?? { label: latest.status, tone: "mute" as const }) : { label: "Draft", tone: "mute" as const };
-          const tone = st.tone === "good" ? c.accent : st.tone === "bad" ? c.heat : st.tone === "wait" ? c.warning : c.textDim;
-          const t = g.stats.find((s) => s.day === today);
+        o.games.map((g) => {
+          const versions = q.data?.byGame.get(g.id) ?? [];
+          const latestVersion = [...versions].sort((a, b) => b.created_at.localeCompare(a.created_at))[0];
+          const st = latestVersion ? (STATUS_COPY[latestVersion.status] ?? { label: latestVersion.status, tone: "mute" as const }) : { label: "Draft", tone: "mute" as const };
+          const tone = st.tone === "good" ? c.success : st.tone === "bad" ? c.heat : st.tone === "wait" ? c.warning : c.textDim;
+          const next = nextLabel(g.next);
+          const progress = g.next ? Math.max(0, Math.min(1, g.next.current / g.next.target)) : 0;
           return (
-            <Press key={g.id} onPress={() => (g.status === "live" ? router.push(`/game/${g.slug}`) : open(`${env.portalUrl}/dashboard`))} scaleTo={0.99} accessibilityLabel={`${g.name}, ${st.label}`} style={{ flexDirection: "row", alignItems: "center", gap: space[3], paddingHorizontal: layout.gutter, paddingVertical: space[2] }}>
-              <GameIcon url={g.icon_url} size={52} accent={g.accent_color} />
-              <View style={{ flex: 1, gap: 2 }}>
+            <Press
+              key={g.id}
+              onPress={() => (g.status === "live" ? router.push(`/game/${g.slug}`) : open(`${env.portalUrl}/creator/games/${g.slug}`))}
+              scaleTo={0.99}
+              accessibilityLabel={`${g.name}, ${st.label}, ${g.todayPlayers} players today${next ? `, next milestone ${next}` : ""}`}
+              style={{ flexDirection: "row", alignItems: "center", gap: space[3], paddingHorizontal: layout.gutter, paddingVertical: space[2] }}
+            >
+              <GameIcon url={g.iconUrl} size={52} accent={g.accentColor} />
+              <View style={{ flex: 1, gap: 4 }}>
                 <T variant="bodyStrong">{g.name}</T>
                 <T variant="mono" color="textDim">
-                  {latest ? `v${latest.semver} · ${formatRelative(latest.created_at)}` : "No versions yet"} · {formatCount(t?.play_starts ?? 0)} plays today
+                  {latestVersion ? `v${latestVersion.semver} · ` : ""}
+                  {formatCount(g.todayPlayers)} players today
                 </T>
+                {next ? (
+                  <View style={{ gap: 4 }}>
+                    <View style={{ height: 3, backgroundColor: c.line, overflow: "hidden" }}>
+                      <View style={{ height: 3, width: `${progress * 100}%`, backgroundColor: accentOf(g.accentColor) }} />
+                    </View>
+                    <T variant="monoLabel" color="textDim">
+                      Next: {next}
+                    </T>
+                  </View>
+                ) : null}
               </View>
               <View style={{ flexDirection: "row", alignItems: "center", gap: space[1.5] }}>
                 <View style={{ width: 6, height: 6, backgroundColor: tone }} />
@@ -201,7 +242,7 @@ function CreatorHub() {
         })
       )}
       <View style={{ paddingHorizontal: layout.gutter, marginTop: space[6], gap: space[2] }}>
-        <Button label="Open the creator dashboard" kind="secondary" onPress={() => open(`${env.portalUrl}/dashboard`)} />
+        <Button label="Open the creator dashboard" kind="secondary" onPress={() => open(`${env.portalUrl}/creator`)} />
         <Button label="Docs" kind="ghost" icon="code" onPress={() => open(env.docsUrl)} />
       </View>
     </ScrollView>

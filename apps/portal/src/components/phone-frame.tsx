@@ -33,7 +33,7 @@ export function PhoneFrame({ children, className, maxWidth = 414 }: { children: 
           padding: PHONE.bezel,
           background: "linear-gradient(160deg, #2c2c33 0%, #121216 38%, #0a0a0c 100%)",
           boxShadow:
-            "0 0 0 1px rgba(255,255,255,0.08) inset, 0 0 0 2px #050506, 0 50px 120px -20px rgba(0,0,0,0.9), 0 30px 60px -30px rgba(212,255,61,0.18)",
+            "0 0 0 1px rgba(255,255,255,0.08) inset, 0 0 0 2px #050506, 0 50px 120px -20px rgba(0,0,0,0.9), 0 30px 60px -30px rgba(255,74,61,0.18)",
         }}
       >
         <div className="relative overflow-hidden bg-black" style={{ width: PHONE.width, height: PHONE.height, borderRadius: 52 }}>

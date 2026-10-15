@@ -59,7 +59,7 @@
 }
 
 .conn.is-on::before {
-  background: var(--tc-accent);
+  background: var(--tc-success);
 }
 
 .state__phase {
@@ -190,7 +190,7 @@
 .clean svg {
   flex: none;
   margin-top: 1px;
-  color: var(--tc-accent-text);
+  color: var(--tc-success);
 }
 
 .issues {

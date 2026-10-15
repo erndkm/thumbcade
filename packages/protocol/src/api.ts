@@ -149,6 +149,8 @@ export const SessionStartRequestSchema = z.object({
   gameId: z.string().uuid(),
   versionId: z.string().uuid(),
   launchReason: LaunchReasonSchema,
+  /** The feed card the run started on, so sessions join to card views (creator funnel). */
+  cardId: z.string().max(80).optional(),
 });
 export type SessionStartRequest = z.infer<typeof SessionStartRequestSchema>;
 
@@ -163,10 +165,33 @@ export const SessionEndRequestSchema = z.object({
   sessionId: z.string().uuid(),
   token: z.string(),
   score: z.number().finite(),
+  /** Wall-clock time from start to end (the impossible-duration check uses it). */
   durationMs: z.number().int().nonnegative(),
+  /** Time the run spent in PLAYING while the game was running (not paused, dragged or offscreen). */
+  activeMs: z.number().int().nonnegative().optional(),
   outcome: z.enum(["win", "lose", "quit"]).optional(),
 });
 export type SessionEndRequest = z.infer<typeof SessionEndRequestSchema>;
+
+/**
+ * POST /functions/v1/session-progress — reports a run's active playtime before it ends: once when it reaches
+ * `QUALIFIED_PLAY_MS`, and when the run is interrupted (at most every `SESSION_PROGRESS_INTERVAL_MS`). The
+ * server clamps the value to wall-clock time and never lowers it. 429 `rate_limited` when called too often.
+ */
+export const SessionProgressRequestSchema = z.object({
+  sessionId: z.string().uuid(),
+  token: z.string(),
+  activeMs: z.number().int().nonnegative(),
+});
+export type SessionProgressRequest = z.infer<typeof SessionProgressRequestSchema>;
+
+export const SessionProgressResponseSchema = z.object({
+  /** The active playtime the server stored (clamped, never lowered). */
+  activeMs: z.number().int().nonnegative(),
+  /** The run counts as a play. */
+  qualified: z.boolean(),
+});
+export type SessionProgressResponse = z.infer<typeof SessionProgressResponseSchema>;
 
 /**
  * Why `session-end` did not accept a score. A rejected score is still a 200 response with

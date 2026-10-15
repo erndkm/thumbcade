@@ -26,7 +26,6 @@ import { layout, space } from "../../src/ui/theme";
 export default function Settings() {
   const me = useMe();
   const isGuest = useAuth((s) => s.isGuest);
-  const userId = useAuth((s) => s.userId);
   const s = useSettings();
   const taps = useRef(0);
   const [exporting, setExporting] = useState(false);
@@ -75,32 +74,36 @@ export default function Settings() {
         <SheetRow icon="flag" label="Community guidelines" onPress={() => router.push({ pathname: "/settings/legal", params: { doc: "guidelines" } })} />
         <SheetRow icon="link" label="Contact the safety team" hint={env.contactEmail} onPress={() => void Linking.openURL(`mailto:${env.contactEmail}`)} />
 
-        {!isGuest ? (
-          <>
-            <SectionTitle>Your data</SectionTitle>
-            <SheetRow
-              icon="download"
-              label={exporting ? "Packing your data…" : "Download my data"}
-              hint="A JSON file with your profile, scores, comments and more"
-              onPress={async () => {
-                if (!userId || exporting) return;
-                setExporting(true);
-                try {
-                  await exportMyData(userId);
-                } catch {
-                  toast("Export failed. Try again in a moment.", "bad");
-                } finally {
-                  setExporting(false);
-                }
-              }}
-            />
-            <SheetRow icon="close" label="Delete account" hint="Removes your account and everything in it" danger testID="delete-account" onPress={openDeleteSheet} />
-          </>
-        ) : null}
+        <SectionTitle>Your data</SectionTitle>
+        <SheetRow
+          icon="download"
+          label={exporting ? "Packing your data…" : "Download my data"}
+          hint="Everything we store about you, as a JSON file"
+          onPress={async () => {
+            if (exporting) return;
+            setExporting(true);
+            try {
+              await exportMyData();
+            } catch {
+              toast("Export failed. Try again in a moment.", "bad");
+            } finally {
+              setExporting(false);
+            }
+          }}
+        />
+        <SheetRow
+          icon="close"
+          label={isGuest ? "Delete my data" : "Delete account"}
+          hint={isGuest ? "Removes your guest profile, scores and saves" : "Removes your account and everything in it"}
+          danger
+          testID="delete-account"
+          onPress={() => openDeleteSheet(isGuest)}
+        />
 
         <SectionTitle>About</SectionTitle>
         <SheetRow icon="eye" label="Privacy Policy" onPress={() => router.push({ pathname: "/settings/legal", params: { doc: "privacy" } })} />
         <SheetRow icon="grid" label="Terms of Service" onPress={() => router.push({ pathname: "/settings/legal", params: { doc: "terms" } })} />
+        <SheetRow icon="home" label="Imprint" onPress={() => router.push({ pathname: "/settings/legal", params: { doc: "imprint" } })} />
         {devVisible ? <SheetRow icon="code" label="Developer menu" testID="open-dev-menu" onPress={() => router.push("/settings/dev")} /> : null}
         <Press onPress={tapVersion} scaleTo={1} accessibilityLabel={`Version ${version}`} testID="version-row" style={{ paddingHorizontal: layout.gutter, minHeight: 56, justifyContent: "center" }}>
           <T variant="mono" color="textDim">
@@ -118,17 +121,17 @@ export default function Settings() {
   );
 }
 
-function openDeleteSheet() {
-  openSheet({ key: "delete", snap: 0.62, keyboard: true, accessibilityLabel: "Delete account", render: (close) => <DeleteSheet onDone={close} /> });
+function openDeleteSheet(isGuest: boolean) {
+  openSheet({ key: "delete", snap: 0.62, keyboard: true, accessibilityLabel: "Delete account", render: (close) => <DeleteSheet isGuest={isGuest} onDone={close} /> });
 }
 
-function DeleteSheet({ onDone }: { onDone: () => void }) {
+function DeleteSheet({ isGuest, onDone }: { isGuest: boolean; onDone: () => void }) {
   const [text, setText] = useState("");
   const [busy, setBusy] = useState(false);
   return (
     <View style={{ paddingHorizontal: layout.gutter, gap: space[4] }}>
       <SheetDragArea>
-        <SheetTitle>Delete your account?</SheetTitle>
+        <SheetTitle>{isGuest ? "Delete your data?" : "Delete your account?"}</SheetTitle>
       </SheetDragArea>
       <T variant="body" color="textDim">
         This permanently deletes your profile, scores, likes, saves, comments, follows and game saves. It can't be undone. Type DELETE to confirm.
@@ -145,7 +148,7 @@ function DeleteSheet({ onDone }: { onDone: () => void }) {
           try {
             await deleteMyAccount();
             onDone();
-            toast("Your account is gone. Thanks for playing.", "good");
+            toast(isGuest ? "Your data is gone. Thanks for playing." : "Your account is gone. Thanks for playing.", "good");
             router.replace("/onboarding");
           } catch {
             toast("Deletion failed. Nothing was removed. Try again.", "bad");

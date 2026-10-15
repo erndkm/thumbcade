@@ -14,9 +14,11 @@
     "events/index.ts",
     "session-start/index.ts",
     "session-end/index.ts",
+    "session-progress/index.ts",
     "challenge-resolve/index.ts",
     "share-create/index.ts",
     "account-delete/index.ts",
+    "account-export/index.ts",
     "notify/index.ts",
     "_shared/*.ts"
   ]

@@ -1,7 +1,7 @@
 import { formatCount, safeAccent } from "@thumbcade/protocol";
 import { ImageResponse } from "next/og";
 import { getGameBySlug } from "@/lib/data";
-import { brandMarkDataUrl, ogFonts } from "@/lib/og";
+import { brandMarkDataUrl, imageDataUrl, ogFonts } from "@/lib/og";
 
 export const runtime = "nodejs";
 export const size = { width: 1200, height: 630 };
@@ -11,7 +11,8 @@ export const alt = "A game on Thumbcade";
 export default async function Image({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
   const [game, fonts, mark] = await Promise.all([getGameBySlug(slug), ogFonts(), brandMarkDataUrl()]);
-  const accent = game ? safeAccent(game.accentColor) : "#D4FF3D";
+  const icon = await imageDataUrl(game?.iconUrl);
+  const accent = game ? safeAccent(game.accentColor) : "#FF4A3D";
   return new ImageResponse(
     (
       <div style={{ width: "100%", height: "100%", display: "flex", background: "#000", color: "#F3F0E8", padding: 64, position: "relative" }}>
@@ -23,9 +24,9 @@ export default async function Image({ params }: { params: Promise<{ slug: string
             <span style={{ fontFamily: "Mono", fontSize: 22, letterSpacing: 1, color: "#A7A3AE" }}>THUMBCADE · PLAY FREE, NO INSTALL</span>
           </div>
           <div style={{ display: "flex", alignItems: "center", gap: 44 }}>
-            {game?.iconUrl ? (
+            {icon ? (
                
-              <img src={game.iconUrl} width={220} height={220} style={{ borderRadius: 50 }} alt="" />
+              <img src={icon} width={220} height={220} style={{ borderRadius: 50 }} alt="" />
             ) : (
               <div style={{ width: 220, height: 220, borderRadius: 50, background: accent, display: "flex" }} />
             )}

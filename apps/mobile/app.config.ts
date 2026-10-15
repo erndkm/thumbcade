@@ -11,7 +11,7 @@ const config: ExpoConfig = {
   icon: brand("app-icon.png"),
   userInterfaceStyle: "dark",
   backgroundColor: "#000000",
-  primaryColor: "#D4FF3D",
+  primaryColor: "#FF4A3D",
   ios: {
     bundleIdentifier: "com.thumbcade.app",
     supportsTablet: false,
@@ -91,7 +91,7 @@ const config: ExpoConfig = {
     "expo-sqlite",
     "expo-apple-authentication",
     "expo-web-browser",
-    ["expo-notifications", { color: "#D4FF3D" }],
+    ["expo-notifications", { color: "#FF4A3D" }],
     [
       "expo-media-library",
       { savePhotosPermission: "Save share cards of your scores to your photo library.", isAccessMediaLocationEnabled: false },

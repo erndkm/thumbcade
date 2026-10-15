@@ -27,7 +27,7 @@ export function GameHero({ card, eyebrow, title, children, leaders }: { card: We
           <div className="mt-3 flex items-center gap-2 text-[15px] text-text-dim">
             <Avatar url={card.creator.avatarUrl} seed={card.creator.avatarSeed} size={24} />
             <span>@{card.creator.handle}</span>
-            {card.creator.verified ? <span className="size-3 rounded-full bg-volt" title="Verified creator" /> : null}
+            {card.creator.verified ? <span className="size-3 rounded-full bg-accent" title="Verified creator" /> : null}
           </div>
         </div>
       </div>

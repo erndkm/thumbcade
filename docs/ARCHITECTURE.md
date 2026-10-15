@@ -20,7 +20,7 @@
               Game host: prod <slug>.thumbcade.gg/<versionId>/      Supabase: Postgres + RLS, Auth (anon → Apple/Google/
               (R2 + CDN) · local services/game-host :5555           email), Storage, Realtime, Edge Functions:
               reads the `game-bundles` bucket                       feed · events · session-start/end · notify ·
-                                                                    challenge-resolve · account-delete · creator-publish
+                                                                    challenge-resolve · account-delete/export · creator-publish
                                                                     · creator-review-callback · pg_cron rollups
                                          ▲                                               ▲
                                          │                                               │
@@ -60,4 +60,7 @@ place (`profiles.is_guest` flips via trigger). RLS: social writes require `publi
   `session-end` checks it against the caller, the manifest's `score.max` and the server clock. Challenge links
   can only carry a score at or below the caller's verified best.
 - Client analytics (`events`) are capped per user per minute, because trending and ranking signals roll up
-  from them. Public play counts come from server sessions, not from events.
+  from them. Public play counts come from server sessions, not from events: a session counts once it qualifies (the
+  game ended it, or 3 s of active play), capped per person per day, and never for the game's creator or admins.
+- Creator analytics: per-player aggregates (`game_players`, `game_player_days`) are server-only; creators read
+  owner-checked `creator_*` RPCs (aggregates only). Milestones are private until their creator shares them.

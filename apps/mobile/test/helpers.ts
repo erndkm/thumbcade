@@ -73,6 +73,7 @@ export function harness(opts: { vertical?: boolean; best?: number | null; sessio
     }),
     sessionStart: jest.fn(async () => ({ sessionId: "44444444-4444-4444-8444-444444444444", token: "tok" })),
     sessionEnd: jest.fn(async () => ({ accepted: true, best: 120, isNewBest: true, percentile: 91, dailyRank: 3, ...opts.sessionEnd })),
+    sessionProgress: jest.fn(async (req: { activeMs: number }) => ({ activeMs: req.activeMs, qualified: req.activeMs >= 3000 })),
     storageGet: jest.fn(async () => ({ best: 3 })),
     storageSet: jest.fn(async () => undefined),
     leaderboardTop: jest.fn(async () => []),

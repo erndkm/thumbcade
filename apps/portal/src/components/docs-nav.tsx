@@ -4,7 +4,7 @@ import { usePathname } from "next/navigation";
 
 const sections = [
   { title: "Start", items: [["Quickstart", "/docs"], ["The CLI", "/docs/cli"]] },
-  { title: "Reference", items: [["SDK", "/docs/sdk"], ["Manifest", "/docs/manifest"], ["Budgets", "/docs/budgets"]] },
+  { title: "Reference", items: [["SDK", "/docs/sdk"], ["Manifest", "/docs/manifest"], ["Budgets", "/docs/budgets"], ["How we count players", "/docs/analytics"]] },
   { title: "Guides", items: [["The Swipe Contract", "/docs/swipe-contract"], ["Designing for the feed", "/docs/design"], ["Review guidelines", "/docs/review"]] },
 ] as const;
 

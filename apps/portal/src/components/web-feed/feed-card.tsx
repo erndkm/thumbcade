@@ -412,7 +412,7 @@ export function FeedCard({
         <div className="pointer-events-auto absolute bottom-0 left-0 flex flex-col gap-1.5 p-4 pr-0" style={{ right: layout.actionRailWidth, maxHeight: layout.captionHeight }}>
           <div className="flex items-center gap-1.5 text-[15px] font-semibold text-paper">
             @{card.creator.handle}
-            {card.creator.verified ? <span className="inline-block size-3.5 rounded-full bg-volt" title="Verified creator" /> : null}
+            {card.creator.verified ? <span className="inline-block size-3.5 rounded-full bg-accent" title="Verified creator" /> : null}
           </div>
           <div className="font-wide text-[19px] font-extrabold leading-[22px] tracking-tight text-paper">{card.name}</div>
           <p className="line-clamp-2 text-[14px] leading-[19px] text-paper/85">
@@ -448,7 +448,7 @@ export function FeedCard({
           </div>
           <RailButton icon="like" active={social.liked} activeColor="var(--color-heat)" label={formatCount(social.counts.likes)} onClick={social.toggleLike} aria={social.liked ? "Unlike" : "Like"} />
           <RailButton icon="comment" label={formatCount(card.stats.comments)} onClick={() => onOpenComments(card)} aria="Comments" />
-          <RailButton icon="save" active={social.saved} activeColor="var(--color-volt)" label={formatCount(social.counts.saves)} onClick={social.toggleSave} aria={social.saved ? "Unsave" : "Save"} />
+          <RailButton icon="save" active={social.saved} activeColor="var(--color-accent)" label={formatCount(social.counts.saves)} onClick={social.toggleSave} aria={social.saved ? "Unsave" : "Save"} />
           <RailButton icon="share" label={formatCount(card.stats.shares)} onClick={() => void onShare(card)} aria="Share" />
           <Link href={`/g/${card.slug}`} aria-label={`Open ${card.name}`} className="mt-1 block rounded-[12px] p-[3px]" style={{ background: "#1b1b21" }}>
             <span className="block motion-safe:animate-[spin-slow_8s_linear_infinite]">
@@ -487,7 +487,7 @@ export function FeedCard({
         <div className="absolute inset-0 flex flex-col items-center justify-center gap-4 bg-black/70 px-10 text-center">
           <p className="font-wide text-[20px] font-extrabold text-paper">That game tripped over a cable.</p>
           <p className="text-[14px] text-paper/70">It didn&apos;t start in time. Give it another go, or swipe on.</p>
-          <button type="button" onClick={() => dispatch({ type: "RETRY" })} className="h-11 rounded-pill bg-volt px-5 font-semiwide text-[15px] font-bold text-ink-1">
+          <button type="button" onClick={() => dispatch({ type: "RETRY" })} className="h-11 rounded-pill bg-accent px-5 font-semiwide text-[15px] font-bold text-on-accent">
             Retry
           </button>
         </div>

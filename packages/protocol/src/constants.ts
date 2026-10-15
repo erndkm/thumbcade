@@ -59,6 +59,18 @@ export type AnalyticsEventName = (typeof ANALYTICS_EVENT_WHITELIST)[number];
 /** Idle time in PLAYING before the shell auto-pauses the card. */
 export const PLAYING_IDLE_PAUSE_MS = 20_000;
 
+/**
+ * A run counts as a play once the game ends it (`gameplay.end`) or once it reaches this much active playtime,
+ * whichever comes first. Mirrored in SQL (`feed_config` key `analytics`); a test keeps the two equal.
+ */
+export const QUALIFIED_PLAY_MS = 3000;
+
+/** The shell reports a run's active playtime to `session-progress` at most this often. */
+export const SESSION_PROGRESS_INTERVAL_MS = 5000;
+
+/** Creator-dashboard rates are shown only when their denominator reaches this. */
+export const ANALYTICS_MIN_SAMPLE = 20;
+
 /** Categories surfaced in Discover. Hashtags are free-form; these are curated buckets. */
 export const CATEGORIES = [
   { id: "arcade", label: "Arcade", tags: ["arcade", "onetap", "flyer", "runner"] },

@@ -24,6 +24,7 @@
     "@supabase/ssr": "0.12.7",
     "@supabase/supabase-js": "2.117.3",
     "@thumbcade/design-tokens": "workspace:*",
+    "@thumbcade/legal": "workspace:*",
     "@thumbcade/protocol": "workspace:*",
     "@thumbcade/swipe-contract": "workspace:*",
     "next": "16.4.0",

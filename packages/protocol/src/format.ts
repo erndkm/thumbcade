@@ -24,6 +24,24 @@ export function formatScore(score: number, config?: Pick<ScoreConfig, "format" |
   return config?.unit ? `${grouped}${config.unit}` : grouped;
 }
 
+/**
+ * A playtime for humans: "8.4 s", "12 min", "3.5 h", "1.2K h". Never rounds up past the truth: the parts
+ * are floored, so "1 min" means at least a minute.
+ */
+export function formatPlaytime(ms: number): string {
+  const s = Math.max(0, ms) / 1000;
+  if (s < 60) return `${s < 10 ? (Math.floor(s * 10) / 10).toString() : Math.floor(s)} s`;
+  const min = s / 60;
+  if (min < 60) {
+    const whole = Math.floor(min);
+    const rest = Math.floor(s - whole * 60);
+    return whole < 10 && rest > 0 ? `${whole} min ${rest} s` : `${whole} min`;
+  }
+  const h = min / 60;
+  if (h < 100) return `${(Math.floor(h * 10) / 10).toString()} h`;
+  return `${formatCount(Math.floor(h))} h`;
+}
+
 /** "now", "3m", "2h", "5d", "3w", then a short date. */
 export function formatRelative(date: Date | string | number, now: number = Date.now()): string {
   const t = typeof date === "object" ? date.getTime() : new Date(date).getTime();

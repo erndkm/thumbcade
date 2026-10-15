@@ -6,6 +6,11 @@ import {
   formatScore,
   gameEntryUrl,
   parseGameMessage,
+  formatPlaytime,
+  METRIC_DEFINITIONS,
+  milestoneCopy,
+  nonstopSpan,
+  rateOrNull,
   safeAccent,
   validateManifest,
 } from "../src/index.ts";
@@ -96,5 +101,43 @@ describe("format", () => {
   it("falls back when an accent has poor contrast", () => {
     expect(safeAccent("#111111")).toBe("#F3F0E8");
     expect(safeAccent("#D4FF3D")).toBe("#D4FF3D");
+  });
+});
+
+describe("creator analytics", () => {
+  it("formats playtime without rounding up", () => {
+    expect(formatPlaytime(8_449)).toBe("8.4 s");
+    expect(formatPlaytime(42_900)).toBe("42 s");
+    expect(formatPlaytime(72_000)).toBe("1 min 12 s");
+    expect(formatPlaytime(12 * 60_000 + 59_000)).toBe("12 min");
+    expect(formatPlaytime(3.56 * 3_600_000)).toBe("3.5 h");
+    expect(formatPlaytime(1_234 * 3_600_000)).toBe("1.2K h");
+  });
+
+  it("writes milestone copy that never claims more than happened", () => {
+    expect(milestoneCopy({ kind: "players", threshold: 10_000, value: 10_212, detail: {} }, "Lane Rush")).toMatchObject({
+      title: "10K players",
+      body: "Lane Rush just passed 10,000 players.",
+      figureText: "10,000",
+    });
+    expect(milestoneCopy({ kind: "playtime", threshold: 1000, value: 1003, detail: {} }, "Stackd").body).toBe(
+      "1,000 hours played in Stackd. That's more than 5 weeks of nonstop play.",
+    );
+    expect(milestoneCopy({ kind: "taking_off", threshold: 20261014, value: 3.4, detail: { players: 680, ratio: 3.4 } }, "Snek")).toMatchObject({
+      body: "Snek is taking off: 3.4× your usual players today.",
+      figureText: "3.4×",
+    });
+    expect(nonstopSpan(100)).toBe("4 days");
+    expect(nonstopSpan(10_000)).toBe("1 year");
+  });
+
+  it("has a definition for every metric and a rate floor", () => {
+    for (const [id, def] of Object.entries(METRIC_DEFINITIONS)) {
+      expect(def.label.length, id).toBeGreaterThan(2);
+      expect(def.definition.endsWith("."), id).toBe(true);
+    }
+    expect(rateOrNull(5, 19, 20)).toBeNull();
+    expect(rateOrNull(5, 20, 20)).toBe(0.25);
+    expect(rateOrNull(0, 0, 0)).toBeNull();
   });
 });

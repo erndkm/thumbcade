@@ -5,12 +5,13 @@
   "scripts": {
     "seed": "tsx seed.ts",
     "typecheck": "tsc -p tsconfig.json && tsc -p ../supabase/functions/tsconfig.json",
-    "lint": "eslint seed.ts seed test ../supabase/functions/feed ../supabase/functions/events ../supabase/functions/session-start ../supabase/functions/session-end ../supabase/functions/challenge-resolve ../supabase/functions/share-create ../supabase/functions/account-delete ../supabase/functions/notify ../supabase/functions/_shared",
+    "lint": "eslint seed.ts seed test ../supabase/functions/feed ../supabase/functions/events ../supabase/functions/session-start ../supabase/functions/session-end ../supabase/functions/session-progress ../supabase/functions/challenge-resolve ../supabase/functions/share-create ../supabase/functions/account-delete ../supabase/functions/account-export ../supabase/functions/notify ../supabase/functions/_shared",
     "test": "vitest run"
   },
   "dependencies": {
-    "@thumbcade/protocol": "workspace:*",
-    "@supabase/supabase-js": "2.117.3"
+    "@supabase/supabase-js": "2.117.3",
+    "@thumbcade/legal": "workspace:*",
+    "@thumbcade/protocol": "workspace:*"
   },
   "devDependencies": {
     "playwright": "1.64.0"

@@ -165,6 +165,32 @@ isOneToOne: false
       referencedColumns: ["id"]
     }
                   ]
+                },"creator_milestones": {
+                  Row: {
+                    "creator_id": string,"detail": NonNullable<Json>,"game_id": string,"id": string,"is_seed": boolean,"kind": string,"reached_at": string,"seen_at": string | null,"share_code": string | null,"threshold": number,"value": number
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "creator_id": string,"detail"?: NonNullable<Json>,"game_id": string,"id"?: string,"is_seed"?: boolean,"kind": string,"reached_at"?: string,"seen_at"?: string | null,"share_code"?: string | null,"threshold": number,"value": number
+                  }
+                  Update: {
+                    "creator_id"?: string,"detail"?: NonNullable<Json>,"game_id"?: string,"id"?: string,"is_seed"?: boolean,"kind"?: string,"reached_at"?: string,"seen_at"?: string | null,"share_code"?: string | null,"threshold"?: number,"value"?: number
+                  }
+                  Relationships: [
+                    {
+      foreignKeyName: "creator_milestones_creator_id_fkey"
+      columns: ["creator_id"]
+isOneToOne: false
+      referencedRelation: "profiles"
+      referencedColumns: ["id"]
+    },{
+      foreignKeyName: "creator_milestones_game_id_fkey"
+      columns: ["game_id"]
+isOneToOne: false
+      referencedRelation: "games"
+      referencedColumns: ["id"]
+    }
+                  ]
                 },"creator_tokens": {
                   Row: {
                     "created_at": string,"creator_id": string,"id": string,"last_used_at": string | null,"name": string,"revoked_at": string | null,"token_hash": string,"token_prefix": string
@@ -365,6 +391,20 @@ isOneToOne: false
                   Relationships: [
                     
                   ]
+                },"feed_events_20261021": {
+                  Row: {
+                    "card_id": string | null,"client_ts": string | null,"created_at": string,"duration_ms": number | null,"dwell_ms": number | null,"feed_id": string | null,"game_id": string | null,"id": number,"meta": Json | null,"score": number | null,"state": string | null,"type": Database["public"]['Enums']["feed_event_type"],"user_id": string,"version_id": string | null
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "card_id"?: string | null,"client_ts"?: string | null,"created_at"?: string,"duration_ms"?: number | null,"dwell_ms"?: number | null,"feed_id"?: string | null,"game_id"?: string | null,"id"?: never,"meta"?: Json | null,"score"?: number | null,"state"?: string | null,"type": Database["public"]['Enums']["feed_event_type"],"user_id": string,"version_id"?: string | null
+                  }
+                  Update: {
+                    "card_id"?: string | null,"client_ts"?: string | null,"created_at"?: string,"duration_ms"?: number | null,"dwell_ms"?: number | null,"feed_id"?: string | null,"game_id"?: string | null,"id"?: never,"meta"?: Json | null,"score"?: number | null,"state"?: string | null,"type"?: Database["public"]['Enums']["feed_event_type"],"user_id"?: string,"version_id"?: string | null
+                  }
+                  Relationships: [
+                    
+                  ]
                 },"feed_events_default": {
                   Row: {
                     "card_id": string | null,"client_ts": string | null,"created_at": string,"duration_ms": number | null,"dwell_ms": number | null,"feed_id": string | null,"game_id": string | null,"id": number,"meta": Json | null,"score": number | null,"state": string | null,"type": Database["public"]['Enums']["feed_event_type"],"user_id": string,"version_id": string | null
@@ -402,6 +442,26 @@ isOneToOne: false
       columns: ["follower_id"]
 isOneToOne: false
       referencedRelation: "profiles"
+      referencedColumns: ["id"]
+    }
+                  ]
+                },"game_benchmarks": {
+                  Row: {
+                    "computed_at": string,"game_id": string,"games_compared": number,"metrics": NonNullable<Json>
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "computed_at"?: string,"game_id": string,"games_compared": number,"metrics": NonNullable<Json>
+                  }
+                  Update: {
+                    "computed_at"?: string,"game_id"?: string,"games_compared"?: number,"metrics"?: NonNullable<Json>
+                  }
+                  Relationships: [
+                    {
+      foreignKeyName: "game_benchmarks_game_id_fkey"
+      columns: ["game_id"]
+isOneToOne: true
+      referencedRelation: "games"
       referencedColumns: ["id"]
     }
                   ]
@@ -457,16 +517,68 @@ isOneToOne: false
       referencedColumns: ["id"]
     }
                   ]
-                },"game_stats_daily": {
+                },"game_player_days": {
                   Row: {
-                    "comments": number,"day": string,"fast_skips": number,"game_id": string,"impressions": number,"likes": number,"load_failures": number,"play_ends": number,"play_starts": number,"ready_count": number,"replays": number,"saves": number,"shares": number,"total_play_ms": number,"unique_players": number
+                    "active_ms": number,"day": string,"game_id": string,"plays": number,"user_id": string
                   }
                   ComputedFields: never
                   Insert: {
-                    "comments"?: number,"day": string,"fast_skips"?: number,"game_id": string,"impressions"?: number,"likes"?: number,"load_failures"?: number,"play_ends"?: number,"play_starts"?: number,"ready_count"?: number,"replays"?: number,"saves"?: number,"shares"?: number,"total_play_ms"?: number,"unique_players"?: number
+                    "active_ms"?: number,"day": string,"game_id": string,"plays"?: number,"user_id": string
                   }
                   Update: {
-                    "comments"?: number,"day"?: string,"fast_skips"?: number,"game_id"?: string,"impressions"?: number,"likes"?: number,"load_failures"?: number,"play_ends"?: number,"play_starts"?: number,"ready_count"?: number,"replays"?: number,"saves"?: number,"shares"?: number,"total_play_ms"?: number,"unique_players"?: number
+                    "active_ms"?: number,"day"?: string,"game_id"?: string,"plays"?: number,"user_id"?: string
+                  }
+                  Relationships: [
+                    {
+      foreignKeyName: "game_player_days_game_id_fkey"
+      columns: ["game_id"]
+isOneToOne: false
+      referencedRelation: "games"
+      referencedColumns: ["id"]
+    },{
+      foreignKeyName: "game_player_days_user_id_fkey"
+      columns: ["user_id"]
+isOneToOne: false
+      referencedRelation: "profiles"
+      referencedColumns: ["id"]
+    }
+                  ]
+                },"game_players": {
+                  Row: {
+                    "active_ms": number,"days_played": number,"first_played_at": string,"game_id": string,"last_played_at": string,"plays": number,"user_id": string
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "active_ms"?: number,"days_played"?: number,"first_played_at": string,"game_id": string,"last_played_at": string,"plays"?: number,"user_id": string
+                  }
+                  Update: {
+                    "active_ms"?: number,"days_played"?: number,"first_played_at"?: string,"game_id"?: string,"last_played_at"?: string,"plays"?: number,"user_id"?: string
+                  }
+                  Relationships: [
+                    {
+      foreignKeyName: "game_players_game_id_fkey"
+      columns: ["game_id"]
+isOneToOne: false
+      referencedRelation: "games"
+      referencedColumns: ["id"]
+    },{
+      foreignKeyName: "game_players_user_id_fkey"
+      columns: ["user_id"]
+isOneToOne: false
+      referencedRelation: "profiles"
+      referencedColumns: ["id"]
+    }
+                  ]
+                },"game_stats_daily": {
+                  Row: {
+                    "active_play_ms": number,"bounced_starts": number,"comments": number,"day": string,"fast_skips": number,"follows": number,"game_id": string,"impressions": number,"is_seed": boolean,"left_after_run": number,"left_after_watching": number,"left_instantly": number,"left_mid_run": number,"likes": number,"load_failures": number,"new_players": number,"play_ends": number,"play_starts": number,"players": number,"players_28d": number,"players_7d": number,"plays": number,"ready_count": number,"ready_ms_p50": number | null,"ready_ms_p90": number | null,"replays": number,"returned_d1": number | null,"returned_d7": number | null,"saves": number,"shares": number,"total_play_ms": number,"unique_players": number,"views_played": number,"views_replayed": number,"views_started": number
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "active_play_ms"?: number,"bounced_starts"?: number,"comments"?: number,"day": string,"fast_skips"?: number,"follows"?: number,"game_id": string,"impressions"?: number,"is_seed"?: boolean,"left_after_run"?: number,"left_after_watching"?: number,"left_instantly"?: number,"left_mid_run"?: number,"likes"?: number,"load_failures"?: number,"new_players"?: number,"play_ends"?: number,"play_starts"?: number,"players"?: number,"players_28d"?: number,"players_7d"?: number,"plays"?: number,"ready_count"?: number,"ready_ms_p50"?: number | null,"ready_ms_p90"?: number | null,"replays"?: number,"returned_d1"?: number | null,"returned_d7"?: number | null,"saves"?: number,"shares"?: number,"total_play_ms"?: number,"unique_players"?: number,"views_played"?: number,"views_replayed"?: number,"views_started"?: number
+                  }
+                  Update: {
+                    "active_play_ms"?: number,"bounced_starts"?: number,"comments"?: number,"day"?: string,"fast_skips"?: number,"follows"?: number,"game_id"?: string,"impressions"?: number,"is_seed"?: boolean,"left_after_run"?: number,"left_after_watching"?: number,"left_instantly"?: number,"left_mid_run"?: number,"likes"?: number,"load_failures"?: number,"new_players"?: number,"play_ends"?: number,"play_starts"?: number,"players"?: number,"players_28d"?: number,"players_7d"?: number,"plays"?: number,"ready_count"?: number,"ready_ms_p50"?: number | null,"ready_ms_p90"?: number | null,"replays"?: number,"returned_d1"?: number | null,"returned_d7"?: number | null,"saves"?: number,"shares"?: number,"total_play_ms"?: number,"unique_players"?: number,"views_played"?: number,"views_replayed"?: number,"views_started"?: number
                   }
                   Relationships: [
                     {
@@ -511,14 +623,14 @@ isOneToOne: false
                   ]
                 },"games": {
                   Row: {
-                    "accent_color": string,"age_rating": Database["public"]['Enums']["age_rating"],"audio": boolean,"comment_count": number,"controls": NonNullable<Json>,"created_at": string,"creator_id": string,"description": string,"featured_rank": number | null,"icon_url": string | null,"id": string,"is_seed": boolean,"like_count": number,"live_version_id": string | null,"name": string,"play_count": number,"poster_url": string | null,"primary_tag": string | null,"published_at": string | null,"save_count": number,"score_config": NonNullable<Json>,"session_length": string,"share_count": number,"slug": string,"status": Database["public"]['Enums']["game_status"],"tags": (string)[],"updated_at": string
+                    "accent_color": string,"age_rating": Database["public"]['Enums']["age_rating"],"audio": boolean,"comment_count": number,"controls": NonNullable<Json>,"created_at": string,"creator_id": string,"description": string,"featured_rank": number | null,"icon_url": string | null,"id": string,"is_seed": boolean,"like_count": number,"live_version_id": string | null,"name": string,"play_count": number,"play_ms_total": number,"player_count": number,"poster_url": string | null,"primary_tag": string | null,"published_at": string | null,"save_count": number,"score_config": NonNullable<Json>,"session_length": string,"share_count": number,"slug": string,"status": Database["public"]['Enums']["game_status"],"tags": (string)[],"updated_at": string
                   }
                   ComputedFields: never
                   Insert: {
-                    "accent_color"?: string,"age_rating"?: Database["public"]['Enums']["age_rating"],"audio"?: boolean,"comment_count"?: number,"controls"?: NonNullable<Json>,"created_at"?: string,"creator_id": string,"description"?: string,"featured_rank"?: number | null,"icon_url"?: string | null,"id"?: string,"is_seed"?: boolean,"like_count"?: number,"live_version_id"?: string | null,"name": string,"play_count"?: number,"poster_url"?: string | null,"primary_tag"?: never,"published_at"?: string | null,"save_count"?: number,"score_config"?: NonNullable<Json>,"session_length"?: string,"share_count"?: number,"slug": string,"status"?: Database["public"]['Enums']["game_status"],"tags"?: (string)[],"updated_at"?: string
+                    "accent_color"?: string,"age_rating"?: Database["public"]['Enums']["age_rating"],"audio"?: boolean,"comment_count"?: number,"controls"?: NonNullable<Json>,"created_at"?: string,"creator_id": string,"description"?: string,"featured_rank"?: number | null,"icon_url"?: string | null,"id"?: string,"is_seed"?: boolean,"like_count"?: number,"live_version_id"?: string | null,"name": string,"play_count"?: number,"play_ms_total"?: number,"player_count"?: number,"poster_url"?: string | null,"primary_tag"?: never,"published_at"?: string | null,"save_count"?: number,"score_config"?: NonNullable<Json>,"session_length"?: string,"share_count"?: number,"slug": string,"status"?: Database["public"]['Enums']["game_status"],"tags"?: (string)[],"updated_at"?: string
                   }
                   Update: {
-                    "accent_color"?: string,"age_rating"?: Database["public"]['Enums']["age_rating"],"audio"?: boolean,"comment_count"?: number,"controls"?: NonNullable<Json>,"created_at"?: string,"creator_id"?: string,"description"?: string,"featured_rank"?: number | null,"icon_url"?: string | null,"id"?: string,"is_seed"?: boolean,"like_count"?: number,"live_version_id"?: string | null,"name"?: string,"play_count"?: number,"poster_url"?: string | null,"primary_tag"?: never,"published_at"?: string | null,"save_count"?: number,"score_config"?: NonNullable<Json>,"session_length"?: string,"share_count"?: number,"slug"?: string,"status"?: Database["public"]['Enums']["game_status"],"tags"?: (string)[],"updated_at"?: string
+                    "accent_color"?: string,"age_rating"?: Database["public"]['Enums']["age_rating"],"audio"?: boolean,"comment_count"?: number,"controls"?: NonNullable<Json>,"created_at"?: string,"creator_id"?: string,"description"?: string,"featured_rank"?: number | null,"icon_url"?: string | null,"id"?: string,"is_seed"?: boolean,"like_count"?: number,"live_version_id"?: string | null,"name"?: string,"play_count"?: number,"play_ms_total"?: number,"player_count"?: number,"poster_url"?: string | null,"primary_tag"?: never,"published_at"?: string | null,"save_count"?: number,"score_config"?: NonNullable<Json>,"session_length"?: string,"share_count"?: number,"slug"?: string,"status"?: Database["public"]['Enums']["game_status"],"tags"?: (string)[],"updated_at"?: string
                   }
                   Relationships: [
                     {
@@ -629,14 +741,14 @@ isOneToOne: false
                   ]
                 },"play_sessions": {
                   Row: {
-                    "accepted": boolean | null,"duration_ms": number | null,"ended_at": string | null,"game_id": string,"id": string,"launch_reason": string,"outcome": string | null,"reject_reason": string | null,"score": number | null,"started_at": string,"user_id": string,"version_id": string | null
+                    "accepted": boolean | null,"active_ms": number,"card_id": string | null,"duration_ms": number | null,"ended_at": string | null,"excluded": boolean,"game_id": string,"id": string,"launch_reason": string,"outcome": string | null,"progress_at": string | null,"qualified_at": string | null,"reject_reason": string | null,"score": number | null,"started_at": string,"user_id": string,"version_id": string | null
                   }
                   ComputedFields: never
                   Insert: {
-                    "accepted"?: boolean | null,"duration_ms"?: number | null,"ended_at"?: string | null,"game_id": string,"id"?: string,"launch_reason"?: string,"outcome"?: string | null,"reject_reason"?: string | null,"score"?: number | null,"started_at"?: string,"user_id": string,"version_id"?: string | null
+                    "accepted"?: boolean | null,"active_ms"?: number,"card_id"?: string | null,"duration_ms"?: number | null,"ended_at"?: string | null,"excluded"?: boolean,"game_id": string,"id"?: string,"launch_reason"?: string,"outcome"?: string | null,"progress_at"?: string | null,"qualified_at"?: string | null,"reject_reason"?: string | null,"score"?: number | null,"started_at"?: string,"user_id": string,"version_id"?: string | null
                   }
                   Update: {
-                    "accepted"?: boolean | null,"duration_ms"?: number | null,"ended_at"?: string | null,"game_id"?: string,"id"?: string,"launch_reason"?: string,"outcome"?: string | null,"reject_reason"?: string | null,"score"?: number | null,"started_at"?: string,"user_id"?: string,"version_id"?: string | null
+                    "accepted"?: boolean | null,"active_ms"?: number,"card_id"?: string | null,"duration_ms"?: number | null,"ended_at"?: string | null,"excluded"?: boolean,"game_id"?: string,"id"?: string,"launch_reason"?: string,"outcome"?: string | null,"progress_at"?: string | null,"qualified_at"?: string | null,"reject_reason"?: string | null,"score"?: number | null,"started_at"?: string,"user_id"?: string,"version_id"?: string | null
                   }
                   Relationships: [
                     {
@@ -820,8 +932,58 @@ isOneToOne: false
             "allowed_age_ratings":
 { Args: { "p_band": Database["public"]['Enums']["age_band"] }; Returns: (Database["public"]['Enums']["age_rating"])[]
                            },
+"analytics_config":
+{ Args: Record<PropertyKey, never>; Returns: Json
+                           },
+"analytics_period":
+{ Args: { "p_from": string,"p_game": string,"p_players": number,"p_to": string }; Returns: Json
+                           },
+"analytics_range":
+{ Args: { "p_game": string,"p_range": string }; Returns: Record<string, unknown>
+                           },
 "approve_version":
 { Args: { "p_notes"?: string,"p_version_id": string }; Returns: undefined
+                           },
+"assert_game_owner":
+{ Args: { "p_game": string }; Returns: {
+              "accent_color": string,
+"age_rating": Database["public"]['Enums']["age_rating"],
+"audio": boolean,
+"comment_count": number,
+"controls": NonNullable<Json>,
+"created_at": string,
+"creator_id": string,
+"description": string,
+"featured_rank": number | null,
+"icon_url": string | null,
+"id": string,
+"is_seed": boolean,
+"like_count": number,
+"live_version_id": string | null,
+"name": string,
+"play_count": number,
+"play_ms_total": number,
+"player_count": number,
+"poster_url": string | null,
+"primary_tag": string | null,
+"published_at": string | null,
+"save_count": number,
+"score_config": NonNullable<Json>,
+"session_length": string,
+"share_count": number,
+"slug": string,
+"status": Database["public"]['Enums']["game_status"],
+"tags": (string)[],
+"updated_at": string
+            }
+                          SetofOptions: {
+        from: "*"
+        to: "games"
+        isOneToOne: true
+        isSetofReturn: false
+      } },
+"award_milestones":
+{ Args: { "p_silent"?: boolean }; Returns: number
                            },
 "become_creator":
 { Args: Record<PropertyKey, never>; Returns: undefined
@@ -835,6 +997,9 @@ isOneToOne: false
 "cleanup_stale_sessions":
 { Args: Record<PropertyKey, never>; Returns: undefined
                            },
+"compute_game_benchmarks":
+{ Args: Record<PropertyKey, never>; Returns: undefined
+                           },
 "compute_trending":
 { Args: Record<PropertyKey, never>; Returns: undefined
                            },
@@ -842,6 +1007,18 @@ isOneToOne: false
 { Args: { "token_name": string }; Returns: {
               "id": string,"token": string,"token_prefix": string
             }[]
+                           },
+"creator_game_funnel":
+{ Args: { "p_game": string,"p_range"?: string }; Returns: Json
+                           },
+"creator_game_summary":
+{ Args: { "p_game": string,"p_range"?: string }; Returns: Json
+                           },
+"creator_overview":
+{ Args: Record<PropertyKey, never>; Returns: Json
+                           },
+"creator_version_compare":
+{ Args: { "p_game": string }; Returns: Json
                            },
 "decay_affinity":
 { Args: Record<PropertyKey, never>; Returns: undefined
@@ -861,7 +1038,7 @@ isOneToOne: false
             }[]
                            },
 "finish_play_session":
-{ Args: { "p_duration_ms": number,"p_outcome"?: string,"p_score": number,"p_session": string,"p_user": string }; Returns: {
+{ Args: { "p_active_ms"?: number,"p_duration_ms": number,"p_outcome"?: string,"p_score": number,"p_session": string,"p_user": string }; Returns: {
               "accepted": boolean,"best": number,"daily_rank": number,"is_new_best": boolean,"percentile": number,"reason": string
             }[]
                            },
@@ -899,9 +1076,29 @@ isOneToOne: false
               "best": number,"percentile": number,"rank": number
             }[]
                            },
+"mark_milestones_seen":
+{ Args: { "p_ids": (string)[] }; Returns: undefined
+                           },
+"milestone_card":
+{ Args: { "p_code": string }; Returns: Json
+                           },
+"milestone_json":
+{ Args: { "g": Omit<Database["public"]['Tables']["games"]['Row'], Database["public"]['Tables']["games"]['ComputedFields']>,"m": Omit<Database["public"]['Tables']["creator_milestones"]['Row'], Database["public"]['Tables']["creator_milestones"]['ComputedFields']> }; Returns: Json
+                           },
+"next_milestone":
+{ Args: { "p_play_ms": number,"p_players": number }; Returns: Json
+                           },
+"qualified_play_ms":
+{ Args: Record<PropertyKey, never>; Returns: number
+                           },
 "rank_feed":
 { Args: { "p_cursor"?: Json,"p_limit"?: number,"p_tab"?: string,"p_tag"?: string,"p_viewer": string }; Returns: {
               "game_id": string,"score": number,"source": string
+            }[]
+                           },
+"record_session_progress":
+{ Args: { "p_active_ms": number,"p_session": string,"p_user": string }; Returns: {
+              "is_qualified": boolean,"stored_ms": number
             }[]
                            },
 "reject_version":
@@ -924,8 +1121,11 @@ isOneToOne: false
 "set_runtime_secret":
 { Args: { "p_name": string,"p_value": string }; Returns: undefined
                            },
+"share_milestone":
+{ Args: { "p_id": string }; Returns: string
+                           },
 "start_play_session":
-{ Args: { "p_game": string,"p_reason"?: string,"p_user": string,"p_version": string }; Returns: string
+{ Args: { "p_card"?: string,"p_game": string,"p_reason"?: string,"p_user": string,"p_version": string }; Returns: string
                            },
 "takedown_game":
 { Args: { "p_game_id": string,"p_reason": string }; Returns: undefined
@@ -935,10 +1135,13 @@ isOneToOne: false
                            },
 "viewer_best":
 { Args: { "p_game": string,"p_viewer": string }; Returns: number
+                           },
+"window_players":
+{ Args: { "p_day": string,"p_days": number,"p_game": string }; Returns: number
                            }
           }
           Enums: {
-            "age_band": "under13"|"13to15"|"16to17"|"adult","age_rating": "4+"|"9+"|"12+"|"17+","comment_status": "visible"|"hidden"|"removed","feed_event_type": "impression"|"ready"|"play_start"|"play_end"|"skip"|"replay"|"like"|"unlike"|"save"|"unsave"|"share"|"comment"|"follow"|"open_game_page"|"load_failed"|"custom","game_status": "draft"|"in_review"|"live"|"rejected"|"removed","notification_type": "follow"|"comment_like"|"comment_reply"|"score_beaten"|"new_game"|"game_approved"|"game_rejected"|"challenge_accepted","report_status": "open"|"actioned"|"dismissed","report_target": "game"|"comment"|"user","review_job_status": "queued"|"running"|"done"|"failed","user_role": "user"|"creator"|"admin","version_status": "uploaded"|"auto_checking"|"auto_failed"|"pending_review"|"approved"|"rejected"
+            "age_band": "under13"|"13to15"|"16to17"|"adult","age_rating": "4+"|"9+"|"12+"|"17+","comment_status": "visible"|"hidden"|"removed","feed_event_type": "impression"|"ready"|"play_start"|"play_end"|"skip"|"replay"|"like"|"unlike"|"save"|"unsave"|"share"|"comment"|"follow"|"open_game_page"|"load_failed"|"custom","game_status": "draft"|"in_review"|"live"|"rejected"|"removed","notification_type": "follow"|"comment_like"|"comment_reply"|"score_beaten"|"new_game"|"game_approved"|"game_rejected"|"challenge_accepted"|"milestone","report_status": "open"|"actioned"|"dismissed","report_target": "game"|"comment"|"user","review_job_status": "queued"|"running"|"done"|"failed","user_role": "user"|"creator"|"admin","version_status": "uploaded"|"auto_checking"|"auto_failed"|"pending_review"|"approved"|"rejected"
           }
           CompositeTypes: {
             [_ in never]: never
@@ -1058,7 +1261,7 @@ export const Constants = {
           }
         },"public": {
           Enums: {
-            "age_band": ["under13", "13to15", "16to17", "adult"],"age_rating": ["4+", "9+", "12+", "17+"],"comment_status": ["visible", "hidden", "removed"],"feed_event_type": ["impression", "ready", "play_start", "play_end", "skip", "replay", "like", "unlike", "save", "unsave", "share", "comment", "follow", "open_game_page", "load_failed", "custom"],"game_status": ["draft", "in_review", "live", "rejected", "removed"],"notification_type": ["follow", "comment_like", "comment_reply", "score_beaten", "new_game", "game_approved", "game_rejected", "challenge_accepted"],"report_status": ["open", "actioned", "dismissed"],"report_target": ["game", "comment", "user"],"review_job_status": ["queued", "running", "done", "failed"],"user_role": ["user", "creator", "admin"],"version_status": ["uploaded", "auto_checking", "auto_failed", "pending_review", "approved", "rejected"]
+            "age_band": ["under13", "13to15", "16to17", "adult"],"age_rating": ["4+", "9+", "12+", "17+"],"comment_status": ["visible", "hidden", "removed"],"feed_event_type": ["impression", "ready", "play_start", "play_end", "skip", "replay", "like", "unlike", "save", "unsave", "share", "comment", "follow", "open_game_page", "load_failed", "custom"],"game_status": ["draft", "in_review", "live", "rejected", "removed"],"notification_type": ["follow", "comment_like", "comment_reply", "score_beaten", "new_game", "game_approved", "game_rejected", "challenge_accepted", "milestone"],"report_status": ["open", "actioned", "dismissed"],"report_target": ["game", "comment", "user"],"review_job_status": ["queued", "running", "done", "failed"],"user_role": ["user", "creator", "admin"],"version_status": ["uploaded", "auto_checking", "auto_failed", "pending_review", "approved", "rejected"]
           }
         }
 } as const

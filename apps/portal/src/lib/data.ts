@@ -1,5 +1,14 @@
 import "server-only";
-import { gameEntryUrl, gameOrigin, ScoreConfigSchema, ControlsSchema, type Controls, type ScoreConfig } from "@thumbcade/protocol";
+import {
+  gameEntryUrl,
+  gameOrigin,
+  MilestoneCardSchema,
+  ScoreConfigSchema,
+  ControlsSchema,
+  type Controls,
+  type MilestoneCard,
+  type ScoreConfig,
+} from "@thumbcade/protocol";
 import { cache } from "react";
 import { gameHostConfig } from "./env";
 import { createPublicClient } from "./supabase/server";
@@ -200,4 +209,20 @@ export const getLeaders = cache(async (gameId: string, order: "asc" | "desc", li
     avatarSeed: r.user?.avatar_seed ?? String(i),
     score: r.best_score,
   }));
+});
+
+export interface MilestoneCardInfo {
+  card: MilestoneCard;
+  game: WebCard;
+}
+
+/** A milestone its creator chose to share (public RPC: nothing else about a milestone is public). */
+export const getMilestoneCard = cache(async (code: string): Promise<MilestoneCardInfo | null> => {
+  if (!/^[a-z0-9]{8,16}$/.test(code)) return null;
+  const { data, error } = await createPublicClient().rpc("milestone_card", { p_code: code });
+  if (error || !data) return null;
+  const parsed = MilestoneCardSchema.safeParse(data);
+  if (!parsed.success) return null;
+  const game = await getGameBySlug(parsed.data.game.slug);
+  return game ? { card: parsed.data, game } : null;
 });

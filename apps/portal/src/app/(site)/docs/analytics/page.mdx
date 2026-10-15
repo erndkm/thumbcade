@@ -1,0 +1,58 @@
+import { METRIC_DEFINITIONS, QUALIFIED_PLAY_MS } from "@thumbcade/protocol";
+
+export const metadata = { title: "How we count players" };
+
+<span className="label">Reference</span>
+
+# How we count players
+
+A run counts as a **play** once your game ends it, or once it reaches <span className="font-mono">{QUALIFIED_PLAY_MS / 1000} s</span> of active play, whichever comes first. A **player** is a person with at least one play. Every number on your dashboard follows from those two rules.
+
+## Why not count instantly?
+
+In a feed, a tap is cheap. Someone taps your card and swipes on half a second later: that's not a player, and counting them would inflate every number you see. A long threshold would be wrong too: a run that ends in two seconds because the player crashed into the first pipe is a real play. "Ended, or <span className="font-mono">{QUALIFIED_PLAY_MS / 1000} s</span> in" keeps both the quick death and the real attempt, and drops the accidental tap. Runs that never get there show up as *bounced starts*, so you can still see them.
+
+## What counts as playtime
+
+Only time spent in a run while your game was running. When the run is paused (a sheet opened, the app went to the background, the player was idle for 20 s), dragged by a feed swipe, or offscreen, the clock stops. The app reports this time to our servers, which never accept more than the real time that has passed.
+
+## What never counts
+
+- Your own plays, and plays by Thumbcade admins.
+- On the public play count: plays past 100 by one person in one day. Your dashboard's plays follow the same rule.
+- Plays in the web player on thumbcade.com. They don't open a server session yet.
+
+## Every metric
+
+<table>
+  <thead>
+    <tr>
+      <th>Metric</th>
+      <th>Definition</th>
+    </tr>
+  </thead>
+  <tbody>
+    {Object.values(METRIC_DEFINITIONS).map((m) => (
+      <tr key={m.label}>
+        <td>{m.label}</td>
+        <td>{m.definition}</td>
+      </tr>
+    ))}
+  </tbody>
+</table>
+
+## Milestones
+
+| Milestone | When it lands |
+| --- | --- |
+| Players | Your game passes 100, 1,000, 10,000, 100,000 and 1,000,000 players |
+| Playtime | 100, 1,000, 10,000 and 100,000 hours played |
+| Firsts | Your first player, like, comment and challenge |
+| Best day yet | A new record for players in one day, after a week live, with 50 or more players that day (at most once a week) |
+| Taking off | Three times your usual daily players, with 200 or more that day |
+
+Each milestone sends one notification (at most one a day per game) and comes with a card you can share. Nothing about a milestone is public until you share it.
+
+## Freshness
+
+Numbers update every 10 minutes. Days are UTC days. Return rates fill in once their window is over: day-1 return the day after tomorrow, day-7 return after a week.

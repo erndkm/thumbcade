@@ -8,8 +8,8 @@ export function ActivateForm({ initialCode }: { initialCode: string }) {
   const [state, action, pending] = useActionState<ActivateState, FormData>(approveDevice, null);
   if (state?.done)
     return (
-      <div className="flex items-center gap-3 rounded-[16px] border border-accent/40 bg-accent/5 p-5 text-[16px] text-text">
-        <Icon name="check" size={22} className="text-accent-text" /> Connected. Head back to your terminal.
+      <div className="flex items-center gap-3 rounded-[16px] border border-success/40 bg-success/5 p-5 text-[16px] text-text">
+        <Icon name="check" size={22} className="text-success" /> Connected. Head back to your terminal.
       </div>
     );
   return (

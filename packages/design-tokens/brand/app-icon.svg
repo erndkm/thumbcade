@@ -1,16 +1,16 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1024" viewBox="0 0 1024 1024"><rect width="1024" height="1024" fill="#0D0D10"/><defs>
   <radialGradient id="m-cap" cx="0.38" cy="0.32" r="0.85">
-    <stop offset="0" stop-color="#E9FF8A"/>
-    <stop offset="0.45" stop-color="#D4FF3D"/>
-    <stop offset="1" stop-color="#B4DE1E"/>
+    <stop offset="0" stop-color="#FF928B"/>
+    <stop offset="0.45" stop-color="#FF4A3D"/>
+    <stop offset="1" stop-color="#DB4034"/>
   </radialGradient>
   <linearGradient id="m-housing" x1="0" y1="0" x2="0" y2="1">
     <stop offset="0" stop-color="#2E2E36"/>
     <stop offset="1" stop-color="#141418"/>
   </linearGradient>
   <linearGradient id="m-side" x1="0" y1="0" x2="0" y2="1">
-    <stop offset="0" stop-color="#7E9C0E"/>
-    <stop offset="1" stop-color="#4E6305"/>
+    <stop offset="0" stop-color="#942B23"/>
+    <stop offset="1" stop-color="#571915"/>
   </linearGradient>
   <clipPath id="m-clip"><circle cx="512" cy="500.56" r="312"/></clipPath>
 </defs>
@@ -20,6 +20,8 @@
   <circle cx="512" cy="512" r="331.76" fill="#08080A"/>
   <circle cx="512" cy="523.44" r="312" fill="url(#m-side)"/>
   <circle cx="512" cy="500.56" r="312" fill="url(#m-cap)"/>
-  <g clip-path="url(#m-clip)" fill="none" stroke="#0D0D10" stroke-width="26" stroke-linecap="round" stroke-opacity="0.94"><path d="M518.14 456.71 A35.36 38.19 0 1 1 489.27 523.57"/><path d="M574.42 566.61 A91.52 98.84 0 1 1 603.39 489.15"/><path d="M459.08 345.42 A147.68 159.49 0 1 1 391.03 402.84"/><path d="M370.40 652.68 A203.84 220.15 0 1 1 455.81 705.94"/><path d="M741.57 362.49 A260.00 280.80 0 1 1 672.07 273.05"/></g>
-  <path d="M318.56 307.12 A274.56 274.56 0 0 1 574.4 232.24" fill="none" stroke="#FBFFE6" stroke-width="7.28" stroke-linecap="round" stroke-opacity="0.32"/>
+  <g clip-path="url(#m-clip)" opacity="0.94"><defs><clipPath id="m-smooth"><rect x="179.2" y="161.52" width="665.6" height="377"/></clipPath></defs>
+  <g clip-path="url(#m-smooth)" fill="none" stroke="#0D0D10" stroke-width="29.12" stroke-linecap="round"><path d="M517.06 465.64 A29.12 29.12 0 1 1 493.28 516.63"/><path d="M571.58 558.21 A87.36 87.36 0 1 1 599.24 489.75"/><path d="M459.82 358.39 A145.60 145.60 0 1 1 392.73 410.81"/><path d="M370.40 640.95 A203.84 203.84 0 1 1 455.81 690.26"/><path d="M743.40 371.28 A262.08 262.08 0 1 1 673.35 287.80"/></g>
+  <path d="M235.36 538h29.12v14.56h-29.12zM293.6 538h29.12v14.56h-29.12zM366.4 538h29.12v14.56h-29.12zM424.64 538h29.12v14.56h-29.12zM628.48 538h29.12v14.56h-29.12zM701.28 538h29.12v14.56h-29.12zM759.52 538h29.12v14.56h-29.12zM249.92 552.56h29.12v14.56h-29.12zM308.16 552.56h29.12v14.56h-29.12zM366.4 552.56h29.12v14.56h-29.12zM439.2 552.56h43.68v14.56h-43.68zM541.12 552.56h29.12v14.56h-29.12zM628.48 552.56h29.12v14.56h-29.12zM686.72 552.56h29.12v14.56h-29.12zM744.96 552.56h29.12v14.56h-29.12zM249.92 567.12h29.12v14.56h-29.12zM308.16 567.12h29.12v14.56h-29.12zM366.4 567.12h43.68v14.56h-43.68zM453.76 567.12h116.48v14.56h-116.48zM613.92 567.12h43.68v14.56h-43.68zM686.72 567.12h29.12v14.56h-29.12zM744.96 567.12h29.12v14.56h-29.12zM249.92 581.68h29.12v14.56h-29.12zM308.16 581.68h43.68v14.56h-43.68zM380.96 581.68h43.68v14.56h-43.68zM468.32 581.68h87.36v14.56h-87.36zM599.36 581.68h43.68v14.56h-43.68zM672.16 581.68h43.68v14.56h-43.68zM744.96 581.68h29.12v14.56h-29.12zM264.48 596.24h29.12v14.56h-29.12zM322.72 596.24h29.12v14.56h-29.12zM395.52 596.24h43.68v14.56h-43.68zM584.8 596.24h43.68v14.56h-43.68zM672.16 596.24h29.12v14.56h-29.12zM730.4 596.24h29.12v14.56h-29.12zM264.48 610.8h29.12v14.56h-29.12zM337.28 610.8h29.12v14.56h-29.12zM410.08 610.8h58.24v14.56h-58.24zM555.68 610.8h58.24v14.56h-58.24zM657.6 610.8h29.12v14.56h-29.12zM730.4 610.8h29.12v14.56h-29.12zM293.6 625.36h29.12v29.12h-29.12zM351.84 625.36h29.12v29.12h-29.12zM439.2 625.36h145.6v29.12h-145.6zM643.04 625.36h29.12v29.12h-29.12zM701.28 625.36h29.12v29.12h-29.12zM293.6 654.48h29.12v29.12h-29.12zM584.8 654.48h58.24v29.12h-58.24zM701.28 654.48h29.12v29.12h-29.12zM322.72 683.6h58.24v29.12h-58.24zM439.2 683.6h145.6v29.12h-145.6zM643.04 683.6h58.24v29.12h-58.24zM380.96 712.72h58.24v29.12h-58.24zM584.8 712.72h58.24v29.12h-58.24zM439.2 741.84h145.6v29.12h-145.6z" fill="#0D0D10"/></g>
+  <path d="M318.56 307.12 A274.56 274.56 0 0 1 574.4 232.24" fill="none" stroke="#FFEDEC" stroke-width="7.28" stroke-linecap="round" stroke-opacity="0.32"/>
 </g></svg>

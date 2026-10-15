@@ -1,16 +1,16 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64"><rect width="64" height="64" fill="#0D0D10"/><defs>
   <radialGradient id="f-cap" cx="0.38" cy="0.32" r="0.85">
-    <stop offset="0" stop-color="#E9FF8A"/>
-    <stop offset="0.45" stop-color="#D4FF3D"/>
-    <stop offset="1" stop-color="#B4DE1E"/>
+    <stop offset="0" stop-color="#FF928B"/>
+    <stop offset="0.45" stop-color="#FF4A3D"/>
+    <stop offset="1" stop-color="#DB4034"/>
   </radialGradient>
   <linearGradient id="f-housing" x1="0" y1="0" x2="0" y2="1">
     <stop offset="0" stop-color="#2E2E36"/>
     <stop offset="1" stop-color="#141418"/>
   </linearGradient>
   <linearGradient id="f-side" x1="0" y1="0" x2="0" y2="1">
-    <stop offset="0" stop-color="#7E9C0E"/>
-    <stop offset="1" stop-color="#4E6305"/>
+    <stop offset="0" stop-color="#942B23"/>
+    <stop offset="1" stop-color="#571915"/>
   </linearGradient>
   <clipPath id="f-clip"><circle cx="32" cy="31.303333333333335" r="19"/></clipPath>
 </defs>
@@ -20,6 +20,8 @@
   <circle cx="32" cy="32" r="20.203333333333333" fill="#08080A"/>
   <circle cx="32" cy="32.696666666666665" r="19" fill="url(#f-side)"/>
   <circle cx="32" cy="31.303333333333335" r="19" fill="url(#f-cap)"/>
-  <g clip-path="url(#f-clip)" fill="none" stroke="#0D0D10" stroke-width="1.5833333333333335" stroke-linecap="round" stroke-opacity="0.94"><path d="M32.37 28.63 A2.15 2.33 0 1 1 30.62 32.70"/><path d="M35.80 35.33 A5.57 6.02 0 1 1 37.57 30.61"/><path d="M28.78 21.86 A8.99 9.71 0 1 1 24.63 25.35"/><path d="M23.38 40.57 A12.41 13.41 0 1 1 28.58 43.81"/><path d="M45.98 22.90 A15.83 17.10 0 1 1 41.75 17.45"/></g>
-  <path d="M20.22 19.523333333333333 A16.72 16.72 0 0 1 35.8 14.963333333333335" fill="none" stroke="#FBFFE6" stroke-width="0.44333333333333336" stroke-linecap="round" stroke-opacity="0.32"/>
+  <g clip-path="url(#f-clip)" opacity="0.94"><defs><clipPath id="f-smooth"><rect x="11.73" y="10.66" width="40.53" height="22.96"/></clipPath></defs>
+  <g clip-path="url(#f-smooth)" fill="none" stroke="#0D0D10" stroke-width="1.7733333333333334" stroke-linecap="round"><path d="M32.31 29.18 A1.77 1.77 0 1 1 30.86 32.28"/><path d="M35.63 34.81 A5.32 5.32 0 1 1 37.31 30.64"/><path d="M28.82 22.65 A8.87 8.87 0 1 1 24.74 25.84"/><path d="M23.38 39.85 A12.41 12.41 0 1 1 28.58 42.86"/><path d="M46.09 23.43 A15.96 15.96 0 1 1 41.83 18.35"/></g>
+  <path d="M15.15 33.58h1.77v0.89h-1.77zM18.7 33.58h1.77v0.89h-1.77zM23.13 33.58h1.77v0.89h-1.77zM26.68 33.58h1.77v0.89h-1.77zM39.09 33.58h1.77v0.89h-1.77zM43.53 33.58h1.77v0.89h-1.77zM47.07 33.58h1.77v0.89h-1.77zM16.04 34.47h1.77v0.89h-1.77zM19.59 34.47h1.77v0.89h-1.77zM23.13 34.47h1.77v0.89h-1.77zM27.57 34.47h2.66v0.89h-2.66zM33.77 34.47h1.77v0.89h-1.77zM39.09 34.47h1.77v0.89h-1.77zM42.64 34.47h1.77v0.89h-1.77zM46.19 34.47h1.77v0.89h-1.77zM16.04 35.36h1.77v0.89h-1.77zM19.59 35.36h1.77v0.89h-1.77zM23.13 35.36h2.66v0.89h-2.66zM28.45 35.36h7.09v0.89h-7.09zM38.21 35.36h2.66v0.89h-2.66zM42.64 35.36h1.77v0.89h-1.77zM46.19 35.36h1.77v0.89h-1.77zM16.04 36.24h1.77v0.89h-1.77zM19.59 36.24h2.66v0.89h-2.66zM24.02 36.24h2.66v0.89h-2.66zM29.34 36.24h5.32v0.89h-5.32zM37.32 36.24h2.66v0.89h-2.66zM41.75 36.24h2.66v0.89h-2.66zM46.19 36.24h1.77v0.89h-1.77zM16.93 37.13h1.77v0.89h-1.77zM20.47 37.13h1.77v0.89h-1.77zM24.91 37.13h2.66v0.89h-2.66zM36.43 37.13h2.66v0.89h-2.66zM41.75 37.13h1.77v0.89h-1.77zM45.3 37.13h1.77v0.89h-1.77zM16.93 38.02h1.77v0.89h-1.77zM21.36 38.02h1.77v0.89h-1.77zM25.79 38.02h3.55v0.89h-3.55zM34.66 38.02h3.55v0.89h-3.55zM40.87 38.02h1.77v0.89h-1.77zM45.3 38.02h1.77v0.89h-1.77zM18.7 38.9h1.77v1.77h-1.77zM22.25 38.9h1.77v1.77h-1.77zM27.57 38.9h8.87v1.77h-8.87zM39.98 38.9h1.77v1.77h-1.77zM43.53 38.9h1.77v1.77h-1.77zM18.7 40.68h1.77v1.77h-1.77zM36.43 40.68h3.55v1.77h-3.55zM43.53 40.68h1.77v1.77h-1.77zM20.47 42.45h3.55v1.77h-3.55zM27.57 42.45h8.87v1.77h-8.87zM39.98 42.45h3.55v1.77h-3.55zM24.02 44.22h3.55v1.77h-3.55zM36.43 44.22h3.55v1.77h-3.55zM27.57 46h8.87v1.77h-8.87z" fill="#0D0D10"/></g>
+  <path d="M20.22 19.523333333333333 A16.72 16.72 0 0 1 35.8 14.963333333333335" fill="none" stroke="#FFEDEC" stroke-width="0.44333333333333336" stroke-linecap="round" stroke-opacity="0.32"/>
 </g></svg>

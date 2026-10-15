@@ -5,7 +5,7 @@
 import { AccessibilityInfo, Platform } from "react-native";
 import { getLocales } from "expo-localization";
 import type { FeedCard, Json, LeaderboardEntry, LeaderboardScope } from "@thumbcade/protocol";
-import { sessionEnd, sessionStart } from "../lib/api";
+import { sessionEnd, sessionProgress, sessionStart } from "../lib/api";
 import { track } from "../lib/events";
 import { gameFeedback } from "../lib/haptics";
 import { kv } from "../lib/kv";
@@ -101,6 +101,7 @@ export function makeDeps(card: FeedCard, dev: boolean): CardDeps {
     },
     sessionStart: (req) => sessionStart(req),
     sessionEnd: (req) => sessionEnd(req),
+    sessionProgress: (req) => sessionProgress(req),
     storageGet,
     storageSet,
     leaderboardTop,

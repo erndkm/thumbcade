@@ -1,3 +1,4 @@
+import { OPERATOR } from "@thumbcade/legal";
 import Link from "next/link";
 import { Lockup } from "./brand";
 
@@ -5,7 +6,7 @@ const cols = [
   { title: "Play", links: [["The feed", "/#play"], ["How swiping works", "/#swipe-contract"], ["Get the app", "/#get"]] },
   { title: "Build", links: [["Quickstart", "/docs"], ["SDK reference", "/docs/sdk"], ["Swipe Contract", "/docs/swipe-contract"], ["Review guidelines", "/docs/review"]] },
   { title: "Creators", links: [["Dashboard", "/creator"], ["API tokens", "/creator/tokens"], ["Manifest schema", "/schema/manifest-v1.json"]] },
-  { title: "Company", links: [["Privacy", "/legal/privacy"], ["Terms", "/legal/terms"], ["Report a problem", "mailto:safety@thumbcade.com"]] },
+  { title: "Company", links: [["Imprint", "/legal/imprint"], ["Privacy", "/legal/privacy"], ["Terms", "/legal/terms"], ["Guidelines", "/legal/guidelines"], ["Report a problem", `mailto:${OPERATOR.email.safety}`]] },
 ] as const;
 
 export function SiteFooter() {

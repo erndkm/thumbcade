@@ -217,6 +217,9 @@ importers:
       '@thumbcade/design-tokens':
         specifier: workspace:*
         version: link:../../packages/design-tokens
+      '@thumbcade/legal':
+        specifier: workspace:*
+        version: link:../../packages/legal
       '@thumbcade/protocol':
         specifier: workspace:*
         version: link:../../packages/protocol
@@ -395,6 +398,9 @@ importers:
       '@thumbcade/design-tokens':
         specifier: workspace:*
         version: link:../../packages/design-tokens
+      '@thumbcade/legal':
+        specifier: workspace:*
+        version: link:../../packages/legal
       '@thumbcade/protocol':
         specifier: workspace:*
         version: link:../../packages/protocol
@@ -723,6 +729,8 @@ importers:
         specifier: 0.35.5
         version: 0.35.5(@types/node@26.6.5)
 
+  packages/legal: {}
+
   packages/protocol:
     dependencies:
       zod:
@@ -758,6 +766,9 @@ importers:
       '@supabase/supabase-js':
         specifier: 2.117.3
         version: 2.117.3
+      '@thumbcade/legal':
+        specifier: workspace:*
+        version: link:../packages/legal
       '@thumbcade/protocol':
         specifier: workspace:*
         version: link:../packages/protocol

@@ -48,5 +48,5 @@ export function AnimatedSplash({ onDone }: { onDone: () => void }) {
 }
 
 const styles = StyleSheet.create({
-  ring: { position: "absolute", width: 180, height: 180, borderRadius: 90, borderWidth: 3, borderColor: c.accent },
+  ring: { position: "absolute", width: 180, height: 180, borderRadius: 90, borderWidth: 3, borderColor: c.heat },
 });

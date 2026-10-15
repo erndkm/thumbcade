@@ -23,7 +23,7 @@ serve(["POST"], async (req) => {
   const caller = await requireCaller(req);
   const body = SessionEndRequestSchema.safeParse(await readJson(req));
   if (!body.success) throw new HttpError(400, "invalid_request", body.error.issues.map((i) => `${i.path.join(".")}: ${i.message}`).join("; "));
-  const { sessionId, token, score, durationMs, outcome } = body.data;
+  const { sessionId, token, score, durationMs, activeMs, outcome } = body.data;
 
   const claims = await verifySessionToken(token, SECRET);
   if (!claims || claims.sid !== sessionId || claims.uid !== caller.id) {
@@ -37,6 +37,7 @@ serve(["POST"], async (req) => {
     p_score: score,
     p_duration_ms: durationMs,
     p_outcome: outcome ?? null,
+    p_active_ms: activeMs ?? null,
   });
   if (error) throw error;
   const row = ((data ?? []) as FinishRow[])[0];

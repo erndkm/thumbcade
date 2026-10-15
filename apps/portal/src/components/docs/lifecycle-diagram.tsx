@@ -2,7 +2,7 @@
 export function LifecycleDiagram() {
   const node = (x: number, y: number, label: string, accent = false) => (
     <g>
-      <rect x={x - 62} y={y - 20} width="124" height="40" rx="20" fill={accent ? "#D4FF3D" : "#17171C"} stroke={accent ? "#D4FF3D" : "#34343D"} />
+      <rect x={x - 62} y={y - 20} width="124" height="40" rx="20" fill={accent ? "#FF4A3D" : "#17171C"} stroke={accent ? "#FF4A3D" : "#34343D"} />
       <text x={x} y={y + 5} textAnchor="middle" fontSize="13" fontWeight="700" fontFamily="var(--tc-font-sans)" fill={accent ? "#0D0D10" : "#F3F0E8"}>
         {label}
       </text>

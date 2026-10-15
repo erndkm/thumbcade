@@ -20,7 +20,7 @@ export function TokenForm() {
       </form>
       {state?.error ? <p className="text-[14px] text-heat">{state.error}</p> : null}
       {state?.token ? (
-        <div className="flex flex-col gap-3 rounded-[16px] border border-accent/40 bg-accent/5 p-5">
+        <div className="flex flex-col gap-3 rounded-[16px] border border-success/40 bg-success/5 p-5">
           <span className="text-[14px] text-text">Copy it now — you won&apos;t see it again.</span>
           <div className="flex flex-wrap items-center gap-3">
             <code className="rounded-[10px] border border-line bg-surface px-3 py-2 font-mono text-[14px] text-text">{state.token}</code>

@@ -1,7 +1,8 @@
 /**
  * Generates the Thumbcade brand assets from code so they stay exact and reproducible.
  *
- * The mark: a top-down arcade button in volt whose concentric rings form a thumbprint whorl.
+ * The mark: a top-down red arcade button whose concentric rings form a thumbprint whorl. Toward the bottom the
+ * ridges resolve into pixels (smooth, then half pixels, then full pixels): a real thumb turning into a game.
  * Outputs (brand/):
  *   mark.svg                  the button alone, transparent background
  *   app-icon.svg / .png       1024 iOS app icon (ink background, full bleed)
@@ -26,14 +27,38 @@ const out = resolve(root, "brand");
 mkdirSync(out, { recursive: true });
 
 const INK = palette.ink1;
-const VOLT = palette.volt;
+/** The button cap: a classic red arcade button. Every cap shade below is derived from it. */
+const CAP = palette.heat;
+
+/** Mixes a hex color toward white (amount > 0) or black (amount < 0). */
+function shade(hex: string, amount: number): string {
+  const n = parseInt(hex.slice(1), 16);
+  const target = amount > 0 ? 255 : 0;
+  const t = Math.abs(amount);
+  return `#${[16, 8, 0]
+    .map((bits) => (n >> bits) & 255)
+    .map((v) => Math.round(v + (target - v) * t).toString(16).padStart(2, "0"))
+    .join("")
+    .toUpperCase()}`;
+}
 
 // ---------------------------------------------------------------------------
 // Whorl geometry
 // ---------------------------------------------------------------------------
 
+/**
+ * The print is authored on a pixel grid (for a cap radius of 300) so its lower part can resolve into pixels:
+ * ring k is a circle of radius (2k + 1) * CELL around the print center and one CELL wide, so a ridge is exactly
+ * one full pixel and every ring runs through pixel centers.
+ */
+const CELL = 28;
+
+/** Where the ridges change resolution, measured down from the print center: smooth, then half pixels, then full pixels. */
+const HALF_PIXELS_FROM = 1.5 * CELL;
+const FULL_PIXELS_FROM = 4.5 * CELL;
+
 interface Ring {
-  r: number;
+  k: number;
   /** Gap center angle in degrees (0 = 3 o'clock, clockwise). */
   gapAt: number;
   /** Gap width in degrees. */
@@ -42,70 +67,152 @@ interface Ring {
 
 /** Ridges of the print, innermost first. Gaps are staggered so the rings read as one whorl. */
 const RINGS: Ring[] = [
-  { r: 34, gapAt: 205, gap: 150 },
-  { r: 88, gapAt: 22, gap: 50 },
-  { r: 142, gapAt: 232, gap: 34 },
-  { r: 196, gapAt: 120, gap: 28 },
-  { r: 250, gapAt: 320, gap: 24 },
+  { k: 0, gapAt: 205, gap: 150 },
+  { k: 1, gapAt: 22, gap: 50 },
+  { k: 2, gapAt: 232, gap: 34 },
+  { k: 3, gapAt: 120, gap: 28 },
+  { k: 4, gapAt: 320, gap: 24 },
 ];
 
-/** Elliptical arc path around (cx, cy) skipping the gap. Slightly taller than wide, like a fingertip. */
-function ringPath(cx: number, cy: number, ring: Ring, squash = 1.1, scale = 1): string {
-  const rx = ring.r * scale;
-  const ry = ring.r * squash * scale;
+const radius = (ring: Ring) => (2 * ring.k + 1) * CELL;
+
+/** True when (x, y), relative to the print center, lies on the drawn part of the ring rather than in its gap. */
+function onRing(ring: Ring, x: number, y: number): boolean {
+  const angle = (Math.atan2(y, x) * 180) / Math.PI;
+  const fromGap = Math.abs(((((angle - ring.gapAt) % 360) + 540) % 360) - 180);
+  return fromGap > ring.gap / 2;
+}
+
+/** Circular arc path around (cx, cy) skipping the gap. */
+function ringPath(cx: number, cy: number, ring: Ring, scale: number): string {
+  const r = radius(ring) * scale;
   const start = ((ring.gapAt + ring.gap / 2) * Math.PI) / 180;
   const sweepDeg = 360 - ring.gap;
   const end = start + (sweepDeg * Math.PI) / 180;
-  const p = (a: number) => [cx + rx * Math.cos(a), cy + ry * Math.sin(a)] as const;
+  const p = (a: number) => [cx + r * Math.cos(a), cy + r * Math.sin(a)] as const;
   const [x0, y0] = p(start);
   const [x1, y1] = p(end);
   const large = sweepDeg > 180 ? 1 : 0;
-  return `M${x0.toFixed(2)} ${y0.toFixed(2)} A${rx.toFixed(2)} ${ry.toFixed(2)} 0 ${large} 1 ${x1.toFixed(2)} ${y1.toFixed(2)}`;
+  return `M${x0.toFixed(2)} ${y0.toFixed(2)} A${r.toFixed(2)} ${r.toFixed(2)} 0 ${large} 1 ${x1.toFixed(2)} ${y1.toFixed(2)}`;
+}
+
+/** A square pixel: top-left corner and size, relative to the print center. */
+type Pixel = readonly [x: number, y: number, size: number];
+
+/**
+ * Half-size pixels between HALF_PIXELS_FROM and FULL_PIXELS_FROM: every cell whose center lies inside a ridge, so
+ * the ridges stay two pixels wide and follow the curve closely. Cells nest inside the full-pixel grid.
+ */
+function halfPixels(): Pixel[] {
+  const size = CELL / 2;
+  const pixels: Pixel[] = [];
+  const n = Math.ceil(320 / size);
+  for (let i = -n; i <= n; i++) {
+    for (let j = -n; j <= n; j++) {
+      const x = (i - 0.5) * size;
+      const y = (j - 0.5) * size;
+      const top = y - size / 2;
+      if (top < HALF_PIXELS_FROM || top >= FULL_PIXELS_FROM) continue;
+      const rho = Math.hypot(x, y);
+      const ring = RINGS.find((r) => Math.abs(rho - radius(r)) < CELL / 2 && onRing(r, x, y));
+      if (ring) pixels.push([x - size / 2, top, size]);
+    }
+  }
+  return pixels;
+}
+
+/** Full pixels below FULL_PIXELS_FROM: each ridge as a one-pixel, 8-connected pixel-art circle. */
+function fullPixels(): Pixel[] {
+  const pixels: Pixel[] = [];
+  for (const ring of RINGS) {
+    const n = 2 * ring.k + 1;
+    const cells = new Map<string, readonly [number, number]>();
+    for (let i = 0; i <= n; i++) {
+      const j = Math.round(Math.sqrt(n * n - i * i));
+      if (i > j) continue;
+      for (const [a, b] of [[i, j], [j, i]] as const) {
+        for (const sx of [1, -1]) for (const sy of [1, -1]) cells.set(`${a * sx},${b * sy}`, [a * sx, b * sy]);
+      }
+    }
+    for (const [i, j] of cells.values()) {
+      const top = (j - 0.5) * CELL;
+      if (top >= FULL_PIXELS_FROM && onRing(ring, i * CELL, j * CELL)) pixels.push([(i - 0.5) * CELL, top, CELL]);
+    }
+  }
+  return pixels;
+}
+
+/** Merges horizontally adjacent pixels of the same size into runs: [x, y, width, height]. */
+function runs(pixels: Pixel[]): (readonly [number, number, number, number])[] {
+  const sorted = [...pixels].sort((a, b) => a[2] - b[2] || a[1] - b[1] || a[0] - b[0]);
+  const out: [number, number, number, number][] = [];
+  for (const [x, y, size] of sorted) {
+    const last = out[out.length - 1];
+    if (last && last[1] === y && last[3] === size && Math.abs(last[0] + last[2] - x) < 1e-6) last[2] += size;
+    else out.push([x, y, size, size]);
+  }
+  return out;
+}
+
+const PIXEL_RUNS = runs([...halfPixels(), ...fullPixels()]);
+
+/**
+ * The ridges around print center (cx, cy) at scale s: smooth strokes above HALF_PIXELS_FROM, pixels below.
+ * The strokes run half a unit into the pixel band so no hairline shows at the seam.
+ */
+function ridges(cx: number, cy: number, s: number, color: string, id: string): string {
+  const smooth = RINGS.map((ring) => `<path d="${ringPath(cx, cy, ring, s)}"/>`).join("");
+  const f = (v: number) => +v.toFixed(2);
+  const pixels = PIXEL_RUNS.map(([x, y, w, h]) => `M${f(cx + x * s)} ${f(cy + y * s)}h${f(w * s)}v${f(h * s)}h${f(-w * s)}z`).join("");
+  return `<defs><clipPath id="${id}-smooth"><rect x="${f(cx - 320 * s)}" y="${f(cy - 320 * s)}" width="${f(640 * s)}" height="${f((320 + HALF_PIXELS_FROM + 0.5) * s)}"/></clipPath></defs>
+  <g clip-path="url(#${id}-smooth)" fill="none" stroke="${color}" stroke-width="${CELL * s}" stroke-linecap="round">${smooth}</g>
+  <path d="${pixels}" fill="${color}"/>`;
 }
 
 /**
  * The button mark centered at (cx, cy) with cap radius R.
- * Housing ring (dark), cap (volt with a soft convex highlight), engraved whorl ridges (ink).
+ * Housing ring (dark), cap (red with a soft convex highlight), engraved whorl ridges (ink) that turn to pixels
+ * toward the bottom.
  */
 function markGroup(cx: number, cy: number, R: number, opts: { mono?: boolean; idPrefix?: string } = {}): string {
   const id = opts.idPrefix ?? "m";
   const s = R / 300; // geometry is authored for R = 300
   const housing = R + 44 * s;
-  const stroke = 25 * s;
   const depth = 22 * s;
-  const ridges = RINGS.map((ring) => `<path d="${ringPath(cx, cy - depth / 2 - 6 * s, ring, 1.08, s)}"/>`).join("");
+  const capY = cy - depth / 2;
+  const printY = capY - 6 * s;
   if (opts.mono) {
     return `<g>
   <circle cx="${cx}" cy="${cy}" r="${housing}" fill="#fff"/>
   <circle cx="${cx}" cy="${cy}" r="${R + 6 * s}" fill="#000"/>
   <circle cx="${cx}" cy="${cy}" r="${R}" fill="#fff"/>
-  <g fill="none" stroke="#000" stroke-width="${stroke}" stroke-linecap="round">${ridges}</g>
+  ${ridges(cx, printY, s, "#000", id)}
 </g>`;
   }
   return `<defs>
   <radialGradient id="${id}-cap" cx="0.38" cy="0.32" r="0.85">
-    <stop offset="0" stop-color="#E9FF8A"/>
-    <stop offset="0.45" stop-color="${VOLT}"/>
-    <stop offset="1" stop-color="#B4DE1E"/>
+    <stop offset="0" stop-color="${shade(CAP, 0.4)}"/>
+    <stop offset="0.45" stop-color="${CAP}"/>
+    <stop offset="1" stop-color="${shade(CAP, -0.14)}"/>
   </radialGradient>
   <linearGradient id="${id}-housing" x1="0" y1="0" x2="0" y2="1">
     <stop offset="0" stop-color="#2E2E36"/>
     <stop offset="1" stop-color="#141418"/>
   </linearGradient>
   <linearGradient id="${id}-side" x1="0" y1="0" x2="0" y2="1">
-    <stop offset="0" stop-color="#7E9C0E"/>
-    <stop offset="1" stop-color="#4E6305"/>
+    <stop offset="0" stop-color="${shade(CAP, -0.42)}"/>
+    <stop offset="1" stop-color="${shade(CAP, -0.66)}"/>
   </linearGradient>
-  <clipPath id="${id}-clip"><circle cx="${cx}" cy="${cy - (11 * R) / 300}" r="${R}"/></clipPath>
+  <clipPath id="${id}-clip"><circle cx="${cx}" cy="${capY}" r="${R}"/></clipPath>
 </defs>
 <g>
   <circle cx="${cx}" cy="${cy}" r="${housing}" fill="url(#${id}-housing)"/>
   <circle cx="${cx}" cy="${cy}" r="${housing - 1.5 * s}" fill="none" stroke="#3A3A44" stroke-width="${3 * s}" stroke-opacity="0.9"/>
   <circle cx="${cx}" cy="${cy}" r="${R + depth / 2 + 8 * s}" fill="#08080A"/>
   <circle cx="${cx}" cy="${cy + depth / 2}" r="${R}" fill="url(#${id}-side)"/>
-  <circle cx="${cx}" cy="${cy - depth / 2}" r="${R}" fill="url(#${id}-cap)"/>
-  <g clip-path="url(#${id}-clip)" fill="none" stroke="${INK}" stroke-width="${stroke}" stroke-linecap="round" stroke-opacity="0.94">${ridges}</g>
-  <path d="M${cx - R * 0.62} ${cy - depth / 2 - R * 0.62} A${R * 0.88} ${R * 0.88} 0 0 1 ${cx + R * 0.2} ${cy - depth / 2 - R * 0.86}" fill="none" stroke="#FBFFE6" stroke-width="${7 * s}" stroke-linecap="round" stroke-opacity="0.32"/>
+  <circle cx="${cx}" cy="${capY}" r="${R}" fill="url(#${id}-cap)"/>
+  <g clip-path="url(#${id}-clip)" opacity="0.94">${ridges(cx, printY, s, INK, id)}</g>
+  <path d="M${cx - R * 0.62} ${capY - R * 0.62} A${R * 0.88} ${R * 0.88} 0 0 1 ${cx + R * 0.2} ${capY - R * 0.86}" fill="none" stroke="${shade(CAP, 0.9)}" stroke-width="${7 * s}" stroke-linecap="round" stroke-opacity="0.32"/>
 </g>`;
 }
 

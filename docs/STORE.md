@@ -62,7 +62,7 @@ Target **12+ (iOS) / Teen (IARC)**. Games declare their own rating (4+ / 9+ / 12
 | Location, contacts, photos, health, financial | **No** | — | — | — |
 | Push token | Yes (opt-in) | Yes | No | App functionality (notifications) |
 
-No third-party SDKs that collect data. No ads. No tracking (no ATT prompt needed). Account deletion: Settings → Account → Delete account (deletes profile, comments, likes, saves, scores, game storage). Data export: Settings → Account → Export my data.
+No third-party SDKs that collect data. No ads. No tracking (no ATT prompt needed). Account deletion: Settings → Delete account (deletes profile, comments, likes, saves, scores, game storage, activity; guests: Settings → Delete my data), also on the web at https://thumbcade.com/account. Data export: Settings → Download my data (server-side `account-export`, includes usage events). Imprint: Settings → Imprint and https://thumbcade.com/legal/imprint. The App Store and Play listings also need the trader details (EU DSA trader status) that match `@thumbcade/legal` `OPERATOR`.
 
 ## Notes for App Review (iOS)
 

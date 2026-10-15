@@ -60,7 +60,7 @@ describe("CardController bridge", () => {
     await boot(h);
     h.game("gameplay.start", { trigger: "tap" });
     expect(h.ctl.getSnapshot().phase).toBe("PLAYING");
-    expect(h.deps.sessionStart).toHaveBeenCalledWith({ gameId: GAME_ID, versionId: VERSION_ID, launchReason: "feed" });
+    expect(h.deps.sessionStart).toHaveBeenCalledWith({ gameId: GAME_ID, versionId: VERSION_ID, launchReason: "feed", cardId: "feed1:0" });
     const insets = h.sent.filter((m) => m.type === "insets").at(-1);
     expect((insets?.payload as { current: string }).current).toBe("play");
   });
@@ -213,5 +213,115 @@ describe("injectionFor", () => {
     expect(js.startsWith('window.dispatchEvent(new MessageEvent("message",{data:')).toBe(true);
     expect(js).not.toContain(String.fromCharCode(0x2028));
     expect(js).toContain("\\u2028");
+  });
+});
+
+describe("CardController active playtime (creator analytics)", () => {
+  const progress = (h: ReturnType<typeof harness>) => (h.deps.sessionProgress as jest.Mock).mock.calls.map((c) => (c[0] as { activeMs: number }).activeMs);
+
+  async function playing(h: ReturnType<typeof harness>) {
+    await boot(h);
+    h.game("gameplay.start", { trigger: "tap" });
+    await h.flush();
+  }
+
+  it("qualifies a run exactly once, at 3 s of active play", async () => {
+    const h = harness();
+    await playing(h);
+    h.advance(2999);
+    await h.flush();
+    expect(progress(h)).toEqual([]);
+    h.advance(1);
+    await h.flush();
+    expect(progress(h)).toEqual([3000]);
+    h.advance(10_000);
+    await h.flush();
+    expect(progress(h)).toEqual([3000]);
+  });
+
+  it.each([
+    ["a sheet", (h: ReturnType<typeof harness>) => h.ctl.dispatch({ type: "SUSPEND", reason: "sheet" }), (h: ReturnType<typeof harness>) => {
+      h.ctl.dispatch({ type: "UNSUSPEND", reason: "sheet" });
+      h.ctl.resumePlay();
+    }],
+    ["the background", (h: ReturnType<typeof harness>) => h.ctl.dispatch({ type: "SUSPEND", reason: "background" }), (h: ReturnType<typeof harness>) => {
+      h.ctl.dispatch({ type: "UNSUSPEND", reason: "background" });
+      h.ctl.resumePlay();
+    }],
+    ["Android back", (h: ReturnType<typeof harness>) => h.ctl.dispatch({ type: "PAUSE", reason: "back" }), (h: ReturnType<typeof harness>) => h.ctl.resumePlay()],
+    ["a feed drag", (h: ReturnType<typeof harness>) => h.ctl.dispatch({ type: "FEED_GESTURE_BEGIN" }), (h: ReturnType<typeof harness>) => h.ctl.dispatch({ type: "FEED_GESTURE_END", committed: false })],
+    ["going offscreen", (h: ReturnType<typeof harness>) => h.ctl.deactivate(), (h: ReturnType<typeof harness>) => {
+      h.ctl.activate();
+      h.ctl.resumePlay();
+    }],
+  ])("stops the clock during %s", async (_name, interrupt, resume) => {
+    const h = harness();
+    await playing(h);
+    h.advance(1000);
+    interrupt(h);
+    h.advance(15_000);
+    resume(h);
+    h.advance(1999);
+    await h.flush();
+    expect(progress(h).filter((ms) => ms >= 3000)).toEqual([]);
+    h.advance(1);
+    await h.flush();
+    expect(progress(h).at(-1)).toBe(3000);
+    h.game("gameplay.end", { score: 5 });
+    await h.flush();
+    await h.flush();
+    expect(h.deps.sessionEnd).toHaveBeenCalledWith(expect.objectContaining({ activeMs: 3000, durationMs: 18_000 }));
+  });
+
+  it("stops the clock when the shell pauses an idle run", async () => {
+    const h = harness();
+    await playing(h);
+    h.advance(20_000);
+    expect(h.ctl.getSnapshot().phase).toBe("PAUSED");
+    h.advance(60_000);
+    h.game("gameplay.end", { score: 1 });
+    await h.flush();
+    await h.flush();
+    expect(h.deps.sessionEnd).toHaveBeenCalledWith(expect.objectContaining({ activeMs: 20_000, durationMs: 80_000 }));
+  });
+
+  it("lets session-end qualify a run the game ended before 3 s", async () => {
+    const h = harness();
+    await playing(h);
+    h.advance(1800);
+    h.game("gameplay.end", { score: 2, outcome: "lose" });
+    await h.flush();
+    await h.flush();
+    expect(h.deps.sessionEnd).toHaveBeenCalledWith(expect.objectContaining({ activeMs: 1800, durationMs: 1800 }));
+    h.advance(10_000);
+    await h.flush();
+    expect(h.deps.sessionProgress).not.toHaveBeenCalled();
+  });
+
+  it("reports progress when the player swipes away, at most once per 5 s", async () => {
+    const h = harness();
+    await playing(h);
+    h.advance(3000);
+    await h.flush();
+    h.advance(1500);
+    h.ctl.deactivate();
+    await h.flush();
+    expect(progress(h)).toEqual([3000]);
+    h.advance(3499);
+    await h.flush();
+    expect(progress(h)).toEqual([3000]);
+    h.advance(1);
+    await h.flush();
+    expect(progress(h)).toEqual([3000, 4500]);
+    expect(h.deps.sessionProgress).toHaveBeenLastCalledWith({ sessionId: "44444444-4444-4444-8444-444444444444", token: "tok", activeMs: 4500 });
+  });
+
+  it("reports the time of a run lost to a crash", async () => {
+    const h = harness();
+    await playing(h);
+    h.advance(2000);
+    h.ctl.failLoad("content process terminated");
+    await h.flush();
+    expect(progress(h)).toEqual([2000]);
   });
 });

@@ -62,7 +62,13 @@ try {
 
   step(5, "Reviewer worker processes the job");
   run("pnpm", ["--filter", "@thumbcade/reviewer", "worker", "--once"]);
-  const { data: v } = await admin.from("game_versions").select("status, review_report").eq("id", versionId).single();
+  // With `pnpm dev` running, its own worker may have claimed the job first: wait for whichever runs it.
+  let v: { status: string; review_report: unknown } | null = null;
+  for (let i = 0; i < 60; i++) {
+    v = (await admin.from("game_versions").select("status, review_report").eq("id", versionId).single()).data as typeof v;
+    if (v?.status !== "auto_checking" && v?.status !== "uploaded") break;
+    await new Promise((r) => setTimeout(r, 1000));
+  }
   if (v?.status !== "pending_review") fail(`version is ${v?.status}, expected pending_review. Report: ${JSON.stringify(v?.review_report).slice(0, 400)}`);
   const report = v.review_report as { checks: { id: string; status: string }[] };
   ok(`pending_review · ${report.checks.filter((c) => c.status === "pass").length}/${report.checks.length} checks passed`);

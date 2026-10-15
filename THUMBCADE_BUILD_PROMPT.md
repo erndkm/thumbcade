@@ -439,8 +439,7 @@ This is a creator's first impression of the platform, so it must look as good as
 - **Color**
   - `ink.0 #000000` feed backdrop (OLED) · `ink.1 #0D0D10` surfaces · `ink.2 #17171C` raised · `ink.3 #24242B` lines
   - `paper #F3F0E8` primary text (warm, never pure white) · `paper.dim #A7A3AE` · `paper.mute #6E6A78`
-  - `volt #D4FF3D`: the signature accent. Use it for the primary CTA, active states, your own score and focus rings, at most one volt element per region of a screen.
-  - `heat #FF4A3D`: likes, hearts, live indicators.
+  - `heat #FF4A3D`: the signature accent, arcade-button red like the logo. Use it for the primary CTA, active states, your own score and focus rings, at most one accent element per region of a screen. It also marks likes and hearts. Text on it is ink. Success states use `success` green, never the accent.
   - `game.accent`: comes from each game's manifest. It tints the Dock grabber, caption chips, the progress line and the result card for that card only. Check contrast and fall back to `paper` below 3:1 on ink.
 - **Type** (all OFL, bundled as static font files)
   - Display: **Mona Sans Expanded** (Bold/Black) for game names, screen titles and hero text.
@@ -460,9 +459,9 @@ People screenshot these, so polish them hardest.
 1. **Like burst:** a Skia particle burst in heat plus the game's accent, with a scatter of tiny pixel hearts.
 2. **The cartridge:** the game's icon rotating slowly at the bottom of the action rail, with a shared-element transition into the game page.
 3. **Tab bar → Dock morph** when play starts.
-4. **Result card:** score odometer, a "NEW BEST" stamp in volt, the percentile, the challenge CTA.
+4. **Result card:** score odometer, a "NEW BEST" stamp in the accent, the percentile, the challenge CTA.
 5. **Poster → live:** a crossfade with a one-pass scanline wipe in the game's accent color.
-6. **App icon and splash:** a top-down arcade button in volt whose concentric rings form a thumbprint whorl. The splash animates the press.
+6. **App icon and splash:** a top-down red arcade button (`heat`) whose concentric rings form a thumbprint whorl, with the lower ridges resolving into pixels. The splash animates the press.
 
 ### 12.3 Anti-slop rules (violations are bugs)
 

@@ -9,14 +9,14 @@ export function OwnershipDiagram() {
     <svg viewBox="0 0 90 180" className="h-auto w-full max-w-[110px]" aria-hidden>
       <defs>
         <pattern id={`h-${kind}`} width="8" height="8" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
-          <rect width="4" height="8" fill={kind === "game" ? "rgba(255,74,61,0.35)" : "rgba(212,255,61,0.32)"} />
+          <rect width="4" height="8" fill={kind === "game" ? "rgba(255,74,61,0.35)" : "rgba(243,240,232,0.22)"} />
         </pattern>
       </defs>
       <rect x="1" y="1" width="88" height="178" rx="14" fill="#000" stroke="#34343D" />
       <rect x="5" y="5" width="80" height="152" rx="10" fill={`url(#h-${kind})`} opacity={kind === "feed-strict" ? 0.6 : 1} />
-      <rect x="5" y="158" width="80" height="17" rx="4" fill={kind === "game" ? "rgba(212,255,61,0.35)" : "#17171C"} />
-      <rect x="36" y="165" width="18" height="3" rx="1.5" fill={kind === "game" ? "#D4FF3D" : "#6E6A78"} />
-      <text x="45" y="84" textAnchor="middle" fontSize="10" fontFamily="var(--tc-font-mono)" fill={kind === "game" ? "#FF4A3D" : "#D4FF3D"}>
+      <rect x="5" y="158" width="80" height="17" rx="4" fill={kind === "game" ? "rgba(243,240,232,0.16)" : "#17171C"} />
+      <rect x="36" y="165" width="18" height="3" rx="1.5" fill={kind === "game" ? "#F3F0E8" : "#6E6A78"} />
+      <text x="45" y="84" textAnchor="middle" fontSize="10" fontFamily="var(--tc-font-mono)" fill={kind === "game" ? "#FF4A3D" : "#F3F0E8"}>
         {kind === "game" ? "GAME" : "FEED"}
       </text>
       {kind === "feed-strict" ? (
@@ -50,7 +50,7 @@ export function OwnershipDiagram() {
         ))}
       </div>
       <figcaption className="mt-4 flex flex-wrap gap-x-6 gap-y-2 font-mono text-[12px] text-text-mute">
-        <span><span className="mr-2 inline-block size-2.5 bg-[rgba(212,255,61,0.6)]" />feed owns vertical swipes</span>
+        <span><span className="mr-2 inline-block size-2.5 bg-[rgba(243,240,232,0.6)]" />feed owns vertical swipes</span>
         <span><span className="mr-2 inline-block size-2.5 bg-[rgba(255,74,61,0.6)]" />game owns the surface</span>
         <span>bottom strip = tab bar / Dock — always the feed&apos;s</span>
       </figcaption>

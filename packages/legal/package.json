@@ -1,0 +1,15 @@
+{
+  "name": "@thumbcade/legal",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Operator details and legal documents (imprint, privacy policy, terms, community guidelines) shared by the app and the portal.",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc -p tsconfig.json",
+    "lint": "eslint .",
+    "test": "vitest run"
+  }
+}

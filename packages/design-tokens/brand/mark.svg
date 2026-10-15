@@ -1,16 +1,16 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1024" viewBox="0 0 1024 1024"><defs>
   <radialGradient id="m-cap" cx="0.38" cy="0.32" r="0.85">
-    <stop offset="0" stop-color="#E9FF8A"/>
-    <stop offset="0.45" stop-color="#D4FF3D"/>
-    <stop offset="1" stop-color="#B4DE1E"/>
+    <stop offset="0" stop-color="#FF928B"/>
+    <stop offset="0.45" stop-color="#FF4A3D"/>
+    <stop offset="1" stop-color="#DB4034"/>
   </radialGradient>
   <linearGradient id="m-housing" x1="0" y1="0" x2="0" y2="1">
     <stop offset="0" stop-color="#2E2E36"/>
     <stop offset="1" stop-color="#141418"/>
   </linearGradient>
   <linearGradient id="m-side" x1="0" y1="0" x2="0" y2="1">
-    <stop offset="0" stop-color="#7E9C0E"/>
-    <stop offset="1" stop-color="#4E6305"/>
+    <stop offset="0" stop-color="#942B23"/>
+    <stop offset="1" stop-color="#571915"/>
   </linearGradient>
   <clipPath id="m-clip"><circle cx="512" cy="501" r="300"/></clipPath>
 </defs>
@@ -20,6 +20,8 @@
   <circle cx="512" cy="512" r="319" fill="#08080A"/>
   <circle cx="512" cy="523" r="300" fill="url(#m-side)"/>
   <circle cx="512" cy="501" r="300" fill="url(#m-cap)"/>
-  <g clip-path="url(#m-clip)" fill="none" stroke="#0D0D10" stroke-width="25" stroke-linecap="round" stroke-opacity="0.94"><path d="M517.90 458.84 A34.00 36.72 0 1 1 490.15 523.13"/><path d="M572.02 564.51 A88.00 95.04 0 1 1 599.88 490.03"/><path d="M461.11 351.83 A142.00 153.36 0 1 1 395.68 407.04"/><path d="M375.85 647.27 A196.00 211.68 0 1 1 457.98 698.48"/><path d="M732.74 368.24 A250.00 270.00 0 1 1 665.92 282.24"/></g>
-  <path d="M326 315 A264 264 0 0 1 572 243" fill="none" stroke="#FBFFE6" stroke-width="7" stroke-linecap="round" stroke-opacity="0.32"/>
+  <g clip-path="url(#m-clip)" opacity="0.94"><defs><clipPath id="m-smooth"><rect x="192" y="175" width="640" height="362.5"/></clipPath></defs>
+  <g clip-path="url(#m-smooth)" fill="none" stroke="#0D0D10" stroke-width="28" stroke-linecap="round"><path d="M516.86 467.43 A28.00 28.00 0 1 1 494.00 516.45"/><path d="M569.29 556.43 A84.00 84.00 0 1 1 595.88 490.60"/><path d="M461.83 364.30 A140.00 140.00 0 1 1 397.32 414.70"/><path d="M375.85 635.99 A196.00 196.00 0 1 1 457.98 683.41"/><path d="M734.50 376.69 A252.00 252.00 0 1 1 667.15 296.42"/></g>
+  <path d="M246 537h28v14h-28zM302 537h28v14h-28zM372 537h28v14h-28zM428 537h28v14h-28zM624 537h28v14h-28zM694 537h28v14h-28zM750 537h28v14h-28zM260 551h28v14h-28zM316 551h28v14h-28zM372 551h28v14h-28zM442 551h42v14h-42zM540 551h28v14h-28zM624 551h28v14h-28zM680 551h28v14h-28zM736 551h28v14h-28zM260 565h28v14h-28zM316 565h28v14h-28zM372 565h42v14h-42zM456 565h112v14h-112zM610 565h42v14h-42zM680 565h28v14h-28zM736 565h28v14h-28zM260 579h28v14h-28zM316 579h42v14h-42zM386 579h42v14h-42zM470 579h84v14h-84zM596 579h42v14h-42zM666 579h42v14h-42zM736 579h28v14h-28zM274 593h28v14h-28zM330 593h28v14h-28zM400 593h42v14h-42zM582 593h42v14h-42zM666 593h28v14h-28zM722 593h28v14h-28zM274 607h28v14h-28zM344 607h28v14h-28zM414 607h56v14h-56zM554 607h56v14h-56zM652 607h28v14h-28zM722 607h28v14h-28zM302 621h28v28h-28zM358 621h28v28h-28zM442 621h140v28h-140zM638 621h28v28h-28zM694 621h28v28h-28zM302 649h28v28h-28zM582 649h56v28h-56zM694 649h28v28h-28zM330 677h56v28h-56zM442 677h140v28h-140zM638 677h56v28h-56zM386 705h56v28h-56zM582 705h56v28h-56zM442 733h140v28h-140z" fill="#0D0D10"/></g>
+  <path d="M326 315 A264 264 0 0 1 572 243" fill="none" stroke="#FFEDEC" stroke-width="7" stroke-linecap="round" stroke-opacity="0.32"/>
 </g></svg>

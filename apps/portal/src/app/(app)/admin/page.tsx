@@ -58,7 +58,7 @@ export default async function ReviewQueue({ searchParams }: { searchParams: Prom
             return (
               <li key={r.id} className="rule-b">
                 <Link href={`/admin/review/${r.id}`} className="group grid grid-cols-[auto_1fr_auto] items-center gap-5 py-4 md:grid-cols-[auto_1fr_200px_160px_auto]">
-                  <GameIcon url={r.game?.icon_url ?? null} name={r.game?.name ?? ""} accent={r.game?.accent_color ?? "#D4FF3D"} size={48} />
+                  <GameIcon url={r.game?.icon_url ?? null} name={r.game?.name ?? ""} accent={r.game?.accent_color ?? "#FF4A3D"} size={48} />
                   <div className="min-w-0">
                     <div className="truncate font-semiwide text-[16px] font-bold text-text">
                       {r.game?.name} <span className="font-mono text-[13px] font-normal text-text-mute">v{r.semver}</span>

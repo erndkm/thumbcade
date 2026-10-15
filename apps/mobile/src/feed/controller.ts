@@ -10,6 +10,8 @@ import {
   BRIDGE_RATE_LIMITS,
   BUDGETS,
   PLAYING_IDLE_PAUSE_MS,
+  QUALIFIED_PLAY_MS,
+  SESSION_PROGRESS_INTERVAL_MS,
   REQUEST_TYPES,
   SUPPORTED_SDK_MAJORS,
   createRateLimiter,
@@ -31,12 +33,14 @@ import {
   type Player,
   type ReplyPayload,
   type SessionEndResponse,
+  type SessionProgressResponse,
   type SessionStartResponse,
   type ShellToGameType,
 } from "@thumbcade/protocol";
 import {
   createCardState,
   gestureConfigFor,
+  shouldRun,
   transition,
   type CardPhase,
   type CardState,
@@ -94,8 +98,17 @@ export interface CardDeps {
   }>;
   /** Current inset sets (synchronous; layout is known before any card mounts). */
   insets: () => { preview: Insets; play: Insets };
-  sessionStart: (req: { gameId: string; versionId: string; launchReason: LaunchReason }) => Promise<SessionStartResponse>;
-  sessionEnd: (req: { sessionId: string; token: string; score: number; durationMs: number; outcome?: "win" | "lose" | "quit" }) => Promise<SessionEndResponse>;
+  sessionStart: (req: { gameId: string; versionId: string; launchReason: LaunchReason; cardId?: string }) => Promise<SessionStartResponse>;
+  sessionEnd: (req: {
+    sessionId: string;
+    token: string;
+    score: number;
+    durationMs: number;
+    activeMs?: number;
+    outcome?: "win" | "lose" | "quit";
+  }) => Promise<SessionEndResponse>;
+  /** Reports an open run's active playtime: when it qualifies as a play, and when it is interrupted. */
+  sessionProgress: (req: { sessionId: string; token: string; activeMs: number }) => Promise<SessionProgressResponse>;
   storageGet: (gameId: string, key: string) => Promise<Json | null>;
   storageSet: (gameId: string, key: string, value: Json) => Promise<void>;
   leaderboardTop: (gameId: string, scope: LeaderboardScope, limit: number) => Promise<LeaderboardEntry[]>;
@@ -115,6 +128,26 @@ export function injectionFor(env: unknown): string {
   // U+2028/2029 are valid JSON but terminate JS string literals in older engines.
   const json = JSON.stringify(env).replace(LINE_SEP, "\\u2028").replace(PARA_SEP, "\\u2029");
   return `window.dispatchEvent(new MessageEvent("message",{data:${json}}));true;`;
+}
+
+/**
+ * Active playtime of the open run: the time it spends in PLAYING while the game is running (not paused,
+ * not under a feed drag, not offscreen). This is what the creator dashboard calls playtime.
+ */
+interface RunClock {
+  session: Promise<SessionStartResponse | null>;
+  /** Time folded in from finished stretches. */
+  activeMs: number;
+  /** Start of the current running stretch, or null while stopped. */
+  runningSince: number | null;
+  qualified: boolean;
+  qualifyTimer: unknown;
+  /** Last value sent to session-progress, and when. */
+  reportedMs: number;
+  reportedAt: number;
+  trailingTimer: unknown;
+  /** The game ended the run; session-end carries the final time. */
+  ended: boolean;
 }
 
 let instances = 0;
@@ -139,6 +172,7 @@ export class CardController {
   private sentInsets: "preview" | "play" | null = null;
   private runStartedAt = 0;
   private session: Promise<SessionStartResponse | null> | null = null;
+  private clock: RunClock | null = null;
   private best: number | null;
   private disposed = false;
   private seed: number;
@@ -223,6 +257,7 @@ export class CardController {
     this.deps.clearTimer(this.loadTimer);
     if (this.state.ready) {
       // Crashed after ready: reload transparently.
+      this.abandonRun();
       this.state = { ...createCardState(), active: this.state.active, phase: this.state.active ? "LOADING" : "OFFSCREEN" };
       this.resetBridge();
       this.emit({ phase: this.state.phase, ready: false, loadKey: this.snapshot.loadKey + 1 });
@@ -277,6 +312,7 @@ export class CardController {
   }
 
   dispose(): void {
+    this.abandonRun();
     this.disposed = true;
     this.deps.clearTimer(this.loadTimer);
     this.deps.clearTimer(this.idleTimer);
@@ -301,6 +337,9 @@ export class CardController {
 
   private afterTransition(prevPhase: CardPhase): void {
     const phase = this.state.phase;
+    this.syncClock();
+    // Leaving PLAYING (paused, a sheet, background, swiped away) keeps the server's playtime current.
+    if (this.clock && prevPhase === "PLAYING" && phase !== "PLAYING") this.reportProgress(this.clock);
     if (phase === "PLAYING") this.armIdle();
     else {
       this.deps.clearTimer(this.idleTimer);
@@ -326,6 +365,7 @@ export class CardController {
         else this.send(effect.message);
         return;
       case "reload":
+        this.abandonRun();
         this.resetBridge();
         this.emit({ loadKey: this.snapshot.loadKey + 1, ready: false, result: null });
         return;
@@ -360,17 +400,39 @@ export class CardController {
     this.emit({ result: null });
     this.track({ type: "play_start" });
     const { game, version } = this.card;
-    if (!isUuid(game.id) || !isUuid(version.id)) {
-      this.session = Promise.resolve(null);
-      return;
-    }
-    this.session = this.deps
-      .sessionStart({ gameId: game.id, versionId: version.id, launchReason: this.launchReason })
-      .catch(() => null);
+    this.session =
+      isUuid(game.id) && isUuid(version.id)
+        ? this.deps
+            .sessionStart({ gameId: game.id, versionId: version.id, launchReason: this.launchReason, cardId: this.card.cardId.slice(0, 80) })
+            .catch(() => null)
+        : Promise.resolve(null);
+    this.abandonRun();
+    // afterTransition starts it: the machine is in PLAYING by now.
+    this.clock = {
+      session: this.session,
+      activeMs: 0,
+      runningSince: null,
+      qualified: false,
+      qualifyTimer: null,
+      reportedMs: 0,
+      reportedAt: -Infinity,
+      trailingTimer: null,
+      ended: false,
+    };
   }
 
   private onRunEnded(score: number): void {
     const durationMs = Math.max(0, Math.round(this.deps.now() - this.runStartedAt));
+    const clock = this.clock;
+    this.clock = null;
+    let activeMs: number | undefined;
+    if (clock) {
+      this.stopClock(clock);
+      clock.ended = true;
+      this.deps.clearTimer(clock.trailingTimer);
+      clock.trailingTimer = null;
+      activeMs = Math.round(clock.activeMs);
+    }
     const order = this.card.game.score.order;
     const better = (a: number, b: number | null) => b === null || (order === "asc" ? a < b : a > b);
     const previousBest = this.best;
@@ -403,6 +465,7 @@ export class CardController {
           token: s.token,
           score,
           durationMs,
+          ...(activeMs !== undefined ? { activeMs } : null),
           ...(this.pendingOutcome ? { outcome: this.pendingOutcome } : null),
         });
         const hadBest = previousBest !== null;
@@ -421,6 +484,73 @@ export class CardController {
         this.patchResult(result, { pending: false });
       }
     })();
+  }
+
+  // ---------------------------------------------------------------------------------------------
+  // Active playtime (creator analytics): see RunClock.
+
+  private clockMs(c: RunClock): number {
+    return c.activeMs + (c.runningSince === null ? 0 : this.deps.now() - c.runningSince);
+  }
+
+  /** Runs the clock exactly while the run is in PLAYING and the game is running. */
+  private syncClock(): void {
+    const c = this.clock;
+    if (!c) return;
+    const running = this.state.phase === "PLAYING" && shouldRun(this.state);
+    if (running && c.runningSince === null) {
+      c.runningSince = this.deps.now();
+      if (!c.qualified) c.qualifyTimer = this.deps.setTimer(() => this.onQualified(c), Math.max(0, QUALIFIED_PLAY_MS - c.activeMs));
+    } else if (!running) {
+      this.stopClock(c);
+    }
+  }
+
+  private stopClock(c: RunClock): void {
+    if (c.runningSince !== null) {
+      c.activeMs += this.deps.now() - c.runningSince;
+      c.runningSince = null;
+    }
+    this.deps.clearTimer(c.qualifyTimer);
+    c.qualifyTimer = null;
+  }
+
+  /** The run reached QUALIFIED_PLAY_MS of active play: it counts as a play from now on. */
+  private onQualified(c: RunClock): void {
+    c.qualifyTimer = null;
+    if (c.qualified || c.ended) return;
+    c.qualified = true;
+    this.reportProgress(c);
+  }
+
+  /** Sends the clock to session-progress, at most once per SESSION_PROGRESS_INTERVAL_MS (the latest value trails). */
+  private reportProgress(c: RunClock): void {
+    if (c.ended) return;
+    const activeMs = Math.round(this.clockMs(c));
+    if (activeMs <= c.reportedMs) return;
+    const now = this.deps.now();
+    const wait = c.reportedAt + SESSION_PROGRESS_INTERVAL_MS - now;
+    if (wait > 0) {
+      c.trailingTimer ??= this.deps.setTimer(() => {
+        c.trailingTimer = null;
+        this.reportProgress(c);
+      }, wait);
+      return;
+    }
+    c.reportedMs = activeMs;
+    c.reportedAt = now;
+    void c.session
+      .then((s) => (s ? this.deps.sessionProgress({ sessionId: s.sessionId, token: s.token, activeMs }) : null))
+      .catch(() => null);
+  }
+
+  /** The run is gone without an end (reload, crash, card recycled): report what was played. */
+  private abandonRun(): void {
+    const c = this.clock;
+    if (!c) return;
+    this.clock = null;
+    this.stopClock(c);
+    this.reportProgress(c);
   }
 
   private patchResult(base: CardResult, patch: Partial<CardResult>): void {

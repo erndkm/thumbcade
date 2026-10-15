@@ -86,8 +86,8 @@ export function Stat({ label, value, sub }: { label: string; value: ReactNode; s
 }
 
 export function StatusDot({ tone }: { tone: "live" | "pending" | "failed" | "neutral" }) {
-  const color = { live: "var(--tc-accent)", pending: "var(--tc-warning)", failed: "var(--tc-heat)", neutral: "var(--tc-text-mute)" }[tone];
-  return <span className="inline-block size-2 rounded-full" style={{ background: color, boxShadow: tone === "live" ? `0 0 0 3px ${color}22` : undefined }} />;
+  const color = { live: "var(--tc-success)", pending: "var(--tc-warning)", failed: "var(--tc-heat)", neutral: "var(--tc-text-mute)" }[tone];
+  return <span className="inline-block size-2 rounded-full" style={{ background: color, boxShadow: tone === "live" ? `0 0 0 3px color-mix(in srgb, ${color} 14%, transparent)` : undefined }} />;
 }
 
 export function EmptyState({ title, body, action }: { title: string; body: ReactNode; action?: ReactNode }) {

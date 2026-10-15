@@ -6,7 +6,7 @@ import { T } from "./Text";
 import { c, layout, space, springs } from "./theme";
 import { useReduceMotion } from "../hooks/useMotion";
 
-/** A hardware-style toggle: squared track, volt when on. */
+/** A hardware-style toggle: squared track, accent when on. */
 export function ToggleRow({ label, hint, value, onChange, testID }: { label: string; hint?: string; value: boolean; onChange: (v: boolean) => void; testID?: string }) {
   const p = useSharedValue(value ? 1 : 0);
   const reduce = useReduceMotion();

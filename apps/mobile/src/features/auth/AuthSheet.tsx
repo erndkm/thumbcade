@@ -61,7 +61,7 @@ export function AuthSheet({ reason, onDone, onClose }: { reason?: string | undef
           <T variant="caption" color="textDim" onPress={() => router.push("/settings/legal?doc=terms")} accessibilityRole="link">
             Terms
           </T>{" "}
-          and the{" "}
+          and confirm you've read the{" "}
           <T variant="caption" color="textDim" onPress={() => router.push("/settings/legal?doc=privacy")} accessibilityRole="link">
             Privacy Policy
           </T>
