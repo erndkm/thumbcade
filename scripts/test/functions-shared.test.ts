@@ -85,8 +85,8 @@ describe("push copy", () => {
 
   it("announces milestones in the creator's terms and opens the Creator Hub", () => {
     expect(
-      pushCopy({ type: "milestone", payload: { kind: "players", threshold: 10000, value: 10012, detail: {} }, actorHandle: null, gameName: "Lane Rush", gameSlug: "lane-rush" }),
-    ).toEqual({ title: "10K players", body: "Lane Rush just passed 10,000 players.", url: "/create" });
+      pushCopy({ type: "milestone", payload: { kind: "players", threshold: 10000, value: 10012, detail: {} }, actorHandle: null, gameName: "Duskrail", gameSlug: "duskrail" }),
+    ).toEqual({ title: "10K players", body: "Duskrail just passed 10,000 players.", url: "/create" });
     expect(
       pushCopy({ type: "milestone", payload: { kind: "taking_off", threshold: 20261014, value: 3.4, detail: { players: 680, ratio: 3.4 } }, actorHandle: null, gameName: "Snek", gameSlug: "snek" })
         ?.body,

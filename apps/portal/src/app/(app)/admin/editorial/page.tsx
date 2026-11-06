@@ -25,7 +25,7 @@ export default async function EditorialPage() {
         <Input name="subtitle" defaultValue={row?.subtitle ?? ""} placeholder="Quick hits for the bus stop" />
       </Field>
       <Field label="Games (slugs, in order)">
-        <Input name="games" defaultValue={(row?.game_ids ?? []).map((id) => slugOf.get(id)).filter(Boolean).join(" ")} className="font-mono" placeholder="flapjack stackd reflex" />
+        <Input name="games" defaultValue={(row?.game_ids ?? []).map((id) => slugOf.get(id)).filter(Boolean).join(" ")} className="font-mono" placeholder="flapjack stackd kneejerk" />
       </Field>
       <Field label="Order">
         <Input name="position" type="number" defaultValue={row?.position ?? (rows?.length ?? 0)} />

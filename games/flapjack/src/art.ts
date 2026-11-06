@@ -22,6 +22,8 @@ export const PAL = {
   floorB: "#1C1C22",
   ink: "#0D0D10",
   paper: "#F3F0E8",
+  /** Warm griddle light for the impact flash. */
+  flash: "#FFECC8",
 } as const;
 
 function canvas(w: number, h: number, scale: number): [HTMLCanvasElement, CanvasRenderingContext2D] {

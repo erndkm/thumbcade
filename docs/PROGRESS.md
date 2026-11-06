@@ -9,7 +9,7 @@
 - [x] Ranked For You + Following feeds with exploration and diversity (`rank_feed`, infinite recycle, hashtag-scoped feeds)
 - [x] Creator loop proven by scripts/e2e-creator-loop.ts (scaffold → publish → 16/16 review checks → approve → in a new guest's feed)
 - [x] Portal: landing with live phone, /play, docs, creator dashboard, admin review, /g and /c pages with OG cards
-- [x] 12 polished launch games, 3 in 3D (Stackd, Helix Fall, Lane Rush), both `vertical` modes, all pass the reviewer
+- [x] 12 polished launch games, 3 in 3D (Stackd, Heatfall, Duskrail), both `vertical` modes, all pass the reviewer
 - [x] Three Design QA passes logged (docs/DESIGN_QA.md); screenshots in docs/screenshots/{mobile,portal,games,simulator}
 - [x] typecheck, lint, test green (30 + 25 + 19 turbo tasks, 329 tests); `npx expo export` for ios + android
 - [x] STORE.md, DECISIONS.md, GAPS.md, PERF.md, THIRD_PARTY.md complete
@@ -37,3 +37,15 @@ mid-tier Android phone) is in docs/GAPS.md, with the steps in the README's "Goin
 - [x] Hardening: verified-best challenge scores, events rate cap, signing-secret floor, exact WebView origin check
 - [x] Fixes: card stuck in LOADING after a Fast Refresh; caption clipped at accessibility text sizes; paused runs dimmed under the chrome; seeded creator stats consistent with real counters; `pnpm dev` Metro start and shutdown; `create-thumbcade-game --local` under pnpm
 - [x] Performance soak, Design QA pass 3, portal and app screenshots, final docs
+
+## Library expansion (2026-10-17)
+- [x] 13 new games (2D and 3D): Clearcut and Spindart in the house style; 11 creator games, each creator with a look of their own (docs/DECISIONS.md, docs/handoff/B.md §9)
+- [x] House-style games all attributed to Thumbcade Studio; new seed creators softbake and marginalia; library fonts with their OFL texts in every bundle
+- [x] Seed comments, release notes and score medians for every game
+- [x] Six Seven: a house game on the "6 7" trend with an original kid, two-thumb tapping and a teacher to freeze for (docs/DECISIONS.md)
+
+## Creator bundle safety (2026-10-17)
+- [x] Uploads hold web code, data and media only; native executables are refused under any name (CLI, `creator-publish`, reviewer)
+- [x] Obfuscated code and WebRTC fail the static scan; the reviewer also catches WebRTC at runtime, including from blank iframes
+- [x] Portal pages may only frame the games origin (`frame-src`); the web player stops a game that tries to leave its frame
+- [x] Reviewer flash check (WCAG 2.3.1, general and red flashes, area rule) on 60 fps screen captures of attract mode and play

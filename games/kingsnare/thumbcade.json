@@ -1,0 +1,18 @@
+{
+  "$schema": "https://thumbcade.com/schema/manifest-v1.json",
+  "id": "kingsnare",
+  "name": "Kingsnare",
+  "version": "1.0.0",
+  "sdk": "^1.0.0",
+  "entry": "index.html",
+  "description": "Ninety seconds of checkmates. Mate in one, two, three. A new opener every day. No draws, no mercy.",
+  "tags": ["chess", "puzzle", "brain", "logic"],
+  "accentColor": "#5CF2B8",
+  "icon": "assets/icon.png",
+  "ageRating": "4+",
+  "controls": { "vertical": true, "horizontal": true, "multitouch": false, "inputs": ["drag", "tap"] },
+  "session": "medium",
+  "audio": true,
+  "orientation": "portrait",
+  "score": { "order": "desc", "max": 1000000, "format": "integer" }
+}

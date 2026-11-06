@@ -75,7 +75,7 @@ export const ANALYTICS_MIN_SAMPLE = 20;
 export const CATEGORIES = [
   { id: "arcade", label: "Arcade", tags: ["arcade", "onetap", "flyer", "runner"] },
   { id: "puzzle", label: "Puzzle", tags: ["puzzle", "merge", "logic", "chess"] },
-  { id: "brain", label: "Brain", tags: ["brain", "memory", "chess", "logic"] },
+  { id: "brain", label: "Brain", tags: ["brain", "matching", "chess", "logic"] },
   { id: "3d", label: "3D", tags: ["3d"] },
   { id: "chill", label: "Chill", tags: ["chill", "zen", "relax"] },
   { id: "reflex", label: "Reflex", tags: ["reflex", "reaction", "speed"] },

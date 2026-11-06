@@ -1,0 +1,35 @@
+{
+  "$schema": "https://thumbcade.com/schema/manifest-v1.json",
+  "id": "brinebop",
+  "name": "Brinebop",
+  "version": "1.0.0",
+  "sdk": "^1.0.0",
+  "entry": "index.html",
+  "description": "SWAP THE CRITTERS, CHAIN THE SPLASHES, BEAT THE CLOCK, THEN WATCH EVERY SPECIAL GO KA-BLAM AT THE BUZZER!",
+  "tags": [
+    "match3",
+    "puzzle",
+    "cartoon",
+    "speed"
+  ],
+  "accentColor": "#2ED3E6",
+  "icon": "assets/icon.png",
+  "ageRating": "4+",
+  "controls": {
+    "vertical": true,
+    "horizontal": true,
+    "multitouch": false,
+    "inputs": [
+      "drag",
+      "tap"
+    ]
+  },
+  "session": "medium",
+  "audio": true,
+  "orientation": "portrait",
+  "score": {
+    "order": "desc",
+    "max": 1000000,
+    "format": "integer"
+  }
+}

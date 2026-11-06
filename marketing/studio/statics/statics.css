@@ -1,0 +1,150 @@
+/* Thumbcade ad statics. Tokens mirror packages/design-tokens (§12: ink, paper, one heat accent per region). */
+@font-face {
+  font-family: "Mona Sans";
+  src: url("../assets/MonaSansVF.woff2") format("woff2");
+  font-weight: 200 900;
+  font-stretch: 75% 125%;
+}
+@font-face {
+  font-family: "Departure Mono";
+  src: url("../assets/DepartureMono-Regular.woff2") format("woff2");
+  font-weight: 400;
+}
+
+:root {
+  --ink0: #000000;
+  --ink1: #0d0d10;
+  --ink2: #17171c;
+  --ink3: #24242b;
+  --ink4: #34343d;
+  --paper: #f3f0e8;
+  --paper-dim: #a7a3ae;
+  --paper-mute: #6e6a78;
+  --heat: #ff4a3d;
+  --heat-deep: #c42a1f;
+  --success: #4cc38a;
+  --sans: "Mona Sans", ui-sans-serif, system-ui, sans-serif;
+  --mono: "Departure Mono", ui-monospace, monospace;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { background: #000; }
+body { -webkit-font-smoothing: antialiased; text-rendering: geometricPrecision; }
+
+#stage { position: absolute; left: 0; top: 0; overflow: hidden; }
+.cv {
+  position: absolute; left: 0; top: 0; overflow: hidden;
+  background: var(--ink0); color: var(--paper); font-family: var(--sans);
+}
+.abs { position: absolute; }
+.display {
+  font-family: var(--sans); font-weight: 900; font-stretch: 125%;
+  letter-spacing: -0.02em; text-transform: uppercase; line-height: 0.9;
+}
+.wide { font-family: var(--sans); font-weight: 800; font-stretch: 125%; letter-spacing: -0.015em; }
+.body { font-family: var(--sans); font-weight: 450; letter-spacing: -0.005em; }
+.mono { font-family: var(--mono); text-transform: uppercase; letter-spacing: 0.04em; }
+.heat { color: var(--heat); }
+.dim { color: var(--paper-dim); }
+.mute { color: var(--paper-mute); }
+.ink { color: var(--ink1); }
+
+.dots {
+  position: absolute; inset: 0;
+  background-image: radial-gradient(circle, rgba(243, 240, 232, 0.08) 1.7px, transparent 2px);
+  background-size: 40px 40px;
+}
+.dots.on-heat { background-image: radial-gradient(circle, rgba(13, 13, 16, 0.12) 1.7px, transparent 2px); }
+
+/* Brand lockup: the arcade-button mark + wordmark */
+.lockup { display: flex; align-items: center; }
+.lockup img { display: block; }
+
+/* Full-bleed gameplay frame */
+.frame { position: absolute; display: block; object-fit: cover; }
+
+/* ---------- The feed card: logical 360 x 640, scaled with transform (mirrors the app) ---------- */
+.card {
+  position: absolute; left: 0; top: 0; width: 360px; height: 640px;
+  transform-origin: 0 0; border-radius: 26px; overflow: hidden;
+  background: var(--ink1); isolation: isolate;
+}
+.card.square { border-radius: 0; }
+.card .shot { position: absolute; left: 0; top: 0; width: 360px; height: 640px; display: block; object-fit: cover; }
+.card .ring { position: absolute; inset: 0; border-radius: inherit; box-shadow: inset 0 0 0 1px rgba(243, 240, 232, 0.14); }
+.card .scrim-top { position: absolute; left: 0; top: 0; width: 360px; height: 96px; background: linear-gradient(rgba(0, 0, 0, 0.42), rgba(0, 0, 0, 0)); }
+.card .scrim-bottom { position: absolute; left: 0; top: 380px; width: 360px; height: 204px; background: linear-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.6)); }
+.card .tabs {
+  position: absolute; left: 0; top: 18px; width: 360px; height: 30px;
+  display: flex; justify-content: center; gap: 22px;
+  font-size: 15px; font-weight: 600; letter-spacing: -0.01em;
+}
+.card .tabs .off { color: rgba(243, 240, 232, 0.6); }
+.card .tabs .on { position: relative; }
+.card .tabs .on::after {
+  content: ""; position: absolute; left: 50%; top: 24px; width: 18px; height: 2.5px; margin-left: -9px;
+  background: var(--paper); border-radius: 2px;
+}
+.card .search { position: absolute; left: 322px; top: 17px; width: 21px; height: 21px; }
+.card .rail { position: absolute; left: 294px; top: 0; width: 66px; height: 640px; }
+.card .rail .item { position: absolute; left: 0; width: 66px; display: flex; flex-direction: column; align-items: center; }
+.card .rail svg { overflow: visible; display: block; }
+.card .avatar { width: 42px; height: 42px; border-radius: 11px; overflow: hidden; box-shadow: 0 0 0 2px var(--paper); }
+.card .avatar svg { width: 42px; height: 42px; display: block; }
+.card .follow {
+  position: absolute; left: 24px; top: 34px; width: 18px; height: 18px; border-radius: 9px;
+  background: var(--heat); display: flex; align-items: center; justify-content: center;
+}
+.card .cart {
+  position: absolute; left: 12px; top: 520px; width: 42px; height: 42px; border-radius: 21px;
+  border: 2px solid var(--accent); padding: 4px; background: var(--ink1);
+}
+.card .cart img { width: 100%; height: 100%; border-radius: 50%; display: block; }
+.card .caption { position: absolute; left: 14px; top: 452px; width: 276px; }
+.card .handle { font-size: 13.5px; font-weight: 600; display: flex; align-items: center; gap: 5px; }
+.card .verified {
+  width: 13px; height: 13px; border-radius: 3.5px; background: var(--paper);
+  display: inline-flex; align-items: center; justify-content: center;
+}
+.card .gname { font-weight: 700; font-stretch: 125%; font-size: 21px; letter-spacing: -0.01em; margin-top: 4px; line-height: 24px; }
+.card .desc {
+  font-size: 12.5px; line-height: 17px; margin-top: 3px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  color: rgba(243, 240, 232, 0.92);
+}
+.card .chips { display: flex; gap: 5px; margin-top: 7px; }
+.card .chip {
+  font-family: var(--mono); font-size: 10.5px; color: var(--accent); border: 1px solid var(--accent);
+  border-radius: 6px; padding: 2px 5px 1px; background: rgba(0, 0, 0, 0.35);
+}
+.card .meta { font-family: var(--mono); font-size: 10.5px; color: var(--paper-dim); margin-top: 7px; white-space: nowrap; }
+.card .bar { position: absolute; left: 0; top: 584px; width: 360px; height: 56px; background: #000; }
+.card .tabbar { position: absolute; inset: 0; display: flex; justify-content: space-around; align-items: flex-start; padding-top: 8px; }
+.card .tabbar .t { width: 60px; display: flex; flex-direction: column; align-items: center; font-size: 9.5px; font-weight: 600; color: var(--paper-dim); position: relative; }
+.card .tabbar .t.on { color: var(--paper); }
+.card .tabbar .t span { margin-top: 3px; }
+.card .create {
+  width: 38px; height: 25px; border-radius: 7px; background: var(--paper); margin-top: 1px;
+  display: flex; align-items: center; justify-content: center;
+}
+
+/* Game icon squircle (22/1024 continuous corners, approximated) */
+.gicon { display: block; border-radius: 22.5%; overflow: hidden; }
+.gicon img { width: 100%; height: 100%; display: block; }
+
+/* Chips and labels outside the card */
+.tag {
+  display: inline-flex; align-items: center; font-family: var(--mono); text-transform: uppercase; letter-spacing: 0.04em;
+  border: 2px solid currentColor; border-radius: 8px; padding: 6px 12px 4px; white-space: nowrap;
+}
+.rule { position: absolute; height: 2px; background: var(--ink3); }
+
+/* Terminal (creators) */
+.term {
+  position: absolute; background: var(--ink1); border: 2px solid var(--ink3); border-radius: 22px; overflow: hidden;
+  font-family: var(--mono); color: var(--paper);
+}
+.term .bar3 { display: flex; gap: 10px; padding: 22px 26px 0; }
+.term .bar3 i { width: 14px; height: 14px; border-radius: 7px; background: var(--ink4); display: block; }
+.term .lines { padding: 22px 30px 30px; }
+.term .ln { white-space: pre; }
+.caret { display: inline-block; background: var(--heat); vertical-align: -0.12em; }

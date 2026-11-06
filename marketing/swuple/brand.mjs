@@ -1,0 +1,254 @@
+/**
+ * Generates the swuple logo from code, in the same system as the Thumbcade mark (packages/design-tokens/scripts/build-brand.ts):
+ * the same top-down red arcade button (housing, cap, highlight), with a new engraving on the cap.
+ *
+ * The name is sw (swipe) + up + le (the ending of a game name, like Wordle). The engraving spells all three: an
+ * arrow pointing up (up), built from rounded game tiles (le), whose shaft dissolves into ever smaller tiles, the
+ * trail a swipe leaves behind (sw). The wordmark stays plain.
+ *
+ *   node marketing/swuple/brand.mjs         -> marketing/swuple/brand/
+ *
+ * Outputs (brand/):
+ *   mark.svg                 the button alone, transparent background
+ *   app-icon.svg / .png      1024 app icon (ink background, full bleed)
+ *   favicon.svg / favicon-*.png
+ *   wordmark.svg             "swuple" in Mona Sans Display Expanded Black, as paths (paper)
+ *   wordmark-ink.svg         the same in ink, for light backgrounds
+ *   lockup.svg / .png        mark + wordmark
+ *   logo-sheet.png           overview of all of the above
+ *   brand.json               what the video compositors need (`render.mjs --brand swuple`)
+ *
+ * Only marketing uses this so far. The product brand in packages/design-tokens/brand is still Thumbcade.
+ */
+import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
+import { createRequire } from "node:module";
+import { dirname, resolve } from "node:path";
+import { fileURLToPath } from "node:url";
+
+const HERE = dirname(fileURLToPath(import.meta.url));
+const REPO = resolve(HERE, "../..");
+const TOKENS = resolve(REPO, "packages/design-tokens");
+// sharp and opentype.js come from the design-tokens package, so this script needs no install of its own.
+const require = createRequire(resolve(TOKENS, "package.json"));
+const sharp = require("sharp");
+const opentype = require("opentype.js");
+const { palette, pixelAvatarSvg } = await import(resolve(TOKENS, "src/index.ts"));
+
+const NAME = "swuple";
+const out = resolve(HERE, "brand");
+mkdirSync(out, { recursive: true });
+
+const INK = palette.ink1;
+const CAP = palette.heat;
+
+/** Mixes a hex color toward white (amount > 0) or black (amount < 0). */
+function shade(hex, amount) {
+  const n = parseInt(hex.slice(1), 16);
+  const target = amount > 0 ? 255 : 0;
+  const t = Math.abs(amount);
+  return `#${[16, 8, 0]
+    .map((bits) => (n >> bits) & 255)
+    .map((v) => Math.round(v + (target - v) * t).toString(16).padStart(2, "0"))
+    .join("")
+    .toUpperCase()}`;
+}
+
+const f = (v) => +v.toFixed(2);
+
+// ---------------------------------------------------------------------------
+// Engraving geometry, authored for a cap radius of 300 around the print center
+// ---------------------------------------------------------------------------
+
+/** Grid pitch, full tile size and a full tile's corner radius. Smaller tiles keep the same shape. */
+const PITCH = 70;
+const TILE = 60;
+const ROUND = 11.5;
+/** The arrow, row by row on a five-column grid: X is a full tile, a/b/c are trail tiles at 72, 45 and 30 % size. */
+const ARROW = ["..X..", ".XXX.", "XXXXX", ".aaa.", ".bbb.", ".ccc."];
+const SIZE = { X: 1, a: 0.72, b: 0.45, c: 0.3 };
+/** The arrow sits this far below the print center: the head carries the weight, so the pair reads centered on the cap. */
+const DROP = 12;
+
+/** Tiles as { x, y, size }, centers relative to the print center. */
+const TILES = ARROW.flatMap((row, r) =>
+  [...row].flatMap((ch, c) => (ch === "." ? [] : [{ c, x: (c - 2) * PITCH, y: (r - (ARROW.length - 1) / 2) * PITCH + DROP, size: TILE * SIZE[ch] }])),
+);
+
+/** One rounded tile as path data: center (x, y), edge `w`, corners in the same proportion as a full tile. */
+function tilePath(x, y, w) {
+  const k = ROUND * (w / TILE);
+  const [x0, y0] = [x - w / 2, y - w / 2];
+  return `M${f(x0 + k)} ${f(y0)}h${f(w - 2 * k)}a${f(k)} ${f(k)} 0 0 1 ${f(k)} ${f(k)}v${f(w - 2 * k)}a${f(k)} ${f(k)} 0 0 1 ${f(-k)} ${f(k)}h${f(-(w - 2 * k))}a${f(k)} ${f(k)} 0 0 1 ${f(-k)} ${f(-k)}v${f(-(w - 2 * k))}a${f(k)} ${f(k)} 0 0 1 ${f(k)} ${f(-k)}z`;
+}
+
+/** The engraving around print center (cx, cy) at scale s, in `color`. */
+function engraving(cx, cy, s, color) {
+  const d = TILES.map(({ x, y, size }) => tilePath(cx + x * s, cy + y * s, size * s)).join("");
+  return `<path d="${d}" fill="${color}"/>`;
+}
+
+/**
+ * Where the trailer's opening camera dives into the cap (y in the 1024 mark space, cap at 512, 501). The dive runs
+ * down the cap's center column, so it picks the widest gap between two tiles of the center column: inside the trail,
+ * between its last two tiles. The camera dives into the swipe and ends in clean red.
+ */
+function diveY() {
+  const printY = 495;
+  const column = TILES.filter((t) => t.c === 2);
+  let best = { gap: 0, y: 0 };
+  for (let i = 1; i < column.length; i++) {
+    const top = column[i - 1].y + column[i - 1].size / 2;
+    const bottom = column[i].y - column[i].size / 2;
+    if (bottom - top > best.gap) best = { gap: bottom - top, y: (top + bottom) / 2 };
+  }
+  return f(printY + best.y);
+}
+
+/** The button mark centered at (cx, cy) with cap radius R. Same chrome as the Thumbcade mark. */
+/** `mono` draws it in two flat colors instead ({ fg, bg }), for one-color use. */
+function markGroup(cx, cy, R, { idPrefix = "m", mono } = {}) {
+  const id = idPrefix;
+  const s = R / 300;
+  const housing = R + 44 * s;
+  const depth = 22 * s;
+  const capY = cy - depth / 2;
+  const printY = capY - 6 * s;
+  if (mono) {
+    return `<g>
+  <circle cx="${cx}" cy="${cy}" r="${housing}" fill="${mono.fg}"/>
+  <circle cx="${cx}" cy="${cy}" r="${R + 6 * s}" fill="${mono.bg}"/>
+  <circle cx="${cx}" cy="${cy}" r="${R}" fill="${mono.fg}"/>
+  ${engraving(cx, printY, s, mono.bg)}
+</g>`;
+  }
+  return `<defs>
+  <radialGradient id="${id}-cap" cx="0.38" cy="0.32" r="0.85">
+    <stop offset="0" stop-color="${shade(CAP, 0.4)}"/>
+    <stop offset="0.45" stop-color="${CAP}"/>
+    <stop offset="1" stop-color="${shade(CAP, -0.14)}"/>
+  </radialGradient>
+  <linearGradient id="${id}-housing" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0" stop-color="#2E2E36"/>
+    <stop offset="1" stop-color="#141418"/>
+  </linearGradient>
+  <linearGradient id="${id}-side" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0" stop-color="${shade(CAP, -0.42)}"/>
+    <stop offset="1" stop-color="${shade(CAP, -0.66)}"/>
+  </linearGradient>
+  <clipPath id="${id}-clip"><circle cx="${cx}" cy="${capY}" r="${R}"/></clipPath>
+</defs>
+<g>
+  <circle cx="${cx}" cy="${cy}" r="${housing}" fill="url(#${id}-housing)"/>
+  <circle cx="${cx}" cy="${cy}" r="${housing - 1.5 * s}" fill="none" stroke="#3A3A44" stroke-width="${3 * s}" stroke-opacity="0.9"/>
+  <circle cx="${cx}" cy="${cy}" r="${R + depth / 2 + 8 * s}" fill="#08080A"/>
+  <circle cx="${cx}" cy="${cy + depth / 2}" r="${R}" fill="url(#${id}-side)"/>
+  <circle cx="${cx}" cy="${capY}" r="${R}" fill="url(#${id}-cap)"/>
+  <g clip-path="url(#${id}-clip)" opacity="0.94">${engraving(cx, printY, s, INK)}</g>
+  <path d="M${cx - R * 0.62} ${capY - R * 0.62} A${R * 0.88} ${R * 0.88} 0 0 1 ${cx + R * 0.2} ${capY - R * 0.86}" fill="none" stroke="${shade(CAP, 0.9)}" stroke-width="${7 * s}" stroke-linecap="round" stroke-opacity="0.32"/>
+</g>`;
+}
+
+const svg = (w, h, body, bg) =>
+  `<svg xmlns="http://www.w3.org/2000/svg" width="${w}" height="${h}" viewBox="0 0 ${w} ${h}">${bg ? `<rect width="${w}" height="${h}" fill="${bg}"/>` : ""}${body}</svg>\n`;
+
+// ---------------------------------------------------------------------------
+// Wordmark (text -> paths), set exactly like the Thumbcade wordmark
+// ---------------------------------------------------------------------------
+
+function wordmarkPath(text, size, x, baseline, tracking = -0.02, fontFile = "MonaSansDisplayExpanded-Black.ttf") {
+  const buf = readFileSync(resolve(TOKENS, "fonts/native", fontFile));
+  const font = opentype.parse(buf.buffer.slice(buf.byteOffset, buf.byteOffset + buf.byteLength));
+  const scale = size / font.unitsPerEm;
+  const glyphs = font.stringToGlyphs(text);
+  const parts = [];
+  let cursor = x;
+  glyphs.forEach((g, i) => {
+    parts.push(g.getPath(cursor, baseline, size).toPathData(2));
+    const next = glyphs[i + 1];
+    cursor += (g.advanceWidth ?? 0) * scale + (next ? font.getKerningValue(g, next) * scale + tracking * size : 0);
+  });
+  const d = parts.join("");
+  if (d.includes("NaN")) throw new Error(`NaN in glyph path for "${text}"`);
+  return { d, width: cursor - x };
+}
+
+// ---------------------------------------------------------------------------
+// Build
+// ---------------------------------------------------------------------------
+
+async function png(svgText, file, size, density = 300) {
+  let img = sharp(Buffer.from(svgText), { density });
+  if (size) img = img.resize(size.w, size.h);
+  await img.png({ compressionLevel: 9 }).toFile(resolve(out, file));
+}
+
+const S = 1024;
+const C = S / 2;
+
+const mark = svg(S, S, markGroup(C, C, 300));
+writeFileSync(resolve(out, "mark.svg"), mark);
+
+const appIcon = svg(S, S, markGroup(C, C, 312), INK);
+writeFileSync(resolve(out, "app-icon.svg"), appIcon);
+await png(appIcon, "app-icon.png");
+
+const fav = svg(64, 64, markGroup(32, 32, 19, { idPrefix: "f" }), INK);
+writeFileSync(resolve(out, "favicon.svg"), fav);
+for (const px of [32, 180, 512]) await png(svg(S, S, markGroup(C, C, 300), INK), `favicon-${px}.png`, { w: px, h: px });
+
+const wm = wordmarkPath(NAME, 120, 0, 120);
+const wmW = Math.ceil(wm.width) + 4;
+const wordmark = svg(wmW, 150, `<path d="${wm.d}" fill="${palette.paper}"/>`);
+writeFileSync(resolve(out, "wordmark.svg"), wordmark);
+writeFileSync(resolve(out, "wordmark-ink.svg"), svg(wmW, 150, `<path d="${wm.d}" fill="${INK}"/>`));
+
+const lockH = 200;
+const lockMark = markGroup(100, 100, 74, { idPrefix: "l" });
+const lw = wordmarkPath(NAME, 92, 220, 132);
+const lockW = Math.ceil(220 + lw.width + 8);
+writeFileSync(resolve(out, "lockup.svg"), svg(lockW, lockH, `${lockMark}<path d="${lw.d}" fill="${palette.paper}"/>`));
+await png(svg(lockW, lockH, `${lockMark}<path d="${lw.d}" fill="${palette.paper}"/>`, INK), "lockup.png", undefined, 216);
+
+// Overview sheet: the mark large, on paper and in mono, the app icon, small sizes, the lockups.
+{
+  const W = 2400, H = 1500;
+  // Rendered at 72 dpi, so one unit is one pixel and these are the marks' real diameters.
+  const tiny = [96, 64, 48, 32, 24].map((d, i, a) => {
+    const x = 1100 + a.slice(0, i).reduce((sum, v) => sum + v + 64, 0) + d / 2;
+    return markGroup(x, 880, (d / 2) * (300 / 344), { idPrefix: `t${i}` });
+  });
+  const label = (text, x, y, color = palette.paperMute) => `<path d="${wordmarkPath(text, 22, x, y, 0.04, "DepartureMono-Regular.otf").d}" fill="${color}"/>`;
+  const sheet = svg(
+    W,
+    H,
+    `<rect width="${W}" height="${H}" fill="#000000"/>
+    ${markGroup(560, 560, 330, { idPrefix: "a" })}
+    ${label("MARK", 120, 1010)}
+    <rect x="1100" y="120" width="560" height="560" rx="124" fill="${INK}"/>
+    <g transform="translate(1100 120) scale(${560 / 1024})">${markGroup(C, C, 312, { idPrefix: "b" })}</g>
+    ${label("APP ICON", 1100, 730)}
+    <rect x="1760" y="120" width="560" height="560" fill="${palette.paper}"/>
+    <g transform="translate(1760 120) scale(${560 / 1024})">${markGroup(C, C, 300, { mono: { fg: INK, bg: palette.paper } })}</g>
+    ${label("ONE COLOR", 1760, 730)}
+    ${tiny.join("")}
+    ${label("96 · 64 · 48 · 32 · 24 PX", 1100, 1010)}
+    <g transform="translate(120 1120)">${markGroup(100, 100, 74, { idPrefix: "d" })}<path d="${lw.d}" fill="${palette.paper}"/></g>
+    <rect x="1220" y="1080" width="1100" height="300" fill="${palette.paper}"/>
+    <g transform="translate(1300 1130)">${markGroup(100, 100, 74, { idPrefix: "e" })}<path d="${lw.d}" fill="${INK}"/></g>
+    ${label("SWIPE UP FOR THE NEXT GAME", 120, 1440, palette.paperDim)}`,
+  );
+  await png(sheet, "logo-sheet.png", undefined, 72);
+}
+
+// What the compositors need: names, the cap engraving in the 1024 mark space, the dive point, the wordmark, the avatar.
+const brand = {
+  name: NAME,
+  site: `${NAME}.com`,
+  engraving: `<g clip-path="url(#m-clip)" opacity="0.94">${engraving(C, 495, 1, INK)}</g>`,
+  dive: diveY(),
+  wordmark: `data:image/svg+xml;base64,${Buffer.from(wordmark).toString("base64")}`,
+  wordmarkWidth: wmW,
+  avatar: pixelAvatarSvg(NAME, 64),
+};
+writeFileSync(resolve(out, "brand.json"), `${JSON.stringify(brand, null, 2)}\n`);
+console.log(`swuple brand written to ${out} (dive y ${brand.dive})`);

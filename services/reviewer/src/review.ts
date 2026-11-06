@@ -6,6 +6,7 @@ import { BUDGETS, type Manifest, type ReviewCheck, type ReviewCheckId, type Revi
 import { FEED_LAYOUT } from "@thumbcade/sdk/host";
 import type { Browser } from "playwright";
 import { GameSession, launchBrowser, webglRenderer, type Point } from "./driver.ts";
+import { FlashMeter, MAX_FLASHES_PER_SECOND, type FlashResult } from "./flashes.ts";
 import { startHarness, type HarnessServer } from "./harness/index.ts";
 import { serveBundle, type GameServer } from "./server.ts";
 
@@ -28,6 +29,7 @@ const LABELS: Record<ReviewCheckId, string> = {
   heap: `JS heap ≤ ${BUDGETS.heapBytes / 1048576} MB`,
   insets: "Respects the feed insets",
   gameplay_end: "gameplay.end() follows game over",
+  flashes: `No more than ${MAX_FLASHES_PER_SECOND} flashes a second`,
 };
 
 const ORDER: ReviewCheckId[] = [
@@ -44,6 +46,7 @@ const ORDER: ReviewCheckId[] = [
   "gameplay_end",
   "no_uncaught_errors",
   "fps",
+  "flashes",
   "long_tasks",
   "heap",
   "insets",
@@ -245,6 +248,14 @@ async function runtimeChecks(c: RuntimeCtx): Promise<void> {
       checks.no_swipe_start = { status: "fail", detail: "A vertical swipe in attract mode started a run. Start runs on the release of a tap, never on pointerdown or a swipe (Swipe Contract rule 1)." };
     }
 
+    // --- flashes: 3 s of attract mode now, up to 30 s of the run below ------------------------------------
+    c.log("flashes (attract mode)");
+    const flashes = new FlashMeter(s.page.viewportSize()?.width ?? W);
+    let stopCapture = await s.screencast((png, t) => flashes.push(png, t));
+    await sleep(3000);
+    await stopCapture();
+    await flashes.cut();
+
     // --- offscreen pause in attract mode ------------------------------------------------------------
     c.log("pause (offscreen)");
     const loopIssues: string[] = [];
@@ -279,6 +290,8 @@ async function runtimeChecks(c: RuntimeCtx): Promise<void> {
       if (!ended) await pauseProbe(s, { type: "PAUSE", reason: "user" }, { type: "RESUME_PLAY" }, "a run", loopIssues, audioIssues);
 
       c.log("waiting for game over");
+      stopCapture = await s.screencast((png, t) => flashes.push(png, t));
+      const captureCap = setTimeout(() => void stopCapture(), 30_000);
       const t0 = Date.now();
       ended = await s.waitFor("gameplay.end", 25_000, started.t);
       let how = "without input";
@@ -300,6 +313,8 @@ async function runtimeChecks(c: RuntimeCtx): Promise<void> {
           // A run that ends also lets the game sit "over"; a tap there would start a new run — stop now.
         }
       }
+      clearTimeout(captureCap);
+      await stopCapture();
       if (ended) {
         const secs = ((Date.now() - t0) / 1000).toFixed(1);
         checks.gameplay_end = { status: "pass", detail: `gameplay.end(${JSON.stringify(ended.payload)}) arrived ${how} after ${secs} s` };
@@ -309,6 +324,7 @@ async function runtimeChecks(c: RuntimeCtx): Promise<void> {
         checks.gameplay_end = { status: "warn", detail: "No game over within 95 s of automated play. Make sure gameplay.end() fires within 1 s of game over; a human reviewer will check." };
       }
     }
+    checks.flashes = flashCheck(await flashes.result());
     checks.pause_stops_loop = loopIssues.length ? { status: "fail", detail: loopIssues.join("\n") } : { status: "pass", detail: "No animation frames after pause (attract and mid-run)" };
     checks.pause_stops_audio = audioIssues.length ? { status: "fail", detail: audioIssues.join("\n") } : { status: "pass", detail: "Every AudioContext suspended / every source stopped while paused" };
 
@@ -334,13 +350,34 @@ async function runtimeChecks(c: RuntimeCtx): Promise<void> {
     const unique = [...new Set(errors)];
     checks.no_uncaught_errors = unique.length ? { status: "fail", detail: unique.slice(0, 8).join("\n") } : { status: "pass" };
     const urls = [...new Set([...s.blockedRequests, ...(snap?.foreignRequests ?? [])])];
-    checks.network = urls.length
-      ? { status: "fail", detail: `Blocked by the content security policy: ${urls.slice(0, 5).join(", ")}${urls.length > 5 ? ` and ${urls.length - 5} more` : ""}` }
-      : { status: "pass" };
+    const webrtc = [...new Set(snap?.webrtc ?? [])];
+    const network: string[] = [];
+    if (urls.length) network.push(`Blocked by the content security policy: ${urls.slice(0, 5).join(", ")}${urls.length > 5 ? ` and ${urls.length - 5} more` : ""}`);
+    if (webrtc.length) network.push(`Used WebRTC (${webrtc.join(", ")}). Games get no network access, and WebRTC would get around the content security policy.`);
+    checks.network = network.length ? { status: "fail", detail: network.join("\n") } : { status: "pass" };
     c.consoleLines.push(...s.consoleLines);
   } finally {
     await s.close();
   }
+}
+
+function flashCheck(r: FlashResult): Omit<ReviewCheck, "id" | "label"> {
+  if (r.frames < 30) return { status: "warn", detail: `Only ${r.frames} frames were captured, too few to measure flashing. A human reviewer will watch for it.` };
+  const most = Math.max(r.general, r.red);
+  const fps = Math.round(r.frames / Math.max(1, r.seconds));
+  const w = r.worst;
+  const worst = w
+    ? ` Worst: ${w.flashes} ${w.kind === "red" ? "red " : ""}flashes in one second, ${w.at.toFixed(1)} s into ${w.segment === 0 ? "attract mode" : "the run"}, in the ${w.size} px square at (${w.x}, ${w.y}).`
+    : "";
+  const over = most > MAX_FLASHES_PER_SECOND;
+  return {
+    status: over ? "fail" : "pass",
+    value: most,
+    budget: MAX_FLASHES_PER_SECOND,
+    detail:
+      `At most ${r.general} flashes and ${r.red} red flashes in any second, in ${Math.round(r.seconds)} s of attract mode and play with something moving on screen (captured at ${fps} fps).${worst}` +
+      (over ? " Anything that flashes over a large part of the screen must stay at 3 a second or fewer (WCAG 2.3.1); tone down saturated red." : ""),
+  };
 }
 
 /** Sends a pause through the state machine, then checks frames and audio while paused, then resumes. */

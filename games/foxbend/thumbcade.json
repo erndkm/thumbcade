@@ -1,0 +1,35 @@
+{
+  "$schema": "https://thumbcade.com/schema/manifest-v1.json",
+  "id": "foxbend",
+  "name": "Foxbend",
+  "version": "1.0.0",
+  "sdk": "^1.0.0",
+  "entry": "index.html",
+  "description": "One fox, one pond, a stepping-stone path with commitment issues. Tap to turn. Berries are worth it.",
+  "tags": [
+    "onetap",
+    "3d",
+    "voxel",
+    "runner",
+    "chill"
+  ],
+  "accentColor": "#F68A4A",
+  "icon": "assets/icon.png",
+  "ageRating": "4+",
+  "controls": {
+    "vertical": false,
+    "horizontal": false,
+    "multitouch": false,
+    "inputs": [
+      "tap"
+    ]
+  },
+  "session": "short",
+  "audio": true,
+  "orientation": "portrait",
+  "score": {
+    "order": "desc",
+    "max": 100000,
+    "format": "integer"
+  }
+}

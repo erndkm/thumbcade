@@ -1,0 +1,76 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 1024 1024" width="1024" height="1024">
+  <!-- Three spot inks on warm paper: teal #00838A, fluorescent pink #FF48B0, yellow #FFE800.
+       Overprints are their multiply mixes; tints are halftone dots; the yellow plate sits a hair off register. -->
+  <defs>
+    <pattern id="yelDots" width="22" height="22" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+      <circle cx="11" cy="11" r="5" fill="#FFE800"/>
+    </pattern>
+    <pattern id="waterDots" width="20" height="20" patternUnits="userSpaceOnUse" patternTransform="rotate(15)">
+      <circle cx="10" cy="10" r="5.2" fill="#00838A"/>
+    </pattern>
+    <pattern id="deepDots" width="20" height="20" patternUnits="userSpaceOnUse" patternTransform="rotate(15)">
+      <circle cx="10" cy="10" r="7.4" fill="#00838A"/>
+    </pattern>
+    <pattern id="rockDots" width="18" height="18" patternUnits="userSpaceOnUse" patternTransform="rotate(75)">
+      <circle cx="9" cy="9" r="5.6" fill="#00255F"/>
+    </pattern>
+    <pattern id="shaftDots" width="20" height="20" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+      <circle cx="10" cy="10" r="4.6" fill="#007700"/>
+    </pattern>
+    <filter id="grain" x="0" y="0" width="1" height="1">
+      <feTurbulence type="fractalNoise" baseFrequency="0.05" numOctaves="2" seed="11" result="n"/>
+      <feColorMatrix in="n" type="matrix" values="0 0 0 0 0.953  0 0 0 0 0.929  0 0 0 0 0.878  0 0 0 2.2 -1.42"/>
+    </filter>
+    <path id="koi" d="M17.00 0.00 L15.13 -2.91 L13.26 -3.93 L11.39 -4.58 L9.52 -5.04 L7.65 -5.37 L5.78 -5.60 L3.91 -5.77 L2.04 -5.89 L0.17 -5.95 L-1.70 -5.95 L-3.57 -5.87 L-5.44 -5.68 L-7.31 -5.32 L-9.18 -5.99 L-11.05 -5.05 L-12.92 -2.90 L-21.92 -9.24 L-17.92 -1.64 L-21.92 5.96 L-12.92 -0.56 L-11.05 1.20 L-9.18 2.15 L-7.31 1.87 L-5.44 2.58 L-3.57 3.21 L-1.70 3.74 L0.17 4.16 L2.04 4.47 L3.91 4.65 L5.78 4.70 L7.65 4.61 L9.52 4.38 L11.39 3.99 L13.26 3.40 L15.13 2.50 L17.00 0.00 Z"/>
+    <path id="fins" d="M7 3.5 L1 10.5 L0 4 Z M4 -5.04 Q-4 -11.77 -10 -5.87 Z"/>
+    <path id="patches" d="M8 -3 A7 3.6 -6 1 1 -8 -2 A7 3.6 -6 1 1 8 -3 Z M18.8 2.6 A3.2 2.4 0 1 1 13.2 2.6 A3.2 2.4 0 1 1 18.8 2.6 Z"/>
+    <clipPath id="koiClip"><use xlink:href="#koi" transform="translate(430 600) rotate(-44) scale(13.5)"/></clipPath>
+  </defs>
+
+  <!-- Paper, a yellow band low in the sky, the sun. -->
+  <rect width="1024" height="1024" fill="#F3EDE0"/>
+  <rect y="300" width="1024" height="490" fill="url(#yelDots)" opacity="0.7"/>
+  <circle cx="300" cy="330" r="210" fill="#FF48B0"/>
+  <rect x="90" y="400" width="420" height="10" fill="#F3EDE0"/>
+  <rect x="90" y="440" width="420" height="16" fill="#F3EDE0"/>
+  <rect x="90" y="486" width="420" height="24" fill="#F3EDE0"/>
+
+  <!-- The cliff: solid teal under a pink screen; the upper pool on top of it. -->
+  <path d="M640 486 L1024 486 L1024 1024 L520 1024 L560 900 L600 760 Z" fill="#00838A"/>
+  <path d="M640 486 L1024 486 L1024 1024 L520 1024 L560 900 L600 760 Z" fill="url(#rockDots)" opacity="0.8"/>
+  <path d="M700 600 L1024 610 M690 680 L1024 700 M640 780 L1024 800 M600 880 L1024 905" stroke="#F3EDE0" stroke-width="6" fill="none"/>
+  <rect x="640" y="430" width="384" height="56" fill="url(#waterDots)"/>
+  <rect x="640" y="426" width="384" height="8" fill="#00838A"/>
+
+  <!-- The fall: bare paper with teal streaks, foam at its foot. -->
+  <path d="M676 420 L654 486 L612 790 L500 790 Q540 590 610 420 Z" fill="#F3EDE0"/>
+  <path d="M640 440 L630 520 M618 560 L604 650 M596 690 L586 760 M660 470 L650 540 M640 600 L628 690 M606 470 L590 560 M578 610 L562 700 M556 730 L548 770" stroke="#00838A" stroke-width="5" stroke-linecap="round" fill="none"/>
+
+  <!-- The pool below, deeper toward the bottom, with yellow light falling through it. -->
+  <path d="M0 790 L600 790 L560 900 L520 1024 L0 1024 Z" fill="url(#waterDots)"/>
+  <path d="M0 900 L560 900 L520 1024 L0 1024 Z" fill="url(#deepDots)" opacity="0.7"/>
+  <path d="M120 790 L170 790 L90 1024 L20 1024 Z M330 790 L360 790 L300 1024 L250 1024 Z" fill="url(#shaftDots)" opacity="0.8"/>
+  <rect y="784" width="610" height="8" fill="#00838A"/>
+  <g fill="#F3EDE0">
+    <circle cx="520" cy="790" r="34"/><circle cx="566" cy="776" r="28"/><circle cx="476" cy="796" r="22"/><circle cx="604" cy="792" r="24"/>
+    <circle cx="540" cy="740" r="26"/><circle cx="500" cy="716" r="18"/>
+  </g>
+
+  <!-- Spray off the leap. -->
+  <g fill="#00838A"><circle cx="300" cy="760" r="9"/><circle cx="262" cy="716" r="6"/><circle cx="340" cy="700" r="7"/><circle cx="230" cy="770" r="5"/></g>
+  <g fill="#F3EDE0"><circle cx="286" cy="740" r="8"/><circle cx="324" cy="770" r="6"/></g>
+
+  <!-- The koi: the paper cleared under it, pink and yellow plates a few px apart, vermilion where they overprint,
+       white patches knocked out of both. -->
+  <use xlink:href="#koi" transform="translate(430 600) rotate(-44) scale(13.5)" fill="#F3EDE0"/>
+  <use xlink:href="#fins" transform="translate(424 605) rotate(-44) scale(13.5)" fill="#FF48B0"/>
+  <use xlink:href="#koi" transform="translate(424 605) rotate(-44) scale(13.5)" fill="#FF48B0"/>
+  <use xlink:href="#koi" transform="translate(436 595) rotate(-44) scale(13.5)" fill="#FFE800"/>
+  <use xlink:href="#koi" transform="translate(430 600) rotate(-44) scale(13.5)" fill="#FF4100"/>
+  <g clip-path="url(#koiClip)">
+    <use xlink:href="#patches" transform="translate(430 600) rotate(-44) scale(13.5)" fill="#F3EDE0"/>
+  </g>
+  <circle cx="0" cy="0" r="1.3" fill="#00838A" transform="translate(430 600) rotate(-44) scale(13.5) translate(11.5 -1.6)"/>
+
+  <rect width="1024" height="1024" filter="url(#grain)" opacity="0.5"/>
+</svg>

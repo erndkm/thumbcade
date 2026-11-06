@@ -37,7 +37,7 @@ describe("CardView overlay states", () => {
     await renderCard(h);
     expect(screen.getByTestId("webview")).toBeTruthy();
     expect(screen.getByTestId("action-rail")).toBeTruthy();
-    expect(screen.getByLabelText("Lane Rush, loading")).toBeTruthy();
+    expect(screen.getByLabelText("Duskrail, loading")).toBeTruthy();
     expect(overlayHidden()).toBe(false);
   });
 
@@ -45,8 +45,8 @@ describe("CardView overlay states", () => {
     const h = harness();
     await boot(h);
     await renderCard(h);
-    expect(screen.getByLabelText("Lane Rush, preview")).toBeTruthy();
-    expect(screen.getByTestId("caption-name")).toHaveTextContent("Lane Rush");
+    expect(screen.getByLabelText("Duskrail, preview")).toBeTruthy();
+    expect(screen.getByTestId("caption-name")).toHaveTextContent("Duskrail");
     expect(overlayHidden()).toBe(false);
   });
 
@@ -55,7 +55,7 @@ describe("CardView overlay states", () => {
     await boot(h);
     await renderCard(h);
     await act(async () => h.game("gameplay.start", { trigger: "tap" }));
-    expect(screen.getByLabelText("Lane Rush, playing")).toBeTruthy();
+    expect(screen.getByLabelText("Duskrail, playing")).toBeTruthy();
     expect(overlayHidden()).toBe(true);
     expect(screen.queryByTestId("result-card")).toBeNull();
   });

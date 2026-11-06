@@ -36,7 +36,7 @@ export const tick = (ms = 0) => new Promise((r) => setTimeout(r, ms));
 
 export const CONTEXT = {
   sdkVersion: "1.0.0",
-  gameId: "lane-rush",
+  gameId: "duskrail",
   versionId: "11111111-1111-4111-8111-111111111111",
   player: { id: "p_opaque_123", name: "Ines", avatarUrl: null, guest: false },
   locale: "en-US",

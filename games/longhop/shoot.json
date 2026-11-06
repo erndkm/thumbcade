@@ -1,0 +1,9 @@
+[
+  { "wait": 3400 },
+  { "shot": "attract" },
+  { "tap": [160, 400] },
+  { "wait": 650 },
+  { "shot": "hold" },
+  { "wait": 3000 },
+  { "shot": "play" }
+]

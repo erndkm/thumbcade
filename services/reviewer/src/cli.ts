@@ -14,7 +14,7 @@ async function main(): Promise<void> {
     const { values, positionals } = parseArgs({
       args: rest,
       allowPositionals: true,
-      options: { out: { type: "string" }, slug: { type: "string" }, actions: { type: "string" }, insets: { type: "boolean" }, device: { type: "string" } },
+      options: { out: { type: "string" }, slug: { type: "string" }, actions: { type: "string" }, insets: { type: "boolean" }, device: { type: "string" }, "reduced-motion": { type: "boolean" } },
     });
     const dir = resolve(positionals[0] ?? "dist");
     const manifest = JSON.parse(await readFile(join(dir, "thumbcade.json"), "utf8")) as { id: string };
@@ -25,6 +25,7 @@ async function main(): Promise<void> {
       outDir: resolve(values.out ?? "screenshots"),
       actions,
       insetsOverlay: values.insets,
+      reducedMotion: values["reduced-motion"],
       device: values.device as "iphone" | undefined,
     });
     for (const f of r.files) console.log(f);
@@ -53,7 +54,7 @@ async function main(): Promise<void> {
     await runWorker({ once: !!values.once });
     return;
   }
-  console.error("usage: thumbcade-reviewer review <bundleDir> [--out dir] [--json]\n       thumbcade-reviewer worker [--once]\n       thumbcade-reviewer shoot <bundleDir> [--out dir] [--actions file.json] [--insets]");
+  console.error("usage: thumbcade-reviewer review <bundleDir> [--out dir] [--json]\n       thumbcade-reviewer worker [--once]\n       thumbcade-reviewer shoot <bundleDir> [--out dir] [--actions file.json] [--insets] [--reduced-motion]");
   process.exitCode = 2;
 }
 

@@ -1,4 +1,4 @@
-import { createAudio, createRng, createSession, loadFonts, onTap, Particles, PENTATONIC, type Rng } from "@thumbcade-games/kit";
+import { createAudio, createRng, createSession, loadFonts, onTap, Particles, PENTATONIC, Photosafe, type Rng } from "@thumbcade-games/kit";
 import { thumbcade as tc } from "@thumbcade/sdk";
 import { COLORS, glyphSvg, SHAPES, type Glyph } from "./glyphs.ts";
 import "./style.css";
@@ -32,6 +32,7 @@ async function main() {
   const audio = createAudio();
   root.classList.toggle("standalone", session.standalone);
   const fx = new Particles(500);
+  const light = new Photosafe(session.reducedMotion);
   const grid = $<HTMLDivElement>("grid");
   const bg = $<HTMLCanvasElement>("bg");
   const fxCanvas = $<HTMLCanvasElement>("fx");
@@ -365,7 +366,10 @@ async function main() {
     comboEl.textContent = `×${Math.max(1, Math.min(combo, 5))}`;
     const frac = Math.max(0, Math.min(1, timeLeft / START_TIME));
     timeFill.style.transform = `scaleX(${frac})`;
-    timeBar.classList.toggle("low", timeLeft < 6 && !over);
+    const low = timeLeft < 6 && !over;
+    timeBar.classList.toggle("low", low);
+    // Low-time warning: the bar breathes at 1 Hz (slower under reduced motion; the kit caps it either way).
+    timeFill.style.opacity = low ? (0.6 + 0.4 * light.pulse(clock, 1)).toFixed(3) : "";
     bestEl.textContent = session.best !== null ? `Best ${session.best.toLocaleString("en-US")}` : "";
     bestEl.style.display = session.best !== null ? "" : "none";
   }

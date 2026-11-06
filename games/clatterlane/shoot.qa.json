@@ -1,0 +1,10 @@
+[
+  {"wait": 2500},
+  {"tap": [195, 470]},
+  {"wait": 6500},
+  {"shot": "split"},
+  {"wait": 15500},
+  {"shot": "glow"},
+  {"wait": 70000},
+  {"shot": "summary"}
+]

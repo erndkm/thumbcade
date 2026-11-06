@@ -28,3 +28,6 @@ apps/portal/src/app/icon.svg
 apps/portal/src/app/apple-icon.png
 apps/portal/src/app/opengraph-image.png
 apps/portal/next-env.d.ts
+
+# Rendered marketing videos stay out of git (too large without LFS)
+marketing/**/*.mp4

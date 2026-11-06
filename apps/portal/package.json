@@ -11,7 +11,8 @@
     "lint": "eslint .",
     "test": "vitest run --passWithNoTests",
     "predev": "node scripts/copy-brand.mjs",
-    "prebuild": "node scripts/copy-brand.mjs"
+    "prebuild": "node scripts/copy-brand.mjs && pnpm run notices",
+    "notices": "node ../../scripts/licenses/collect.ts . src/lib/notices.generated.ts"
   },
   "dependencies": {
     "@mdx-js/loader": "3.1.1",

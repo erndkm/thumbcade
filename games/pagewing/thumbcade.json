@@ -1,0 +1,18 @@
+{
+  "$schema": "https://thumbcade.com/schema/manifest-v1.json",
+  "id": "pagewing",
+  "name": "Pagewing",
+  "version": "1.0.0",
+  "sdk": "^1.0.0",
+  "entry": "index.html",
+  "description": "I folded my homework into a plane. Hold to pull up, ride the warm air, loop if you dare. Try not to crumple.",
+  "tags": ["onetap", "doodle", "flyer", "physics"],
+  "accentColor": "#D7392F",
+  "icon": "assets/icon.png",
+  "ageRating": "4+",
+  "controls": { "vertical": false, "horizontal": false, "multitouch": false, "inputs": ["hold"] },
+  "session": "short",
+  "audio": true,
+  "orientation": "portrait",
+  "score": { "order": "desc", "max": 100000, "format": "integer", "unit": "m" }
+}

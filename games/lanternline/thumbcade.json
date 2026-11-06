@@ -1,0 +1,18 @@
+{
+  "$schema": "https://thumbcade.com/schema/manifest-v1.json",
+  "id": "lanternline",
+  "name": "Lanternline",
+  "version": "1.0.0",
+  "sdk": "^1.0.0",
+  "entry": "index.html",
+  "description": "hold to catch a lantern, let go to fly. light them one by one, from dawn into the night.",
+  "tags": ["onetap", "swing", "chill", "physics", "endless"],
+  "accentColor": "#F2A65E",
+  "icon": "assets/icon.png",
+  "ageRating": "4+",
+  "controls": { "vertical": false, "horizontal": false, "multitouch": false, "inputs": ["hold"] },
+  "session": "short",
+  "audio": true,
+  "orientation": "portrait",
+  "score": { "order": "desc", "max": 100000, "format": "integer", "unit": "m" }
+}

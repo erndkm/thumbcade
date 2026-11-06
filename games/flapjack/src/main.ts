@@ -18,6 +18,7 @@ import {
   loadFonts,
   onPress,
   Particles,
+  Photosafe,
   Popups,
   rgba,
   roundRect,
@@ -67,6 +68,11 @@ async function main() {
   const audio = createAudio();
   const rng = createRng(session.ctx.seed);
   const shake = new Shake(12, 0.03, 1.8, session.reducedMotion);
+  // Flashes, flicker and pulses go through Photosafe: capped at 2 Hz, steady/faint under reduced motion.
+  const light = new Photosafe(session.reducedMotion);
+  const flash = light.flash({ alpha: 0.25, decay: 0.32 });
+  const SIGN_FLICKER = { depth: 0.55, chance: 0.22 };
+  const PLATE_FLICKER = { depth: 0.55, chance: 0.3 };
   const hitStop = new HitStop();
   const fx = new Particles(700);
   const popups = new Popups();
@@ -94,7 +100,6 @@ async function main() {
   let deadT = -1;
   let endSent = false;
   const p = { x: 0, y: 0, vy: 0, flipT: 1, tilt: 0, squash: 0 };
-  let flash = 0;
   let titleIn = 0;
   let mode: "attract" | "play" = "attract";
 
@@ -164,7 +169,7 @@ async function main() {
     deadT = 0;
     hitStop.freeze(0.09);
     shake.add(0.65);
-    flash = 1;
+    flash.trigger(PAL.flash);
     audio.play("hit");
     audio.play("thud");
     tc.feedback("impact");
@@ -206,7 +211,7 @@ async function main() {
     shake.update(rawDt);
     fx.update(dt);
     popups.update(rawDt);
-    flash = Math.max(0, flash - rawDt * 4);
+    flash.update(rawDt);
     titleIn = Math.min(1, titleIn + rawDt * 1.6);
     counter.set(score);
     counter.update(rawDt);
@@ -355,14 +360,15 @@ async function main() {
     // Neon signs.
     const signSpacing = 240;
     const soff = -(scroll * 0.32) % (signSpacing * signs.length);
+    const cycle = Math.floor((scroll * 0.32) / (signSpacing * signs.length)) * signs.length;
     for (let i = -1; i < Math.ceil(W / signSpacing) + 2; i++) {
-      const idx = (((i + Math.floor((scroll * 0.32) / (signSpacing * signs.length)) * signs.length) % signs.length) + signs.length) % signs.length;
-      const sign = signs[idx]!;
+      // `n` identifies this sign along the whole wall, so its flicker doesn't jump as slots scroll.
+      const n = i + cycle;
+      const sign = signs[((n % signs.length) + signs.length) % signs.length]!;
       const x = soff + i * signSpacing;
       const w = sign.width / S;
       const h = sign.height / S;
-      const flicker = Math.sin(time * 37 + i * 5) > 0.97 ? 0.35 : 1;
-      ctx.globalAlpha = 0.55 * flicker;
+      ctx.globalAlpha = 0.55 * light.flicker(time, n, SIGN_FLICKER);
       ctx.drawImage(sign, x, railY * 0.42 - h / 2 + (i % 2) * 34, w, h);
     }
     ctx.globalAlpha = 1;
@@ -478,7 +484,7 @@ async function main() {
     ctx.fillStyle = "rgba(6,15,19,0.9)";
     roundRect(ctx, -plateW / 2, -70, plateW, plateH, 18);
     ctx.fill();
-    const flick = Math.sin(time * 31) > 0.985 ? 0.4 : 1;
+    const flick = light.flicker(time, -1, PLATE_FLICKER);
     ctx.strokeStyle = rgba(PAL.amber, 0.9 * flick);
     ctx.lineWidth = 2;
     ctx.shadowColor = PAL.amber;
@@ -512,10 +518,7 @@ async function main() {
       ctx.fillStyle = "rgba(11,26,32,0.35)";
       ctx.fillRect(0, 0, W, H);
     }
-    if (flash > 0) {
-      ctx.fillStyle = `rgba(255,236,200,${flash * 0.55})`;
-      ctx.fillRect(0, 0, W, H);
-    }
+    flash.draw(ctx, W, H);
     drawUi();
   }
 

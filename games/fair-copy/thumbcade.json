@@ -1,0 +1,18 @@
+{
+  "$schema": "https://thumbcade.com/schema/manifest-v1.json",
+  "id": "fair-copy",
+  "name": "Fair Copy",
+  "version": "1.0.0",
+  "sdk": "^1.0.0",
+  "entry": "index.html",
+  "description": "sixteen letters and ninety seconds. trace a word, lift the pen, and write the long ones first.",
+  "tags": ["word", "puzzle", "brain", "calm"],
+  "accentColor": "#4D6584",
+  "icon": "assets/icon.png",
+  "ageRating": "4+",
+  "controls": { "vertical": true, "horizontal": true, "multitouch": false, "inputs": ["drag"] },
+  "session": "medium",
+  "audio": true,
+  "orientation": "portrait",
+  "score": { "order": "desc", "max": 20000, "format": "integer" }
+}

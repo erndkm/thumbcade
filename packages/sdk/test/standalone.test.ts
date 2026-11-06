@@ -11,10 +11,10 @@ describe("standalone mock host", () => {
   it("persists storage in localStorage and tracks the best score", async () => {
     const win = makeWindow();
     const tc = createThumbcade(win);
-    await tc.init({ manifestId: "merge" });
+    await tc.init({ manifestId: "shortwick" });
     await tc.storage.set("settings", { haptics: false });
     await expect(tc.storage.get("settings")).resolves.toEqual({ haptics: false });
-    expect(win.localStorage.getItem("tc:merge:settings")).toBe('{"haptics":false}');
+    expect(win.localStorage.getItem("tc:shortwick:settings")).toBe('{"haptics":false}');
     await expect(tc.leaderboard.top()).resolves.toEqual([]);
     tc.gameplay.start();
     tc.gameplay.end({ score: 512 });

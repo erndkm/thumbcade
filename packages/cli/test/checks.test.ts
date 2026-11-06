@@ -1,6 +1,6 @@
 import { randomBytes } from "node:crypto";
 import { describe, expect, it } from "vitest";
-import { checkBundle, imageSize, initialFiles, readBundle, staticScan } from "../src/checks/index.ts";
+import { checkBundle, imageSize, initialFiles, obfuscationSign, readBundle, staticScan } from "../src/checks/index.ts";
 import { bundle, fakeJpeg, fakePng, MANIFEST } from "./fixtures.ts";
 
 const check = async (files: Parameters<typeof bundle>[0]) => checkBundle(await bundle(files));
@@ -36,6 +36,24 @@ describe("checkBundle", () => {
     expect((await check({ "thumbcade.json": withPoster, "assets/poster.jpg": fakeJpeg(1080, 1920) })).passed).toBe(true);
     const odd = await check({ "thumbcade.json": withPoster, "assets/poster.jpg": fakeJpeg(720, 1280) });
     expect(messages(odd, "manifest")[0]).toMatch(/^warn:Poster is 720×1280/);
+  });
+
+  it("fails files that aren't web code, data or media, and native programs under any name", async () => {
+    const elf = Buffer.concat([Buffer.from([0x7f, 0x45, 0x4c, 0x46, 2, 1, 1]), Buffer.alloc(64)]);
+    const r = await check({ "tools/setup.exe": "MZ", "assets/payload.zip": "PK", "assets/.env": "SECRET=1", "assets/level.bin": elf });
+    expect(r.passed).toBe(false);
+    expect(messages(r, "manifest")).toEqual([
+      "fail:assets/.env: hidden files are not allowed",
+      "fail:assets/level.bin is a Linux (ELF) executable",
+      "fail:assets/payload.zip: .zip files are not allowed",
+      "fail:tools/setup.exe: .exe files are not allowed",
+    ]);
+  });
+
+  it("leaves out files the OS drops into folders", async () => {
+    const r = await check({ ".DS_Store": "x", "assets/Thumbs.db": "x" });
+    expect(r.passed).toBe(true);
+    expect(r.totals.files).toBe(6);
   });
 
   it("fails an initial payload over 3 MB gzipped, but not a lazily loaded asset", async () => {
@@ -75,6 +93,37 @@ describe("staticScan", () => {
     expect(all).toContain("warn:Uses eval()");
     expect(all.some((m) => m.startsWith("warn:References 1 remote host: example.org"))).toBe(true);
     expect(all.join(" ")).not.toContain("w3.org");
+  });
+
+  it("fails WebRTC and obfuscated code, and warns when a game navigates its page", async () => {
+    const names = Array.from({ length: 12 }, (_, i) => `_0x${(0x1a2b + i * 7).toString(16)}`);
+    const obfuscated = `var ${names.map((n, i) => `${n}=${i}`).join(",")};function _0x4f2a(){return ${names.join("+")}}`;
+    const f = await scan({
+      "assets/main.js": 'const pc = new RTCPeerConnection({ iceServers: [] });\nwindow.location.href = "https://example.org/?d=" + score;',
+      "assets/chunk.js": obfuscated,
+    });
+    expect(f.map((x) => `${x.status}:${x.file}:${x.message}`)).toEqual([
+      "fail:assets/chunk.js:Looks obfuscated: 13 hex-named identifiers (_0x…)",
+      "fail:assets/main.js:Uses WebRTC (RTCPeerConnection)",
+      "warn:assets/main.js:Navigates the page (location = …)",
+      "warn:assets/main.js:References 1 remote host: example.org",
+    ]);
+  });
+
+  it("doesn't mistake minified engines or shader code for navigation or obfuscation", async () => {
+    const f = await scan({
+      "assets/main.js":
+        'const s="#version 300 es\\nlayout(location = 0) out highp vec4 pc_fragColor;";function n(t){const location=t.gl.getAttribLocation(t.p,"a");t.location=location;return location}var e=[1,2,3].map(function(r){return r*2});console.log(location.href===""?e:s)',
+    });
+    expect(f).toEqual([]);
+  });
+
+  it("recognises packers, decoded-and-run code and hex-escaped strings", () => {
+    expect(obfuscationSign("eval(function(p,a,c,k,e,d){return p}('x',1,1,'x'.split('|'),0,{}))")).toMatch(/packer/);
+    expect(obfuscationSign('new Function(atob("YWxlcnQoMSk="))()')).toBe("code decoded from a string and run");
+    expect(obfuscationSign(`var s="${"\\x61".repeat(600)}";`)).toMatch(/600 \\x escapes/);
+    expect(obfuscationSign(`var s="${"\\x61".repeat(600)}";${"var a=1;".repeat(20000)}`)).toBeNull();
+    expect(obfuscationSign("[]".repeat(300))).toMatch(/\[\]\(\)!\+/);
   });
 
   it("fails remote fonts in CSS", async () => {

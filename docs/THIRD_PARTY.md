@@ -1,43 +1,163 @@
 # Third-party software and assets
 
 Everything Thumbcade ships is either our own work or used under a permissive license. Nothing in the
-apps, games or portal is under a copyleft (GPL/AGPL) or non-commercial license.
+apps, games or portal is under a copyleft (GPL/AGPL) or non-commercial license. The only weak-copyleft
+(MPL-2.0) code in the dependency closures is build and server tooling that never reaches a player's device:
+lightningcss (Metro's CSS minifier) and @vercel/og (vendored by Next.js, renders OG images on our server).
+node-forge is dual-licensed and used under BSD-3-Clause.
+
+The app and the website show every third-party notice to users; see
+[Notices shown to users](#notices-shown-to-users).
 
 ## Fonts
 
 | Font | License | Used in | License text |
 |---|---|---|---|
-| Mona Sans (incl. Display Expanded) by GitHub | SIL Open Font License 1.1 | app, portal, brand assets, games (ASCII subset `games/_kit/assets/fonts/display.woff2`) | `packages/design-tokens/fonts/OFL-MonaSans.txt` |
-| Departure Mono by Helena Zhang | SIL Open Font License 1.1 | app, portal, games (`games/_kit/assets/fonts/mono.woff2`) | `packages/design-tokens/fonts/OFL-DepartureMono.txt` |
+| Mona Sans 2.0.27 (incl. Display Expanded) by GitHub | SIL Open Font License 1.1, Reserved Font Name "Mona" | app, portal, brand assets; games as "TC Display Black" (see below) | `packages/design-tokens/fonts/OFL-MonaSans.txt` |
+| Departure Mono 1.500 by Helena Zhang | SIL Open Font License 1.1 | app, portal, games (`games/_kit/assets/fonts/mono.woff2`) | `packages/design-tokens/fonts/OFL-DepartureMono.txt` |
+| Instrument Serif (The Instrument Serif Project Authors) | SIL Open Font License 1.1, no Reserved Font Name | games by quietmoves | `games/_kit/assets/fonts/library/instrument-serif/OFL.txt` |
+| Fredoka (The Fredoka Project Authors) | SIL Open Font License 1.1, no Reserved Font Name | games by softbake | `games/_kit/assets/fonts/library/fredoka/OFL.txt` |
+| Caveat (The Caveat Project Authors) | SIL Open Font License 1.1, no Reserved Font Name | games by marginalia | `games/_kit/assets/fonts/library/caveat/OFL.txt` |
+| Rubik (The Rubik Project Authors) | SIL Open Font License 1.1, no Reserved Font Name | games by lowpolyfox | `games/_kit/assets/fonts/library/rubik/OFL.txt` |
+| Jost (The Jost Project Authors) | SIL Open Font License 1.1, no Reserved Font Name | Lanternline | `games/_kit/assets/fonts/library/jost/OFL.txt` |
+| Bungee (The Bungee Project Authors) | SIL Open Font License 1.1, no Reserved Font Name | games by juicefactory | `games/_kit/assets/fonts/library/bungee/OFL.txt` |
+| Bricolage Grotesque (The Bricolage Grotesque Project Authors) | SIL Open Font License 1.1, no Reserved Font Name | games by bitbybit | `games/_kit/assets/fonts/library/bricolage/OFL.txt` |
 
-The OFL allows bundling and subsetting. The fonts are not sold on their own, and the subsets keep their
-original family names in the metadata. The license has to travel with the fonts:
+The font files in `packages/design-tokens/fonts` and `packages/create-game/assets/fonts` are byte-identical
+to the upstream releases (git blob hashes checked against github/mona-sans and rektdeckard/departure-mono on
+2026-10-16). The OFL allows bundling, and the fonts are not sold on their own. The license has to travel
+with the fonts:
 
-- **App:** the bundled TTF/OTF files keep the OFL notice and URL in their name table (IDs 13/14).
-- **Portal:** serves the full texts at `/licenses/OFL-*.txt` (copied by `apps/portal/scripts/copy-brand.mjs`).
-- **Games:** the two woff2 subsets in `games/_kit` lost their name-table license records when they were
-  subset. This is an open pre-launch item in `docs/GAPS.md`.
+- **App:** the bundled TTF/OTF files keep the OFL notice and URL in their name table (IDs 13/14), and
+  Settings → Open-source licences shows both full OFL texts.
+- **Portal:** serves the full texts at `/licenses/OFL-*.txt` (copied by `apps/portal/scripts/copy-brand.mjs`)
+  and prints them on `/licenses`.
+- **Games:** `games/_kit/assets/fonts/mono.woff2` is the upstream Departure Mono woff2, unchanged.
+  `display.woff2` is a printable-ASCII subset of Mona Sans Display Expanded Black. A subset is a Modified
+  Version under the OFL, and a Modified Version may not use the Reserved Font Name, so
+  `games/_kit/scripts/fonts.ts` renames it to "TC Display Black" (family, full and PostScript names), keeps
+  the original copyright, vendor and designer records, and writes the license records (IDs 13/14). Every
+  game bundle ships `licenses/OFL-MonaSans.txt` (with a note on the modification) and
+  `licenses/OFL-DepartureMono.txt` next to the fonts (`games/_kit/src/vite.ts`).
+- **Creator-styled games:** the games that don't wear the house style use the font library in
+  `games/_kit/assets/fonts/library/<family>/`, built by `games/_kit/scripts/library-fonts.ts` from google/fonts at a
+  pinned commit (`47d54ca`): variable axes pinned to one instance per file, subset to printable ASCII plus a few
+  symbols, woff2. These are Modified Versions; none of these families has a Reserved Font Name (the script refuses
+  one that does), so they keep their names. Each family folder holds its OFL.txt, and every bundle that uses one of
+  its fonts ships it as `licenses/OFL-<family>.txt` (`games/_kit/src/vite.ts`). Pixel games draw their bitmap type
+  in code.
 
 ## Game art, audio and 3D
 
-All 12 launch games draw their graphics in code (Canvas 2D, PixiJS or Three.js primitives) and make their
+All launch games draw their graphics in code (Canvas 2D, PixiJS or Three.js primitives) and make their
 sounds at runtime with WebAudio. They ship no third-party images, audio, models or textures. Posters
 and icons come from the games themselves (`scripts/games-index.ts`) or from the brand generator
-(`packages/design-tokens/scripts/build-brand.ts`).
+(`packages/design-tokens/scripts/build-brand.ts`). Kingsnare's piece set is drawn in `games/kingsnare/src/pieces.ts`,
+and its 64 puzzles are generated by `games/kingsnare/scripts/generate-puzzles.ts` from a seed and verified by
+its own solver: none are taken from a puzzle database.
+
+## Word lists (Fair Copy)
+
+Fair Copy ships two word lists built by `games/fair-copy/scripts/words.ts` from pinned, checksummed downloads,
+filtered to a-z words of 3-16 letters with a hand-curated blocklist removed. Its bundle carries the credits and
+licence texts as `licenses/words.txt`.
+
+| Source | Licence | Used for |
+|---|---|---|
+| ENABLE2K (Enhanced North American Benchmark LExicon, 2000), `WORD.LST`, by Alan Beale and M. Cooper. Author's archive via the Internet Archive (`enable2k.zip`, sha256 44e2dd5c…) | Public domain ("formally released into the Public Domain … Game designers may feel free to incorporate the WORD.LST into their games"; the authors ask for credit, which `licenses/words.txt` gives) | Accepted words |
+| SCOWL 2020.12.07 (Spell Checker Oriented Word Lists) by Kevin Atkinson, sizes 10-70 (`scowl-2020.12.07.tar.gz` from SourceForge, sha256 5587667c…) | MIT-like: free use, modification, distribution and sale provided the copyright and permission notice travel with it. Its `Copyright` file, which also carries the notices of SCOWL's own sources, ships in full | Accepted words (english, american, british, british_z, canadian, sizes 10-70); common words for boards and the missed-word reveal (english and american up to size 35) |
+| List of Dirty, Naughty, Obscene, and Otherwise Bad Words, © 2012-2020 Shutterstock, Inc. | CC BY 4.0 | Consulted while writing the blocklist (`games/fair-copy/scripts/blocklist.ts`); none of its text ships, only hashes of our own blocked words. Credited in `licenses/words.txt` |
+
+## Music (Halftune)
+
+Halftune's eight tunes are public-domain compositions, transcribed by hand as plain melodies with simple chords in
+`games/halftune/src/songs.ts`: Ode to Joy (Beethoven, d. 1827), Für Elise (Beethoven), Minuet in G (Christian
+Petzold, d. 1733), Can-can / Galop infernal (Jacques Offenbach, d. 1880), In the Hall of the Mountain King (Edvard
+Grieg, d. 1907), and the traditional Frère Jacques and Greensleeves. No recording, published edition or
+arrangement was used, and every sound is synthesized at runtime, so nothing ships that needs a licence text.
 
 ## Runtime libraries
 
 Licenses are read from each package's `package.json` for the direct runtime dependencies of every
-workspace package. Dev tooling (TypeScript, ESLint, Vitest, Jest, Vite, tsx, Turborepo) is not distributed.
+workspace package. Dev tooling (TypeScript, ESLint, Vitest, Jest, Vite, tsx, Turborepo, subset-font,
+fontverter) is not distributed.
 
 | License | Packages |
 |---|---|
 | MIT | react, react-dom, react-native, expo and its `expo-*` modules, expo-router, @expo/metro-runtime, react-native-gesture-handler, react-native-reanimated, react-native-worklets, react-native-screens, react-native-safe-area-context, react-native-svg, react-native-webview, react-native-view-shot, @shopify/flash-list, @shopify/react-native-skia, @tanstack/react-query, zustand, zod, @supabase/supabase-js, @supabase/ssr, next, @next/mdx, @mdx-js/loader, @mdx-js/react, remark-gfm, @radix-ui/react-dialog, @radix-ui/react-dropdown-menu, @radix-ui/react-tabs, @radix-ui/react-tooltip, server-only, three, pixi.js, fflate, qrcode, esbuild, @clack/prompts, opentype.js |
-| BSD-2-Clause | chess.js (Gambit's move generation and validation) |
+| BSD-2-Clause | chess.js (Kingsnare's move generation and validation) |
 | Apache-2.0 | sharp (brand and poster rasterising, build-time), playwright (the reviewer's headless browser, server-side) |
 
+sharp's prebuilt libvips binary (`@img/sharp-libvips-*`) is LGPL-3.0-or-later. It only runs at build time
+and on our servers and is never part of an app, game or portal download.
+
 To regenerate the table after dependency changes, list the direct `dependencies` of every workspace
-`package.json` and read `license` from each resolved package's `package.json`.
+`package.json` and read `license` from each resolved package's `package.json`. The full lists, with every
+transitive dependency, are the generated notice files below.
+
+## Notices shown to users
+
+MIT, BSD, ISC and Apache-2.0 all require their notices to travel with the code, so both apps show them:
+
+| Where | What | Data |
+|---|---|---|
+| App: Settings → About → **Open-source licences** (`/settings/licenses`, one package: `/settings/license?i=`) | Searchable list (name, licence, note) with a licence filter; tapping an entry shows its full licence and notice files | `apps/mobile/src/features/licenses/notices.generated.ts` |
+| Website: **`/licenses`**, linked in the footer next to Imprint, Privacy and Terms | Fonts, a table of every package with its licence, then each distinct licence text once with the packages that ship it | `apps/portal/src/lib/notices.generated.ts` |
+| Games: `licenses/` in every game bundle | see above | Vite's licence report |
+
+Both data files are written by `scripts/licenses/collect.ts` and checked in:
+
+```bash
+pnpm --filter @thumbcade/mobile notices    # after any dependency change in the app's closure
+pnpm --filter @thumbcade/portal notices    # also runs on every portal build (prebuild)
+```
+
+The script name is `notices` because `pnpm licenses` is a pnpm built-in. A test in each app
+(`apps/mobile/test/licenses.test.ts`, `apps/portal/test/licenses.test.ts`) runs the collector with
+`--check` and fails, naming the missing or removed packages, while a file is stale; it also checks that
+every direct dependency is listed at its installed version. The collector's own tests are in
+`scripts/test/licenses.test.ts`.
+
+What the collector includes:
+
+- **Packages:** the app's production dependency closure as pnpm resolves it from the lockfile
+  (`pnpm licenses list --prod`), followed through our workspace packages (e.g. design-tokens → protocol →
+  zod). Workspace packages, dev dependencies and platform-specific build binaries (packages with `os`/`cpu`,
+  e.g. `lightningcss-darwin-arm64`, `fsevents`) are left out. The closure is deliberately generous: it also
+  lists build-time packages that `expo` and `next` depend on (Metro, Babel, the Expo CLI), because listing
+  too much is harmless and listing too little is not. App: 629 packages; website: 234 packages plus 137
+  packages that Next.js vendors into `next/dist/compiled` (React's server/client builds among them).
+- **Texts:** every `LICENSE`, `LICENCE`, `COPYING` and `NOTICE` file (and variants such as `LICENSE.md`,
+  `LICENSE-MIT`, `LICENSE_FONT`) at the package root, verbatim apart from line endings and trailing
+  whitespace. A package without any gets the SPDX standard text of its declared licence
+  (`scripts/licenses/spdx/`) with its own copyright line, taken from its README, else its source file
+  headers, else its package.json author; the screen and the page say so. App: 85 such packages, nearly all
+  from the Metro and React Native monorepos (copyright Meta, found in their source headers); website: 17.
+- **Fonts:** Mona Sans and Departure Mono with their OFL texts, whenever `@thumbcade/design-tokens` is in the
+  closure.
+- **Native code inside npm packages:** Skia (BSD-3-Clause, Google), which `react-native-skia-android` and
+  `react-native-skia-apple-*` ship as prebuilt binaries under a package licence (MIT) that does not cover
+  it. Text in `scripts/licenses/native/skia.txt`.
+
+Each distinct text is stored once and as ids into a table of paragraphs shared between texts, so every
+package keeps its exact text, copyright line included, at 294 KB for the app's 631 entries (280 KB
+minified, 57 KB gzipped; plain deduplication would be about twice that). In production builds the module
+only runs when the screen opens (Expo Router loads route modules on first render). The website page is
+about 930 KB of HTML (110 KB gzipped).
+
+Not covered yet: native libraries that CocoaPods and Gradle add to a store build (React Native's Folly,
+Boost, glog, fmt, double-conversion, Hermes; Skia's own dependencies such as libpng, zlib, FreeType and
+HarfBuzz). Expo Go builds contain none of our native code, so this applies once we ship EAS builds; see
+`docs/GAPS.md`.
+
+### Inside the game bundles
+
+Minified chunks keep no license comments, so every game bundle carries `licenses/libraries.txt`: Vite's
+`build.license` report with the name, version, license and full license text of every npm package bundled
+into it (set in `games/_kit/src/vite.ts`). For the launch games that is three (Stackd, Duskrail,
+Heatfall), chess.js (Kingsnare), and pixi.js with the dependencies it bundles (Neon Chop, Voltbrick): earcut
+(ISC), eventemitter3, @pixi/colord, ismobilejs and parse-svg-path (all MIT). Our own workspace packages
+(the SDK and the kit) are not listed.
 
 ## Services (not bundled)
 

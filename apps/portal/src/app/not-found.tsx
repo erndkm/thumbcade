@@ -16,7 +16,7 @@ export default function NotFound() {
         </h1>
         <p className="max-w-[460px] text-[17px] leading-7 text-text-dim">That link points at a game, a challenge or a page that doesn&apos;t exist — or doesn&apos;t anymore.</p>
         <div className="flex flex-wrap gap-3">
-          <Link href="/play" className="inline-flex h-14 items-center rounded-pill bg-accent px-7 font-semiwide text-[17px] font-bold text-on-accent">
+          <Link href="/#play" className="inline-flex h-14 items-center rounded-pill bg-accent px-7 font-semiwide text-[17px] font-bold text-on-accent">
             Play something else
           </Link>
           <Link href="/" className="inline-flex h-14 items-center rounded-pill border border-line-strong px-7 font-semiwide text-[17px] font-bold text-text">

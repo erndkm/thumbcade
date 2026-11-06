@@ -1,0 +1,133 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 1024 1024" width="1024" height="1024">
+  <!-- Three spot inks on warm paper: blue #0078BF, fluorescent pink #FF48B0, yellow #FFE800, and their overprints
+       (green #006D00, orange #FF4100, violet #002284). Each overprinted dot shows its two plates a few px apart. Every
+       dot carries its printed mark, knocked out to paper. -->
+  <defs>
+    <pattern id="potDots" width="22" height="22" patternUnits="userSpaceOnUse" patternTransform="rotate(15)">
+      <circle cx="11" cy="11" r="7.6" fill="#0078BF"/>
+    </pattern>
+    <pattern id="sheen" width="20" height="20" patternUnits="userSpaceOnUse" patternTransform="rotate(75)">
+      <circle cx="10" cy="10" r="4.2" fill="#FF48B0"/>
+    </pattern>
+    <pattern id="shade" width="18" height="18" patternUnits="userSpaceOnUse" patternTransform="rotate(15)">
+      <circle cx="9" cy="9" r="5.4" fill="#002284"/>
+    </pattern>
+    <pattern id="splat" width="18" height="18" patternUnits="userSpaceOnUse" patternTransform="rotate(75)">
+      <circle cx="9" cy="9" r="4.4" fill="#FF48B0"/>
+    </pattern>
+    <filter id="grain" x="0" y="0" width="1" height="1">
+      <feTurbulence type="fractalNoise" baseFrequency="0.05" numOctaves="2" seed="23" result="n"/>
+      <feColorMatrix in="n" type="matrix" values="0 0 0 0 0.953  0 0 0 0 0.929  0 0 0 0 0.878  0 0 0 2.2 -1.42"/>
+    </filter>
+    <path id="star" d="M0 -40 L9.4 -13 L38 -12.4 L15.2 4.9 L23.5 32.4 L0 16 L-23.5 32.4 L-15.2 4.9 L-38 -12.4 L-9.4 -13 Z"/>
+  </defs>
+
+  <rect width="1024" height="1024" fill="#F3EDE0"/>
+
+  <!-- The press drum across the top, its upper half under a pink screen, paper ridges, a pink nip line. -->
+  <rect y="0" width="1024" height="118" fill="#0078BF"/>
+  <rect y="0" width="1024" height="54" fill="url(#sheen)"/>
+  <rect y="34" width="1024" height="9" fill="#F3EDE0"/>
+  <rect y="74" width="1024" height="9" fill="#F3EDE0"/>
+  <rect y="114" width="1024" height="8" fill="#FF48B0"/>
+
+  <!-- The sheet: two rows of dots hanging from the drum. -->
+  <!-- row 1 -->
+  <circle cx="40" cy="214" r="92" fill="#0078BF"/>
+  <circle cx="40" cy="214" r="40" fill="#F3EDE0"/><circle cx="40" cy="214" r="23" fill="#0078BF"/>
+  <circle cx="234" cy="214" r="92" fill="#FF48B0"/>
+  <use xlink:href="#star" transform="translate(234 216) scale(1.15)" fill="#F3EDE0"/>
+  <g>
+    <circle cx="434" cy="210" r="92" fill="#FFE800"/>
+    <circle cx="424" cy="218" r="92" fill="#0078BF"/>
+    <circle cx="429" cy="214" r="86" fill="#006D00"/>
+    <path d="M429 176 L467 214 L429 252 L391 214 Z" fill="#F3EDE0"/>
+  </g>
+  <circle cx="626" cy="214" r="92" fill="#FF48B0"/>
+  <use xlink:href="#star" transform="translate(626 216) scale(1.15)" fill="#F3EDE0"/>
+  <g>
+    <circle cx="824" cy="210" r="92" fill="#FFE800"/>
+    <circle cx="816" cy="218" r="92" fill="#0078BF"/>
+    <circle cx="820" cy="214" r="86" fill="#006D00"/>
+    <path d="M820 176 L858 214 L820 252 L782 214 Z" fill="#F3EDE0"/>
+  </g>
+  <circle cx="1014" cy="214" r="92" fill="#0078BF"/>
+  <circle cx="1014" cy="214" r="40" fill="#F3EDE0"/><circle cx="1014" cy="214" r="23" fill="#0078BF"/>
+  <!-- row 2 (offset half a dot); a gap where a pink group just popped, a pink halftone splat in it -->
+  <circle cx="136" cy="380" r="92" fill="#FFE800"/>
+  <rect x="99" y="370" width="74" height="20" fill="#0078BF"/><rect x="126" y="343" width="20" height="74" fill="#0078BF"/>
+  <g fill="url(#splat)">
+    <circle cx="432" cy="384" r="66"/><circle cx="486" cy="350" r="34"/><circle cx="384" cy="424" r="30"/><circle cx="470" cy="432" r="28"/>
+    <circle cx="380" cy="338" r="24"/>
+  </g>
+  <g fill="#FF48B0"><circle cx="352" cy="300" r="10"/><circle cx="532" cy="470" r="12"/><circle cx="530" cy="310" r="8"/></g>
+  <g>
+    <circle cx="726" cy="376" r="92" fill="#FF48B0"/>
+    <circle cx="716" cy="384" r="92" fill="#0078BF"/>
+    <circle cx="721" cy="380" r="86" fill="#002284"/>
+    <rect x="683" y="352" width="76" height="18" fill="#F3EDE0"/>
+    <rect x="683" y="390" width="76" height="18" fill="#F3EDE0"/>
+  </g>
+  <!-- Shines -->
+  <g fill="#F3EDE0">
+    <ellipse cx="0" cy="0" rx="17" ry="9" transform="translate(196 170) rotate(-43)"/>
+    <ellipse cx="0" cy="0" rx="17" ry="9" transform="translate(588 170) rotate(-43)"/>
+    <ellipse cx="0" cy="0" rx="17" ry="9" transform="translate(98 336) rotate(-43)"/>
+  </g>
+
+  <!-- Falling dots: an orange triangle and a blue ring tumbling off the sheet. -->
+  <g transform="translate(586 590) rotate(18)">
+    <circle cx="5" cy="-5" r="84" fill="#FFE800"/>
+    <circle cx="-4" cy="4" r="84" fill="#FF48B0"/>
+    <circle cx="0" cy="0" r="78" fill="#FF4100"/>
+    <path d="M0 -38 L36 26 L-36 26 Z" fill="#F3EDE0"/>
+  </g>
+  <g transform="translate(838 690) rotate(-24)">
+    <circle cx="0" cy="0" r="76" fill="#0078BF"/>
+    <circle cx="0" cy="0" r="33" fill="#F3EDE0"/><circle cx="0" cy="0" r="19" fill="#0078BF"/>
+  </g>
+  <g stroke="#0078BF" stroke-width="9" stroke-linecap="round" fill="none">
+    <path d="M512 470 L498 430"/><path d="M560 452 L556 412"/><path d="M800 580 L812 540"/><path d="M850 572 L866 534"/>
+  </g>
+
+  <!-- The dotted aim guide, up from the squid to the gap. -->
+  <g fill="#FFE800">
+    <circle cx="300" cy="790" r="12"/><circle cx="326" cy="742" r="12"/><circle cx="352" cy="694" r="12"/>
+    <circle cx="378" cy="646" r="12"/><circle cx="404" cy="598" r="12"/><circle cx="430" cy="550" r="12"/>
+  </g>
+  <g fill="#006D00">
+    <circle cx="300" cy="790" r="5"/><circle cx="326" cy="742" r="5"/><circle cx="352" cy="694" r="5"/>
+    <circle cx="378" cy="646" r="5"/><circle cx="404" cy="598" r="5"/><circle cx="430" cy="550" r="5"/>
+  </g>
+
+  <!-- The pot. -->
+  <path d="M0 930 C120 912 220 944 340 926 C470 906 560 942 700 924 C820 908 920 936 1024 922 L1024 1024 L0 1024 Z" fill="url(#potDots)"/>
+  <rect y="986" width="1024" height="38" fill="#0078BF"/>
+
+  <!-- The squid: pink, a violet halftone down its side, cupping a yellow dot. -->
+  <g transform="translate(236 900) rotate(14)">
+    <path d="M-62 30 C-70 120 -34 196 0 236 C34 196 70 120 62 30 Z" fill="#FF48B0"/>
+    <path d="M8 50 C26 120 18 190 0 236 C34 196 70 120 62 30 Z" fill="url(#shade)"/>
+    <ellipse cx="0" cy="0" rx="72" ry="56" fill="#FF48B0"/>
+    <g stroke="#FF48B0" stroke-width="20" stroke-linecap="round" fill="none">
+      <path d="M-18 -26 Q-52 -60 -46 -100"/><path d="M18 -26 Q52 -60 46 -100"/>
+      <path d="M-42 -16 Q-84 -48 -72 -122"/><path d="M42 -16 Q84 -48 72 -122"/>
+    </g>
+    <ellipse cx="-30" cy="-4" rx="19" ry="19" fill="#F3EDE0"/>
+    <ellipse cx="30" cy="-4" rx="19" ry="19" fill="#F3EDE0"/>
+    <circle cx="-26" cy="-10" r="9" fill="#0078BF"/><circle cx="34" cy="-10" r="9" fill="#0078BF"/>
+    <path d="M-12 22 Q0 34 12 22" stroke="#0078BF" stroke-width="6" stroke-linecap="round" fill="none"/>
+    <g transform="translate(0 -150)">
+      <circle cx="0" cy="0" r="76" fill="#FFE800"/>
+      <path d="M-8 -32 h16 v24 h24 v16 h-24 v24 h-16 v-24 h-24 v-16 h24 Z" fill="#0078BF"/>
+      <ellipse cx="-36" cy="-38" rx="14" ry="7" transform="rotate(-43 -36 -38)" fill="#F3EDE0"/>
+    </g>
+    <!-- arm tips over the dot print orange (pink over yellow) -->
+    <g stroke="#FF4100" stroke-width="20" stroke-linecap="round" fill="none">
+      <path d="M-46 -100 Q-44 -110 -40 -116"/><path d="M46 -100 Q44 -110 40 -116"/>
+      <path d="M-72 -122 Q-66 -140 -52 -148"/><path d="M72 -122 Q66 -140 52 -148"/>
+    </g>
+  </g>
+
+  <rect width="1024" height="1024" filter="url(#grain)" opacity="0.5"/>
+</svg>

@@ -16,7 +16,7 @@ describe("init", () => {
     expect(a).toBe(b);
     await handshake(win);
     const ctx = await a;
-    expect(ctx).toMatchObject({ gameId: "lane-rush", best: 120, launchReason: "feed" });
+    expect(ctx).toMatchObject({ gameId: "duskrail", best: 120, launchReason: "feed" });
     expect(tc.context).toBe(ctx);
     expect(tc.muted).toBe(true);
   });

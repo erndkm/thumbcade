@@ -8,7 +8,7 @@ cd "$(dirname "$0")"
 PLATFORM="${1:-ios}"
 FILTER="${2:-}"
 ANON_KEY="$(grep EXPO_PUBLIC_SUPABASE_ANON_KEY ../.env | cut -d= -f2)"
-VERTICAL_SLUG="${VERTICAL_SLUG:-merge}"
+VERTICAL_SLUG="${VERTICAL_SLUG:-shortwick}"
 if [ "$PLATFORM" = "android" ]; then
   APP_ID="host.exp.exponent"
   # adb's emulator discovery probes TCP 5555, finds the game host there and lists a phantom offline

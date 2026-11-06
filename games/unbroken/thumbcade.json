@@ -1,0 +1,35 @@
+{
+  "$schema": "https://thumbcade.com/schema/manifest-v1.json",
+  "id": "unbroken",
+  "name": "Unbroken",
+  "version": "1.0.0",
+  "sdk": "^1.0.0",
+  "entry": "index.html",
+  "description": "one line through every dot, without lifting the pen. small grids first, then larger ones, while the clock burns.",
+  "tags": [
+    "puzzle",
+    "logic",
+    "brain",
+    "drawing",
+    "calm"
+  ],
+  "accentColor": "#B9432C",
+  "icon": "assets/icon.png",
+  "ageRating": "4+",
+  "controls": {
+    "vertical": true,
+    "horizontal": true,
+    "multitouch": false,
+    "inputs": [
+      "drag"
+    ]
+  },
+  "session": "medium",
+  "audio": true,
+  "orientation": "portrait",
+  "score": {
+    "order": "desc",
+    "max": 20000,
+    "format": "integer"
+  }
+}

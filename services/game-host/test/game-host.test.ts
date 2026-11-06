@@ -7,32 +7,32 @@ const V = "0b6f7a4e-5a1c-4c55-9b43-2f0a8f1b9e01";
 
 describe("parseGamePath", () => {
   it("accepts versioned paths and defaults to index.html", () => {
-    expect(parseGamePath(`/lane-rush/${V}/assets/app.js`)).toEqual({ slug: "lane-rush", versionId: V, file: "assets/app.js" });
-    expect(parseGamePath(`/lane-rush/${V}/`)?.file).toBe("index.html");
-    expect(parseGamePath(`/lane-rush/${V}`)?.file).toBe("index.html");
-    expect(parseGamePath(`/lane-rush/${V}/assets/`)?.file).toBe("assets/index.html");
+    expect(parseGamePath(`/duskrail/${V}/assets/app.js`)).toEqual({ slug: "duskrail", versionId: V, file: "assets/app.js" });
+    expect(parseGamePath(`/duskrail/${V}/`)?.file).toBe("index.html");
+    expect(parseGamePath(`/duskrail/${V}`)?.file).toBe("index.html");
+    expect(parseGamePath(`/duskrail/${V}/assets/`)?.file).toBe("assets/index.html");
   });
   it("rejects traversal in every spelling", () => {
     for (const p of [
-      `/lane-rush/${V}/../secret`,
-      `/lane-rush/${V}/a/../../b`,
-      `/lane-rush/${V}/%2e%2e/b`,
-      `/lane-rush/${V}/%2E%2E%2Fb`,
-      `/lane-rush/${V}/a%2fb`,
-      `/lane-rush/${V}/a%5cb`,
-      `/lane-rush/${V}/a\\b`,
-      `/lane-rush/${V}/a%00b`,
-      `/lane-rush/${V}/.env`,
-      `/lane-rush/${V}//index.html`,
-      `/lane-rush/${V}/%E0%A4%A`,
+      `/duskrail/${V}/../secret`,
+      `/duskrail/${V}/a/../../b`,
+      `/duskrail/${V}/%2e%2e/b`,
+      `/duskrail/${V}/%2E%2E%2Fb`,
+      `/duskrail/${V}/a%2fb`,
+      `/duskrail/${V}/a%5cb`,
+      `/duskrail/${V}/a\\b`,
+      `/duskrail/${V}/a%00b`,
+      `/duskrail/${V}/.env`,
+      `/duskrail/${V}//index.html`,
+      `/duskrail/${V}/%E0%A4%A`,
     ]) {
       expect(parseGamePath(p), p).toBeNull();
     }
   });
   it("rejects bad slugs and version ids", () => {
-    expect(parseGamePath(`/Lane-Rush/${V}/index.html`)).toBeNull();
-    expect(parseGamePath(`/lane-rush/v1/index.html`)).toBeNull();
-    expect(parseGamePath(`/lane-rush`)).toBeNull();
+    expect(parseGamePath(`/DuskRail/${V}/index.html`)).toBeNull();
+    expect(parseGamePath(`/duskrail/v1/index.html`)).toBeNull();
+    expect(parseGamePath(`/duskrail`)).toBeNull();
     expect(parseGamePath(`/`)).toBeNull();
   });
 });

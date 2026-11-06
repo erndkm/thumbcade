@@ -2,6 +2,7 @@ import { BUDGETS, formatCount } from "@thumbcade/protocol";
 import Link from "next/link";
 import QRCode from "qrcode";
 import { Avatar } from "@/components/avatar";
+import { CountUpStats } from "@/components/count-up-stats";
 import { GameIcon } from "@/components/game-icon";
 import { Icon } from "@/components/icon";
 import { ButtonLink, Chip } from "@/components/ui";
@@ -14,10 +15,9 @@ export const dynamic = "force-dynamic";
 
 export default async function Landing() {
   const [games, stats, viewer] = await Promise.all([getLiveGames(24), getPlatformStats(), getWebViewer()]);
-  const qr = await QRCode.toString(`${env.siteUrl}/play`, { type: "svg", margin: 0, color: { dark: "#0D0D10", light: "#00000000" } });
+  const { appStoreUrl: appStore, playStoreUrl: playStore } = env;
+  const qr = appStore || playStore ? await QRCode.toString(`${env.siteUrl}/get`, { type: "svg", margin: 0, color: { dark: "#0D0D10", light: "#00000000" } }) : null;
   const featured = games[0] ?? null;
-  const appStore = process.env.NEXT_PUBLIC_APP_STORE_URL;
-  const playStore = process.env.NEXT_PUBLIC_PLAY_STORE_URL;
 
   return (
     <>
@@ -52,30 +52,22 @@ export default async function Landing() {
             </h1>
             <p className="max-w-[520px] text-[19px] leading-[29px] text-text-dim">
               Thumbcade is an endless feed of games you play with one thumb. Five seconds or five minutes — then swipe, and the next one is
-              already running. No installs, no menus, no loading bars.
+              already running. No game installs, no menus, no loading bars.
             </p>
             <div className="flex flex-wrap items-center gap-3">
               <ButtonLink href="#get" size="lg">
                 Get the app
               </ButtonLink>
-              <ButtonLink href="/play" size="lg" variant="secondary">
-                <Icon name="play" size={18} active /> Play in your browser
-              </ButtonLink>
             </div>
-            <dl className="mt-4 grid max-w-[560px] grid-cols-3 border-t border-line pt-6">
-              <div>
-                <dt className="label">Next game</dt>
-                <dd className="mt-1 font-mono text-[22px] text-text">&lt; 1 s</dd>
-              </div>
-              <div>
-                <dt className="label">Creators</dt>
-                <dd className="mt-1 font-mono text-[22px] text-text">{formatCount(stats.creators)}</dd>
-              </div>
-              <div>
-                <dt className="label">Thumbs needed</dt>
-                <dd className="mt-1 font-mono text-[22px] text-text">1</dd>
-              </div>
-            </dl>
+            <CountUpStats
+              className="mt-4 max-w-[620px] border-t border-line pt-6"
+              stats={[
+                { label: "Total games", value: stats.games },
+                { label: "Creators", value: stats.creators },
+                { label: "Next game", value: 1, prefix: "< ", suffix: " s" },
+                { label: "Thumbs needed", value: 1 },
+              ]}
+            />
           </div>
           <div className="flex flex-col items-center gap-4">
             <PhoneFeed cards={games} viewer={viewer} className="w-[min(92vw,414px)]" />
@@ -254,28 +246,29 @@ export default async function Landing() {
                 No end.
               </h2>
               <p className="max-w-[460px] text-[17px] leading-7 text-ink-1/90">
-                Scan to play on your phone right now. The iPhone and Android apps add your feed, your saves and your scores.
+                {qr ? "Get the app for iPhone or Android, or scan the code with your phone's camera." : "Coming soon for iPhone and Android."}
               </p>
-              <div className="flex flex-wrap gap-3">
-                {appStore ? (
-                  <a href={appStore} className="inline-flex h-12 items-center rounded-pill bg-ink-1 px-6 font-semiwide text-[15px] font-bold text-paper">
-                    Download for iPhone
-                  </a>
-                ) : null}
-                {playStore ? (
-                  <a href={playStore} className="inline-flex h-12 items-center rounded-pill bg-ink-1 px-6 font-semiwide text-[15px] font-bold text-paper">
-                    Get it for Android
-                  </a>
-                ) : null}
-                <Link href="/play" className="inline-flex h-12 items-center gap-2 rounded-pill border-2 border-ink-1 px-6 font-semiwide text-[15px] font-bold">
-                  <Icon name="play" size={16} active /> Play in your browser
-                </Link>
+              {qr ? (
+                <div className="flex flex-wrap gap-3">
+                  {appStore ? (
+                    <a href={appStore} className="inline-flex h-12 items-center rounded-pill bg-ink-1 px-6 font-semiwide text-[15px] font-bold text-paper">
+                      Download for iPhone
+                    </a>
+                  ) : null}
+                  {playStore ? (
+                    <a href={playStore} className="inline-flex h-12 items-center rounded-pill bg-ink-1 px-6 font-semiwide text-[15px] font-bold text-paper">
+                      Get it for Android
+                    </a>
+                  ) : null}
+                </div>
+              ) : null}
+            </div>
+            {qr ? (
+              <div className="flex flex-col items-center gap-3">
+                <div className="size-44 rounded-[20px] bg-paper p-4" dangerouslySetInnerHTML={{ __html: qr }} aria-label="QR code to get the Thumbcade app" role="img" />
+                <span className="font-mono text-[11px] uppercase tracking-wider text-ink-1/80">Point your camera here</span>
               </div>
-            </div>
-            <div className="flex flex-col items-center gap-3">
-              <div className="size-44 rounded-[20px] bg-paper p-4" dangerouslySetInnerHTML={{ __html: qr }} aria-label="QR code to play Thumbcade on your phone" role="img" />
-              <span className="font-mono text-[11px] uppercase tracking-wider text-ink-1/80">Point your camera here</span>
-            </div>
+            ) : null}
           </div>
         </div>
       </section>

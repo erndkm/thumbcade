@@ -239,7 +239,7 @@ const privacy: LegalDoc = {
 
 const terms: LegalDoc = {
   title: "Terms of Service",
-  updated: UPDATED,
+  updated: "2026-10-16",
   intro: `These terms apply to Thumbcade, its apps and thumbcade.com, provided by ${OPERATOR.name} (see Imprint). Thumbcade is free. Play fair, be decent to people, and don't try to break the arcade for everyone else.`,
   sections: [
     {
@@ -256,6 +256,17 @@ const terms: LegalDoc = {
       blocks: [
         p(
           "Games are made by independent creators. We review every build before it goes live; games run isolated, with no access to your device beyond sound, touch and the score and storage services we provide.",
+        ),
+      ],
+    },
+    {
+      heading: "Health and safety",
+      blocks: [
+        p(
+          "Some games contain flashing lights and fast-moving patterns that may trigger seizures in people with photosensitive epilepsy. Stop playing straight away and seek medical advice if you feel dizzy or have altered vision, eye or muscle twitches, disorientation or convulsions.",
+        ),
+        p(
+          "Turning on Reduce Motion in your device's accessibility settings reduces flashes and screen shake in Thumbcade games. In the app, Settings → Reduce motion does the same.",
         ),
       ],
     },

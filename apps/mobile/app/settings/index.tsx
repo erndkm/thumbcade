@@ -104,6 +104,7 @@ export default function Settings() {
         <SheetRow icon="eye" label="Privacy Policy" onPress={() => router.push({ pathname: "/settings/legal", params: { doc: "privacy" } })} />
         <SheetRow icon="grid" label="Terms of Service" onPress={() => router.push({ pathname: "/settings/legal", params: { doc: "terms" } })} />
         <SheetRow icon="home" label="Imprint" onPress={() => router.push({ pathname: "/settings/legal", params: { doc: "imprint" } })} />
+        <SheetRow icon="code" label="Open-source licences" testID="open-licenses" onPress={() => router.push("/settings/licenses")} />
         {devVisible ? <SheetRow icon="code" label="Developer menu" testID="open-dev-menu" onPress={() => router.push("/settings/dev")} /> : null}
         <Press onPress={tapVersion} scaleTo={1} accessibilityLabel={`Version ${version}`} testID="version-row" style={{ paddingHorizontal: layout.gutter, minHeight: 56, justifyContent: "center" }}>
           <T variant="mono" color="textDim">

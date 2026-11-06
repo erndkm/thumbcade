@@ -28,6 +28,8 @@ describe("runReview (headless Chromium)", () => {
       gameplay_end: "pass",
       no_uncaught_errors: "pass",
       insets: "pass",
+      network: "pass",
+      flashes: "pass",
     });
     expect(report.passed).toBe(true);
     expect(report.metrics.readyMs).toBeGreaterThan(0);
@@ -35,7 +37,7 @@ describe("runReview (headless Chromium)", () => {
     expect(poster?.subarray(0, 2)).toEqual(Buffer.from([0xff, 0xd8]));
   });
 
-  it("fails a game that starts on a swipe, ignores pause, drones on and throws", async () => {
+  it("fails a game that starts on a swipe, ignores pause, drones on, throws, strobes and uses WebRTC", async () => {
     const { report } = await runReview({ dir: await buildFixture("bad"), browser, capturePoster: false });
     expect(report.passed).toBe(false);
     expect(status(report)).toMatchObject({
@@ -44,7 +46,12 @@ describe("runReview (headless Chromium)", () => {
       pause_stops_audio: "fail",
       no_uncaught_errors: "fail",
       insets: "warn",
+      static_scan: "pass",
+      network: "fail",
+      flashes: "fail",
     });
     expect(report.checks.find((c) => c.id === "no_uncaught_errors")!.detail).toContain("kaboom");
+    expect(report.checks.find((c) => c.id === "network")!.detail).toContain("RTCPeerConnection.createDataChannel");
+    expect(report.checks.find((c) => c.id === "flashes")!.detail).toMatch(/into attract mode/);
   });
 });

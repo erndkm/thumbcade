@@ -9,3 +9,4 @@ export * from "./fonts.ts";
 export * from "./rng.ts";
 export * from "./color.ts";
 export * from "./ui.ts";
+export * from "./photosafe.ts";

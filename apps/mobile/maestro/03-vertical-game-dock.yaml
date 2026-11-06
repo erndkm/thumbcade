@@ -1,5 +1,5 @@
 # A `controls.vertical: true` game owns the surface while PLAYING; the Dock is the way out.
-# VERTICAL_SLUG defaults to merge (run.sh); with only the dev fixtures seeded use VERTICAL_SLUG=fixture-swipe.
+# VERTICAL_SLUG defaults to shortwick (run.sh); with only the dev fixtures seeded use VERTICAL_SLUG=fixture-swipe.
 appId: ${APP_ID}
 name: Play a vertical game and leave via the Dock
 ---

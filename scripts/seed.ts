@@ -764,7 +764,7 @@ async function main(): Promise<void> {
   // --- editorial rows ------------------------------------------------------------------------
   const byQuality = [...seeded].sort((a, b) => b.quality - a.quality);
   const oneThumb = seeded.filter((g) => !g.vertical && g.inputs.includes("tap"));
-  const brainy = seeded.filter((g) => g.tags.some((t) => ["puzzle", "brain", "chess", "logic", "memory", "merge"].includes(t)));
+  const brainy = seeded.filter((g) => g.tags.some((t) => ["puzzle", "brain", "chess", "logic", "matching", "merge"].includes(t)));
   const editorial = [
     { slug: "staff-picks", title: "Staff picks", subtitle: "What the studio plays on the bus", game_ids: byQuality.slice(0, 6).map((g) => g.id), position: 0 },
     { slug: "one-thumb", title: "One thumb, zero tutorial", subtitle: "Tap to start. Tap to win. Mostly.", game_ids: oneThumb.map((g) => g.id), position: 1 },

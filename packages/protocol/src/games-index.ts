@@ -42,10 +42,12 @@ export type GamesIndex = z.infer<typeof GamesIndexSchema>;
  */
 export const SEED_CREATORS = [
   { handle: "thumbcade", displayName: "Thumbcade Studio", verified: true, bio: "The house band. We make the games that make the feed." },
-  { handle: "pixelwitch", displayName: "Ines Kroll", verified: true, bio: "Tiny games, big feelings. Berlin." },
-  { handle: "lowpolyfox", displayName: "Kai Okafor", verified: false, bio: "Three.js after dark. Everything is a cube if you squint." },
-  { handle: "quietmoves", displayName: "Mara Lindqvist", verified: false, bio: "Puzzles for the bus ride. Chess for the soul." },
+  { handle: "pixelwitch", displayName: "Ines Kroll", verified: true, bio: "Tiny games, big feelings. Every pixel placed by hand in Berlin." },
+  { handle: "lowpolyfox", displayName: "Kai Okafor", verified: false, bio: "Everything is a cube if you squint. Isometric, always." },
+  { handle: "quietmoves", displayName: "Mara Lindqvist", verified: false, bio: "Puzzles for the bus ride. Paper, ink and no hurry." },
   { handle: "juicefactory", displayName: "Tomás Rivera", verified: false, bio: "Screen shake is a love language." },
-  { handle: "bitbybit", displayName: "Aiyana Brooks", verified: false, bio: "One input. Infinite runs." },
+  { handle: "bitbybit", displayName: "Aiyana Brooks", verified: false, bio: "One input. Infinite runs. Long horizons." },
+  { handle: "softbake", displayName: "Softbake", verified: false, bio: "Two people, one oven, far too much putty. Lisbon." },
+  { handle: "marginalia", displayName: "Priya Raman", verified: false, bio: "I draw in the margins. Sometimes the margins draw back." },
 ] as const;
 export type SeedCreatorHandle = (typeof SEED_CREATORS)[number]["handle"];

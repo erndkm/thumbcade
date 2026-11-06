@@ -1,0 +1,12 @@
+[
+  { "wait": 2600 },
+  { "shot": "attract" },
+  { "tap": [195, 560] },
+  { "wait": 1400 },
+  { "shot": "play" },
+  { "swipe": [180, 700, 110, -300] },
+  { "wait": 330 },
+  { "shot": "flight" },
+  { "wait": 650 },
+  { "shot": "goal" }
+]

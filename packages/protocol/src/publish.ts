@@ -77,8 +77,54 @@ export const ReviewCheckIdSchema = z.enum([
   "heap",
   "insets",
   "gameplay_end",
+  /** WCAG 2.3.1 general and red flash limits, measured on screen captures of attract mode and a run. */
+  "flashes",
 ]);
 export type ReviewCheckId = z.infer<typeof ReviewCheckIdSchema>;
+
+/**
+ * File types a game bundle may contain (lowercase extensions): web code, data and media. Anything else is
+ * refused at upload, so a bundle can never carry executables, archives or server scripts.
+ */
+export const BUNDLE_FILE_EXTENSIONS = [
+  // Code and data
+  "html", "htm", "js", "mjs", "css", "json", "map", "txt", "xml", "csv", "wasm", "glsl", "vert", "frag", "wgsl",
+  // Images and textures
+  "png", "jpg", "jpeg", "webp", "avif", "gif", "svg", "ico", "ktx2", "basis", "hdr", "exr",
+  // Audio and video
+  "mp3", "ogg", "oga", "opus", "wav", "m4a", "aac", "flac", "weba", "mp4", "m4v", "webm",
+  // Fonts
+  "woff", "woff2", "ttf", "otf", "fnt",
+  // 3D models and game-engine formats (glTF buffers, Draco, Spine, Tiled, LDtk, Rive)
+  "glb", "gltf", "bin", "obj", "mtl", "fbx", "drc", "atlas", "skel", "tmj", "tsj", "ldtk", "riv",
+] as const;
+
+const BUNDLE_EXTENSION_SET: ReadonlySet<string> = new Set(BUNDLE_FILE_EXTENSIONS);
+
+/** Why a bundle path is not allowed (hidden file or unknown type), or null when it is. */
+export function bundleFileProblem(path: string): string | null {
+  const name = path.slice(path.lastIndexOf("/") + 1);
+  if (name.startsWith(".")) return "hidden files are not allowed";
+  const dot = name.lastIndexOf(".");
+  if (dot <= 0) return "files need an extension";
+  const ext = name.slice(dot + 1).toLowerCase();
+  return BUNDLE_EXTENSION_SET.has(ext) ? null : `.${ext} files are not allowed`;
+}
+
+/** Native executables recognised by their magic bytes, whatever the file is called. */
+export function executableKind(bytes: Uint8Array): string | null {
+  if (bytes.length >= 64 && bytes[0] === 0x4d && bytes[1] === 0x5a) {
+    // MZ header pointing at a "PE\0\0" signature: a Windows program or DLL.
+    const pe = (bytes[60]! | (bytes[61]! << 8) | (bytes[62]! << 16) | (bytes[63]! << 24)) >>> 0;
+    if (pe + 4 <= bytes.length && bytes[pe] === 0x50 && bytes[pe + 1] === 0x45 && bytes[pe + 2] === 0 && bytes[pe + 3] === 0) return "a Windows executable";
+  }
+  if (bytes.length < 4) return null;
+  const magic = ((bytes[0]! << 24) | (bytes[1]! << 16) | (bytes[2]! << 8) | bytes[3]!) >>> 0;
+  if (magic === 0x7f454c46) return "a Linux (ELF) executable";
+  if (magic === 0xfeedface || magic === 0xfeedfacf || magic === 0xcefaedfe || magic === 0xcffaedfe) return "a macOS (Mach-O) executable";
+  if (magic === 0xcafebabe) return "a macOS universal binary or Java class file";
+  return null;
+}
 
 export const ReviewCheckSchema = z.object({
   id: ReviewCheckIdSchema,

@@ -1,0 +1,19 @@
+{
+  "name": "@thumbcade-games/fair-copy",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "typecheck": "tsc -p tsconfig.json",
+    "lint": "eslint .",
+    "test": "vitest run",
+    "words": "tsx scripts/words.ts",
+    "playtest": "tsx scripts/playtest.ts"
+  },
+  "dependencies": {
+    "@thumbcade-games/kit": "workspace:*",
+    "@thumbcade/sdk": "workspace:*"
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "name": "thumbcade-playable",
+  "private": true,
+  "type": "module",
+  "description": "Thumbcade playable ad: a three-game mini feed in one self-contained HTML file.",
+  "scripts": {
+    "build": "node build.mjs",
+    "verify": "node verify.mjs"
+  },
+  "dependencies": {
+    "subset-font": "2.9.0"
+  }
+}

@@ -71,7 +71,7 @@ export type GameMessageListener<K extends GameMessageType> = (payload: GameMessa
 export interface IframeHostOptions {
   iframe: HTMLIFrameElement;
   /**
-   * Exact origin the game is served from, e.g. "https://lane-rush.thumbcade.gg" or
+   * Exact origin the game is served from, e.g. "https://duskrail.thumbcade.gg" or
    * "http://127.0.0.1:5555". Inbound messages from any other origin are dropped. Use "null" for a
    * sandboxed iframe without allow-same-origin. Never "*".
    */

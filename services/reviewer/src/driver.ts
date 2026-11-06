@@ -55,6 +55,8 @@ export interface OpenOptions {
   muted?: boolean;
   /** Draw the preview-inset areas over the game (for screenshots meant for humans). */
   insetsOverlay?: boolean;
+  /** Launch the game with the player's reduce-motion setting on (LaunchContext.reducedMotion). */
+  reducedMotion?: boolean;
   /** Apply the mid-tier profile (4× CPU, Fast 4G) before loading. */
   throttle?: boolean;
   dpr?: number;
@@ -125,6 +127,7 @@ export class GameSession {
         mode: o.mode ?? "feed",
         muted: o.muted ?? true,
         insets: o.insetsOverlay ?? false,
+        reducedMotion: o.reducedMotion ?? false,
         id: o.id,
         version: o.version,
       }),
@@ -135,6 +138,27 @@ export class GameSession {
   /** The game's frame (null until attached). */
   gameFrame(): Frame | null {
     return this.page.frames().find((f) => f !== this.page.mainFrame()) ?? null;
+  }
+
+  /**
+   * Streams every composited frame of the page (PNG, half the CSS size) to `onFrame` with its capture time in
+   * seconds, until the returned stop function is called.
+   */
+  async screencast(onFrame: (png: Buffer, t: number) => void): Promise<() => Promise<void>> {
+    const handler = (e: { data: string; metadata: { timestamp?: number }; sessionId: number }) => {
+      void this.cdp.send("Page.screencastFrameAck", { sessionId: e.sessionId }).catch(() => undefined);
+      onFrame(Buffer.from(e.data, "base64"), e.metadata.timestamp ?? performance.now() / 1000);
+    };
+    this.cdp.on("Page.screencastFrame", handler);
+    const vp = this.page.viewportSize() ?? { width: this.device.width, height: this.device.height };
+    await this.cdp.send("Page.startScreencast", { format: "png", maxWidth: Math.round(vp.width / 2), maxHeight: Math.round(vp.height / 2), everyNthFrame: 1 });
+    let stopped = false;
+    return async () => {
+      if (stopped) return;
+      stopped = true;
+      await this.cdp.send("Page.stopScreencast").catch(() => undefined);
+      this.cdp.off("Page.screencastFrame", handler);
+    };
   }
 
   async unthrottle(): Promise<void> {

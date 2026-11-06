@@ -1,0 +1,19 @@
+{
+  "name": "thumbcade-trailer",
+  "private": true,
+  "type": "module",
+  "description": "Thumbcade teaser trailer: capture, composite, score and encode.",
+  "scripts": {
+    "prepare-footage": "bash prepare.sh",
+    "music": "node make-music.mjs",
+    "render:vertical": "node render.mjs video 1080 1920 out/thumbcade-teaser-9x16.mp4 --audio out/music.wav",
+    "render:horizontal": "node render.mjs video 1920 1080 out/thumbcade-teaser-16x9.mp4 --audio out/music.wav",
+    "music:15": "node make-music.mjs 15",
+    "render:15:vertical": "node render.mjs video 1080 1920 out/thumbcade-teaser-15s-9x16.mp4 --audio out/music-15.wav --cut 15",
+    "render:15:horizontal": "node render.mjs video 1920 1080 out/thumbcade-teaser-15s-16x9.mp4 --audio out/music-15.wav --cut 15"
+  },
+  "dependencies": {
+    "ffmpeg-static": "5.3.0",
+    "playwright": "1.64.0"
+  }
+}

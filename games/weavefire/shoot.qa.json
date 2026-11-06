@@ -1,0 +1,10 @@
+[
+  { "wait": 1200 },
+  { "tap": [195, 560] },
+  { "wait": 6000 },
+  { "shot": "loom" },
+  { "wait": 17600 },
+  { "shot": "loomdown" },
+  { "wait": 12400 },
+  { "shot": "overdrive" }
+]

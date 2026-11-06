@@ -14,7 +14,8 @@
     "typecheck": "tsc -p tsconfig.json",
     "lint": "eslint .",
     "test": "vitest run",
-    "fonts": "tsx scripts/fonts.ts"
+    "fonts": "tsx scripts/fonts.ts",
+    "fonts:library": "tsx scripts/library-fonts.ts"
   },
   "dependencies": {
     "@thumbcade/sdk": "workspace:*"
@@ -22,10 +23,11 @@
   "devDependencies": {
     "@thumbcade/protocol": "workspace:*",
     "@types/subset-font": "2.3.0",
+    "fontverter": "2.0.0",
+    "happy-dom": "21.0.1",
     "playwright": "1.64.0",
     "sharp": "0.35.5",
     "subset-font": "2.9.0",
-    "vite": "8.3.4",
-    "happy-dom": "21.0.1"
+    "vite": "8.3.4"
   }
 }

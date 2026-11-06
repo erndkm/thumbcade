@@ -106,7 +106,7 @@ function AgeStep({ onNext }: { onNext: () => void }) {
   );
 }
 
-const STARTER_TAGS = ["onetap", "runner", "puzzle", "3d", "reflex", "chill", "brain", "arcade", "merge", "chess", "memory", "physics"];
+const STARTER_TAGS = ["onetap", "runner", "puzzle", "3d", "reflex", "chill", "brain", "arcade", "merge", "chess", "matching", "physics"];
 
 function InterestsStep() {
   const [picked, setPicked] = useState<string[]>([]);

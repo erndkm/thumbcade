@@ -5,6 +5,8 @@ export const env = {
   supabaseAnonKey: process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ?? "",
   gameHost: process.env.NEXT_PUBLIC_GAME_HOST ?? LOCAL_ENDPOINTS.gameHost,
   siteUrl: process.env.NEXT_PUBLIC_SITE_URL ?? LOCAL_ENDPOINTS.portalUrl,
+  appStoreUrl: process.env.NEXT_PUBLIC_APP_STORE_URL || null,
+  playStoreUrl: process.env.NEXT_PUBLIC_PLAY_STORE_URL || null,
 };
 
 /** Path-mode locally; production sets NEXT_PUBLIC_GAME_HOST=subdomain:thumbcade.gg. */

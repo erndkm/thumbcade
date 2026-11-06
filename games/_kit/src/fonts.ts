@@ -3,7 +3,7 @@ import monoUrl from "../assets/fonts/mono.woff2?url";
 
 /** Departure Mono (OFL): scores, counters, labels. */
 export const FONT_MONO = '"TC Mono", ui-monospace, Menlo, monospace';
-/** Mona Sans Display Expanded Black (OFL, ASCII subset): titles. */
+/** "TC Display Black", the renamed ASCII subset of Mona Sans Display Expanded Black (OFL): titles. */
 export const FONT_DISPLAY = '"TC Display", system-ui, sans-serif';
 
 let loading: Promise<void> | null = null;

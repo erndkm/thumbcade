@@ -90,7 +90,7 @@ bash maestro/run.sh ios 03       # flows whose file name matches "03"
 |---|---|
 | `01-cold-start-playing` | cold start → onboarding if needed → PREVIEW → tap → PLAYING with the Dock |
 | `02-swipe-in-preview` | a vertical swipe in PREVIEW moves to the next card |
-| `03-vertical-game-dock` | a `vertical: true` game (Merge; `VERTICAL_SLUG`) keeps surface swipes; the Dock pan leaves |
+| `03-vertical-game-dock` | a `vertical: true` game (Shortwick; `VERTICAL_SLUG`) keeps surface swipes; the Dock pan leaves |
 | `04-like-needs-signin` | guest like → sign-up sheet |
 | `05-comment` | demo member comments; the comment appears |
 | `06-challenge-link` | a challenge link opens its game first |

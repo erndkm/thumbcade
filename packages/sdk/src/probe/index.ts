@@ -3,8 +3,9 @@
  *
  * Inject PROBE_SOURCE into the game document BEFORE any game script runs (Playwright addInitScript,
  * or the `thumbcade dev` server, which inlines it as the first <script>). It wraps
- * requestAnimationFrame, AudioContext / AudioScheduledSourceNode and HTMLMediaElement, and records
- * long tasks, errors, CSP violations and resource requests. Read it through `window.__tcProbe`.
+ * requestAnimationFrame, AudioContext / AudioScheduledSourceNode, HTMLMediaElement and the WebRTC calls that
+ * start network traffic, and records long tasks, errors, CSP violations and resource requests. Read it through
+ * `window.__tcProbe`.
  *
  * It is a plain JavaScript string (not a serialized function) so transpilers can't inject helpers
  * into it.
@@ -37,6 +38,8 @@ export interface ProbeSnapshot {
   errors: string[];
   /** Resource URLs requested from other origins. */
   foreignRequests: string[];
+  /** WebRTC calls the game made, e.g. "RTCPeerConnection.setLocalDescription". WebRTC isn't covered by the CSP. */
+  webrtc: string[];
   /** The SDK marked that the game read its insets. */
   insetsRead: boolean;
 }
@@ -137,6 +140,27 @@ export const PROBE_SOURCE = String.raw`(function (w) {
       return start.apply(node, arguments);
     };
   }
+  // WebRTC traffic (STUN/TURN, data channels) isn't a fetch, so the CSP can't stop it: record the calls that start it.
+  // Hooked on the prototype, so a game can't dodge it by reaching for the original constructor. Same-origin child
+  // frames (an about:blank iframe has its own RTCPeerConnection) report to the outermost game probe.
+  var webrtc = [];
+  var noteWebrtc = function (what) {
+    var host = w;
+    try { while (host.parent && host.parent !== host && host.parent.__tcProbe) host = host.parent; } catch (e) {}
+    if (host !== w && host.__tcProbe.noteWebrtc) host.__tcProbe.noteWebrtc(what);
+    else push(webrtc, what, 20);
+  };
+  ["RTCPeerConnection", "webkitRTCPeerConnection"].forEach(function (name) {
+    var P = typeof w[name] === "function" && w[name].prototype;
+    if (!P) return;
+    ["createOffer", "createAnswer", "setLocalDescription", "createDataChannel"].forEach(function (m) {
+      var orig = P[m];
+      if (typeof orig !== "function" || orig.__tcProbe) return;
+      var hooked = function () { noteWebrtc("RTCPeerConnection." + m); return orig.apply(this, arguments); };
+      hooked.__tcProbe = true;
+      P[m] = hooked;
+    });
+  });
   var M = w.HTMLMediaElement && w.HTMLMediaElement.prototype;
   if (M && M.play) {
     var play = M.play;
@@ -194,12 +218,14 @@ export const PROBE_SOURCE = String.raw`(function (w) {
         audio: audio(),
         errors: errors.slice(),
         foreignRequests: foreign.slice(),
+        webrtc: webrtc.slice(),
         insetsRead: !!(w.document && w.document.documentElement && w.document.documentElement.hasAttribute("data-tc-insets-read"))
       };
     },
     callbacksSince: function (t) { return cbTimes.filter(function (x) { return x > t; }).length; },
     longTasksSince: function (t) { return longTasks.filter(function (x) { return x.start + x.duration > t; }); },
     audio: audio,
+    noteWebrtc: function (what) { push(webrtc, what, 20); },
     onInput: function (cb) {
       inputSubs.push(cb);
       return function () { var i = inputSubs.indexOf(cb); if (i >= 0) inputSubs.splice(i, 1); };

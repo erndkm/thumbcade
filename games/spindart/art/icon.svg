@@ -1,0 +1,94 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 1024 1024" width="1024" height="1024">
+  <defs>
+    <radialGradient id="bg" cx="0.5" cy="0.42" r="0.7">
+      <stop offset="0" stop-color="#2A1240"/>
+      <stop offset="0.55" stop-color="#140B22"/>
+      <stop offset="1" stop-color="#0B0814"/>
+    </radialGradient>
+    <radialGradient id="halo" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0.62" stop-color="#EE55FF" stop-opacity="0"/>
+      <stop offset="0.74" stop-color="#EE55FF" stop-opacity="0.55"/>
+      <stop offset="1" stop-color="#EE55FF" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="gold" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0" stop-color="#FFD45C" stop-opacity="0.75"/>
+      <stop offset="1" stop-color="#FFD45C" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="beam" x1="0" x2="0" y1="0" y2="1">
+      <stop offset="0" stop-color="#FFE9D6" stop-opacity="0.16"/>
+      <stop offset="1" stop-color="#FFE9D6" stop-opacity="0"/>
+    </linearGradient>
+    <linearGradient id="barrel" x1="0" x2="1" y1="0" y2="0">
+      <stop offset="0" stop-color="#8C86A0"/>
+      <stop offset="0.45" stop-color="#F0EDF7"/>
+      <stop offset="1" stop-color="#8C86A0"/>
+    </linearGradient>
+    <filter id="blur" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur stdDeviation="14"/>
+    </filter>
+    <!-- a dart pointing up, tip at the origin -->
+    <g id="dart">
+      <polygon points="0,0 -6,30 6,30" fill="#F0EDF7"/>
+      <rect x="-5" y="26" width="10" height="56" fill="#B9B4C8"/>
+      <rect x="-17" y="80" width="34" height="96" rx="14" fill="url(#barrel)"/>
+      <rect x="-17" y="104" width="34" height="8" fill="#4A4458"/>
+      <rect x="-17" y="140" width="34" height="8" fill="#4A4458"/>
+      <rect x="-6" y="172" width="12" height="54" fill="#2A2438"/>
+      <polygon points="-6,196 -58,236 -62,292 -6,268" fill="#B43CCC"/>
+      <polygon points="6,196 58,236 62,292 6,268" fill="#EE55FF"/>
+      <rect x="-4" y="190" width="8" height="98" rx="4" fill="#FF9CFF"/>
+    </g>
+  </defs>
+  <rect width="1024" height="1024" fill="url(#bg)"/>
+  <!-- light shaft from above -->
+  <polygon points="380,0 640,0 860,1024 160,1024" fill="url(#beam)"/>
+  <!-- wall slats -->
+  <g fill="#000000" opacity="0.22">
+    <rect x="62" y="0" width="6" height="1024"/><rect x="190" y="0" width="6" height="1024"/><rect x="318" y="0" width="6" height="1024"/>
+    <rect x="702" y="0" width="6" height="1024"/><rect x="830" y="0" width="6" height="1024"/><rect x="958" y="0" width="6" height="1024"/>
+  </g>
+  <!-- neon halo -->
+  <circle cx="512" cy="430" r="380" fill="url(#halo)"/>
+  <!-- disc shadow on the wall -->
+  <circle cx="552" cy="482" r="250" fill="#000000" opacity="0.4" filter="url(#blur)"/>
+  <!-- disc edge (thickness), seen slightly from below -->
+  <circle cx="500" cy="452" r="250" fill="#2A2534"/>
+  <!-- stuck darts (behind the face, so the needles disappear into the rim) -->
+  <use xlink:href="#dart" transform="translate(322 540) rotate(60) scale(0.74)"/>
+  <use xlink:href="#dart" transform="translate(402 240) rotate(150) scale(0.74)"/>
+  <use xlink:href="#dart" transform="translate(729 468) rotate(-80) scale(0.74)"/>
+  <!-- face -->
+  <circle cx="512" cy="430" r="250" fill="#0C0816"/>
+  <circle cx="512" cy="430" r="242" fill="#3A2A5E"/>
+  <circle cx="512" cy="430" r="178" fill="#0C0816"/>
+  <circle cx="512" cy="430" r="171" fill="#21183A"/>
+  <circle cx="512" cy="430" r="117" fill="#0C0816"/>
+  <circle cx="512" cy="430" r="110" fill="#30244F"/>
+  <g stroke="#0C0816" stroke-width="8">
+    <line x1="512" y1="180" x2="512" y2="680"/><line x1="262" y1="430" x2="762" y2="430"/>
+    <line x1="387" y1="213" x2="637" y2="647"/><line x1="296" y1="305" x2="728" y2="555"/>
+    <line x1="637" y1="213" x2="387" y2="647"/><line x1="728" y1="305" x2="296" y2="555"/>
+  </g>
+  <!-- tick marks on the outer ring -->
+  <g stroke="#EE55FF" stroke-width="5" opacity="0.5">
+    <line x1="512" y1="196" x2="512" y2="214"/><line x1="512" y1="646" x2="512" y2="664"/>
+    <line x1="278" y1="430" x2="296" y2="430"/><line x1="728" y1="430" x2="746" y2="430"/>
+  </g>
+  <!-- lit cell (bonus) -->
+  <path d="M 683 259 A 242 242 0 0 1 739.4 347.2 L 679.3 369.1 A 178 178 0 0 0 638 304 Z" fill="#FFD45C"/>
+  <circle cx="694" cy="316" r="84" fill="url(#gold)"/>
+  <!-- hub -->
+  <polygon points="512,372 562,401 562,459 512,488 462,459 462,401" fill="#8C86A0"/>
+  <polygon points="512,372 562,401 512,430 462,401" fill="#B9B4C8"/>
+  <circle cx="512" cy="430" r="28" fill="#EE55FF"/>
+  <!-- neon rim -->
+  <circle cx="512" cy="430" r="250" fill="none" stroke="#EE55FF" stroke-width="40" opacity="0.6" filter="url(#blur)"/>
+  <circle cx="512" cy="430" r="250" fill="none" stroke="#EE55FF" stroke-width="20"/>
+  <circle cx="512" cy="430" r="250" fill="none" stroke="#FFC4FF" stroke-width="5"/>
+  <!-- the throw: a dart racing up at the rim -->
+  <g fill="#EE55FF" opacity="0.45">
+    <rect x="474" y="880" width="9" height="110" rx="4.5"/>
+    <rect x="541" y="900" width="9" height="100" rx="4.5"/>
+  </g>
+  <use xlink:href="#dart" transform="translate(512 752) scale(0.8)"/>
+</svg>

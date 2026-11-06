@@ -36,9 +36,9 @@ loads during the soak, mostly preloads of the next card.
 | Game | Median | p90 |
 |---|---|---|
 | all games | 2.1 s | 3.1 s |
-| Breakout Neo / Flapjack / Merge / Pairs / Stackd / Reflex | 1.8–1.9 s | 2.3–2.8 s |
-| Gambit / Mines / Slice / Snek | 2.1–2.2 s | 2.9–3.7 s |
-| Helix Fall / Lane Rush (WebGL) | 3.2 s | 3.4–4.0 s |
+| Voltbrick / Flapjack / Shortwick / Pairs / Stackd / Kneejerk | 1.8–1.9 s | 2.3–2.8 s |
+| Kingsnare / Mines / Neon Chop / Snek | 2.1–2.2 s | 2.9–3.7 s |
+| Heatfall / Duskrail (WebGL) | 3.2 s | 3.4–4.0 s |
 
 That is under the 8 s load timeout with a wide margin. Because loads happen one card ahead, they don't show
 up as waiting. A cold start of the development app (Metro bundle download included) is not representative

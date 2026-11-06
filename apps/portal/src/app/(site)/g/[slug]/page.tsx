@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { GameHero } from "@/components/game-hero";
-import { Icon } from "@/components/icon";
 import { ButtonLink } from "@/components/ui";
 import { PhoneFeed } from "@/components/web-feed/phone-feed";
 import { getGameBySlug, getLeaders, getLiveGames } from "@/lib/data";
@@ -15,7 +14,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   if (!game) return { title: "Game not found" };
   return {
     title: `${game.name} by @${game.creator.handle}`,
-    description: `${game.description} Play it free on Thumbcade — no install.`,
+    description: `${game.description} Play it free in the Thumbcade app.`,
     openGraph: { title: `${game.name} — play it on Thumbcade`, description: game.description },
   };
 }
@@ -34,10 +33,7 @@ export default async function GamePage({ params }: { params: Promise<{ slug: str
         eyebrow={<span className="label">Game · v{game.version.semver}</span>}
       >
         <div className="flex flex-wrap gap-3">
-          <ButtonLink href={`/play?g=${game.slug}`} size="lg">
-            <Icon name="play" size={18} active /> Play full screen
-          </ButtonLink>
-          <ButtonLink href="/#get" size="lg" variant="secondary">
+          <ButtonLink href="/#get" size="lg">
             Get the app
           </ButtonLink>
         </div>

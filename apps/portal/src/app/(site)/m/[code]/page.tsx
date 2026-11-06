@@ -2,7 +2,6 @@ import { milestoneCopy } from "@thumbcade/protocol";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { GameHero } from "@/components/game-hero";
-import { Icon } from "@/components/icon";
 import { ButtonLink } from "@/components/ui";
 import { PhoneFeed } from "@/components/web-feed/phone-feed";
 import { getLeaders, getLiveGames, getMilestoneCard } from "@/lib/data";
@@ -46,11 +45,8 @@ export default async function MilestonePage({ params }: { params: Promise<{ code
         }
       >
         <div className="flex flex-wrap gap-3">
-          <ButtonLink href={`/play?g=${m.card.game.slug}`} size="lg">
-            <Icon name="play" size={18} active /> Play {m.card.game.name}
-          </ButtonLink>
-          <ButtonLink href="/#get" size="lg" variant="secondary">
-            Get the app
+          <ButtonLink href="/#get" size="lg">
+            Play {m.card.game.name} in the app
           </ButtonLink>
         </div>
       </GameHero>

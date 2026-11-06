@@ -20,6 +20,7 @@ import {
   onSwipe,
   Particles,
   PENTATONIC,
+  Photosafe,
   Popups,
   rgba,
   roundRect,
@@ -56,6 +57,11 @@ async function main() {
   const audio = createAudio();
   const rng = createRng(session.ctx.seed);
   const shake = new Shake(12, 0.025, 1.8, session.reducedMotion);
+  // Flashes and pulses go through Photosafe: capped at 2 Hz, faint/still under reduced motion.
+  const light = new Photosafe(session.reducedMotion);
+  // Red-dominant, so Photosafe caps it lower (0.18) and keeps it single.
+  const flash = light.flash({ alpha: 0.25, decay: 0.32 });
+  const STAR_PULSE = { still: 0.5 };
   const hitStop = new HitStop();
   const fx = new Particles(900);
   const popups = new Popups();
@@ -97,7 +103,6 @@ async function main() {
   let dead: { t: number; popped: number } | null = null;
   let endSent = false;
   let time = 0;
-  let flash = 0;
   let titleIn = 0;
   const fireflies = Array.from({ length: 18 }, () => ({ x: rng.range(0, 1), y: rng.range(0, 1), p: rng.range(0, 6.28), s: rng.range(0.4, 1) }));
 
@@ -182,7 +187,7 @@ async function main() {
     dead = { t: 0, popped: 0 };
     hitStop.freeze(0.12);
     shake.add(0.7);
-    flash = 1;
+    flash.trigger(PAL.berry);
     audio.play("hit");
     audio.play("lose");
     tc.feedback("impact");
@@ -244,7 +249,7 @@ async function main() {
     shake.update(rawDt);
     fx.update(dt);
     popups.update(rawDt);
-    flash = Math.max(0, flash - rawDt * 3.5);
+    flash.update(rawDt);
     counter.set(score);
     counter.update(rawDt);
     gulps = gulps.map((g) => g + dt * 16).filter((g) => g < body.length + 2);
@@ -347,7 +352,7 @@ async function main() {
     if (bonus) {
       const b = center(bonus.cell);
       const k = 1 - bonus.t / bonus.life;
-      const s = A.cell * 0.36 * (1 + 0.15 * Math.sin(time * 10));
+      const s = A.cell * 0.36 * (1 + 0.3 * (light.pulse(time, 1.6, STAR_PULSE) - 0.5));
       ctx.save();
       ctx.translate(b.x, b.y);
       ctx.rotate(time * 2);
@@ -523,10 +528,7 @@ async function main() {
     fx.draw(ctx);
     popups.draw(ctx, FONT_DISPLAY);
     ctx.restore();
-    if (flash > 0) {
-      ctx.fillStyle = `rgba(255,79,110,${flash * 0.35})`;
-      ctx.fillRect(0, 0, W, H);
-    }
+    flash.draw(ctx, W, H);
     if (mode === "attract") drawAttract();
     else {
       drawHud();

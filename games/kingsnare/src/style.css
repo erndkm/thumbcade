@@ -1,0 +1,111 @@
+:root {
+  --accent: #5CF2B8;
+  --ink: #0A1311;
+  --paper: #F3F0E8;
+  --dim: #8FA59C;
+  --light: #C7D6CC;
+  --dark: #4C7A6B;
+  --sq: 44px;
+}
+html, body { margin: 0; height: 100%; background: var(--ink); overflow: hidden; color: var(--paper); }
+#stage { position: fixed; inset: 0; font-family: "TC Mono", ui-monospace, Menlo, monospace; }
+#bg, #fx { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+#fx { pointer-events: none; z-index: 6; }
+
+#hud { position: absolute; left: 16px; right: 16px; top: calc(var(--tc-play-inset-top, 0px) + 10px); z-index: 3; transition: opacity 220ms ease, transform 220ms ease; }
+html:not(.playing) #hud, html:not(.playing) #turn { opacity: 0; transform: translateY(-8px); }
+#timebar { height: 10px; border-radius: 999px; background: #17302A; overflow: hidden; box-shadow: inset 0 0 0 1px rgba(92,242,184,0.18); }
+#timefill { height: 100%; width: 100%; background: var(--accent); border-radius: 999px; transform-origin: left center; }
+/* Low time: red, with a breathing opacity driven from main.ts through the kit's Photosafe (reduced-motion aware). */
+#timebar.low #timefill { background: #FF5A4E; }
+#row { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; margin-top: 12px; }
+#score { font-size: 28px; letter-spacing: -0.02em; }
+#tag span { font-size: 12px; letter-spacing: 0.14em; padding: 6px 10px; border-radius: 6px; background: rgba(92,242,184,0.12); color: var(--accent); }
+#tag span.is-daily { background: var(--accent); color: var(--ink); }
+#streak { justify-self: end; font-size: 18px; color: var(--accent); transition: transform 160ms cubic-bezier(.2,.8,.2,1.6); }
+#streak.bump { transform: scale(1.5); }
+#turn { position: absolute; left: 0; right: 0; display: flex; justify-content: center; align-items: center; gap: 10px; font-size: 13px;
+  letter-spacing: 0.12em; text-transform: uppercase; color: var(--dim); z-index: 3; transition: opacity 220ms ease; }
+#shelf { position: absolute; left: 24px; right: 24px; display: flex; flex-wrap: wrap; justify-content: center; gap: 6px; z-index: 3; transition: opacity 220ms ease; }
+html:not(.playing) #shelf { opacity: 0; }
+#shelf b { display: block; border-radius: 3px; background: var(--accent); animation: pip 420ms cubic-bezier(.2,.8,.2,1.6) both; }
+#shelf b.m1 { width: 10px; height: 10px; opacity: 0.55; } #shelf b.m2 { width: 14px; height: 14px; opacity: 0.8; } #shelf b.m3 { width: 18px; height: 18px; }
+@keyframes pip { from { transform: scale(0) rotate(45deg); } to { transform: none; } }
+#turn .dot { width: 12px; height: 12px; border-radius: 50%; box-shadow: 0 0 0 2px #0D0D10, 0 0 0 3px var(--dim); }
+
+#board-wrap { position: absolute; z-index: 2; touch-action: none; transform-origin: 50% 50%;
+  transition: transform 520ms cubic-bezier(.2,.8,.2,1.15), opacity 320ms ease; }
+html:not(.playing) #board-wrap { transform: translateY(54px) scale(0.86); }
+#board-wrap.out { transform: translateX(-110%) rotate(-4deg); opacity: 0; transition: transform 300ms cubic-bezier(.5,0,.8,.4), opacity 300ms ease; }
+#board-wrap.in { animation: boardin 420ms cubic-bezier(.2,.8,.2,1.15) both; }
+@keyframes boardin { from { transform: translateX(110%) rotate(4deg); opacity: 0; } to { transform: none; opacity: 1; } }
+#board-wrap.shake { animation: shake 320ms ease; }
+@keyframes shake { 0%, 100% { translate: 0; } 20% { translate: -9px; } 40% { translate: 8px; } 60% { translate: -5px; } 80% { translate: 3px; } }
+#board { display: grid; grid-template-columns: repeat(8, var(--sq)); grid-auto-rows: var(--sq); border-radius: 10px; overflow: hidden;
+  box-shadow: 0 0 0 6px #13241F, 0 0 0 7px rgba(92,242,184,0.25), 0 18px 40px rgba(0,0,0,0.5); }
+.sq { position: relative; background: var(--light); }
+.sq.d { background: var(--dark); }
+.sq .coord { position: absolute; font-size: 9px; opacity: 0.75; letter-spacing: 0; }
+.sq .coord.f { right: 3px; bottom: 2px; }
+.sq .coord.r { left: 3px; top: 2px; }
+.sq.d .coord { color: var(--light); }
+.sq:not(.d) .coord { color: var(--dark); }
+.sq.last::after { content: ""; position: absolute; inset: 0; background: rgba(92,242,184,0.32); }
+.sq.sel::after { content: ""; position: absolute; inset: 0; background: rgba(92,242,184,0.55); }
+.sq.hint::before { content: ""; position: absolute; left: 50%; top: 50%; width: 28%; height: 28%; translate: -50% -50%; border-radius: 50%; background: rgba(10,19,17,0.35); z-index: 1; }
+.sq.hint.cap::before { width: 86%; height: 86%; background: none; box-shadow: inset 0 0 0 4px rgba(10,19,17,0.35); }
+.sq.over::after { content: ""; position: absolute; inset: 0; box-shadow: inset 0 0 0 3px var(--accent); }
+.sq.check::after { content: ""; position: absolute; inset: 0; background: radial-gradient(circle, rgba(255,74,61,0.85) 0 30%, rgba(255,74,61,0) 72%); }
+/* --mate breathes from main.ts through the kit's Photosafe (steady under reduced motion). */
+.sq.mated::after { content: ""; position: absolute; inset: 0; background: radial-gradient(circle, rgba(255,74,61,1) 0 34%, rgba(255,74,61,0) 76%); opacity: var(--mate, 1); }
+#pieces { position: absolute; inset: 0; pointer-events: none; }
+.pc { position: absolute; left: 0; top: 0; width: var(--sq); height: var(--sq); will-change: transform; transition: transform 170ms cubic-bezier(.2,.8,.2,1); z-index: 1; }
+.pc svg { width: 100%; height: 100%; display: block; transform: scale(0.9); transition: transform 140ms ease; }
+.pc.drag { transition: none; z-index: 5; }
+.pc.drag svg { transform: scale(1.25) translateY(-8%); filter: drop-shadow(0 10px 6px rgba(0,0,0,0.35)); }
+.pc.gone { animation: gone 260ms ease forwards; }
+@keyframes gone { to { opacity: 0; scale: 0.4; } }
+
+#popups { position: absolute; inset: 0; pointer-events: none; z-index: 7; }
+.pop { position: absolute; transform: translate(-50%, -50%); font: 900 22px/1 "TC Display", system-ui, sans-serif; color: var(--accent);
+  text-shadow: 0 3px 0 #0D0D10; animation: popup 900ms cubic-bezier(.2,.8,.2,1.2) forwards; white-space: nowrap; }
+.pop.bad { color: #FF5A4E; font-family: "TC Mono", ui-monospace, monospace; font-weight: 400; }
+.pop.big { font-size: 46px; }
+@keyframes popup { 0% { opacity: 0; scale: 0.4; } 18% { opacity: 1; scale: 1.1; } 70% { opacity: 1; scale: 1; } 100% { opacity: 0; translate: 0 -36px; } }
+
+#attract, #over { position: absolute; inset: 0; z-index: 4; pointer-events: none; transition: opacity 260ms ease; }
+html.playing #attract, html:not(.ended) #over { opacity: 0; }
+#attract::before { content: ""; position: absolute; inset: 0;
+  background: linear-gradient(180deg, rgba(10,19,17,0.95) 0%, rgba(10,19,17,0.6) 30%, rgba(10,19,17,0) 48%, rgba(10,19,17,0.1) 76%, rgba(10,19,17,0.85) 100%); }
+.title { position: absolute; left: 0; right: var(--tc-preview-inset-right, 72px); top: calc(var(--tc-preview-inset-top, 91px) + 18px);
+  text-align: center; font: 900 60px/1 "TC Display", system-ui, sans-serif; letter-spacing: -0.02em; color: var(--accent); white-space: nowrap;
+  /* KINGSNARE is ~6.8em wide in the expanded display face: fit it to the space left of the action rail. */
+  font-size: min(60px, calc((100vw - var(--tc-preview-inset-right, 72px) - 28px) / 6.8));
+  text-shadow: 0 5px 0 #14453A; animation: titlein 700ms cubic-bezier(.2,.8,.2,1.3) both; }
+@keyframes titlein { from { transform: scale(0.6) rotate(-4deg); opacity: 0; } to { transform: none; opacity: 1; } }
+.sub, .best, .daily { position: absolute; left: 0; right: var(--tc-preview-inset-right, 72px); text-align: center; font-size: 12px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--dim); }
+.sub span, .best span, .daily span { background: var(--ink); padding: 4px 8px; border-radius: 6px; }
+.daily span { background: var(--accent); color: var(--ink); }
+.sub { top: calc(var(--tc-preview-inset-top, 91px) + 92px); }
+.best { top: calc(var(--tc-preview-inset-top, 91px) + 116px); color: var(--paper); font-size: 13px; }
+.daily { bottom: calc(var(--tc-preview-inset-bottom, 148px) + 78px); }
+.prompt { position: absolute; left: 50%; transform: translateX(calc(-50% - var(--tc-preview-inset-right, 72px) / 2)); bottom: calc(var(--tc-preview-inset-bottom, 148px) + 18px);
+  display: flex; justify-content: center; align-items: center; gap: 12px; font-size: 14px; letter-spacing: 0.18em; color: var(--paper);
+  padding: 12px 18px; border-radius: 999px; background: var(--ink); box-shadow: inset 0 0 0 1px rgba(92,242,184,0.4); white-space: nowrap; }
+#over .prompt { transform: translateX(-50%); }
+.prompt i { width: 5px; height: 5px; background: var(--accent); animation: breathe 1.5s ease-in-out infinite; }
+@keyframes breathe { 0%, 100% { opacity: 0.25; transform: scale(0.7); } 50% { opacity: 1; transform: scale(1.2); } }
+#over::before { content: ""; position: absolute; inset: 0; background: rgba(10,19,17,0.55); }
+#over .stamp { position: absolute; left: 0; right: 0; top: 38%; text-align: center; font: 900 52px/1 "TC Display", system-ui, sans-serif;
+  color: var(--accent); letter-spacing: -0.02em; transform: rotate(-6deg); text-shadow: 0 4px 0 #0D0D10; }
+html.ended #over .stamp { animation: stamp 420ms cubic-bezier(.2,.8,.2,1.4) both; }
+@keyframes stamp { from { transform: scale(2.2) rotate(-6deg); opacity: 0; } to { transform: scale(1) rotate(-6deg); opacity: 1; } }
+
+/* After a run the shell draws its result card over the game: the HUD gets out of the way (the top tabs return)
+   and our own stamp + retry prompt only exist in a bare browser tab. */
+html.ended #hud, html.ended #turn, html.ended #shelf { opacity: 0; transform: translateY(-8px); }
+html:not(.standalone) #over { display: none; }
+html.ended #over .prompt { animation: overprompt 300ms ease 700ms both; }
+@keyframes overprompt { from { opacity: 0; } to { opacity: 1; } }
+
+html.paused *, html.paused *::before, html.paused *::after { animation-play-state: paused !important; transition-duration: 0s !important; }

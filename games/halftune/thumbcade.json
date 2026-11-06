@@ -1,0 +1,18 @@
+{
+  "$schema": "https://thumbcade.com/schema/manifest-v1.json",
+  "id": "halftune",
+  "name": "Halftune",
+  "version": "1.0.0",
+  "sdk": "^1.0.0",
+  "entry": "index.html",
+  "description": "tap the ink as it meets the red line. every tile is a note. four old tunes, and the last one keeps speeding up.",
+  "tags": ["rhythm", "music", "tap", "classical"],
+  "accentColor": "#0078BF",
+  "icon": "assets/icon.png",
+  "ageRating": "4+",
+  "controls": { "vertical": false, "horizontal": false, "multitouch": false, "inputs": ["tap", "hold"] },
+  "session": "medium",
+  "audio": true,
+  "orientation": "portrait",
+  "score": { "order": "desc", "max": 100000, "format": "integer" }
+}

@@ -1,0 +1,35 @@
+{
+  "$schema": "https://thumbcade.com/schema/manifest-v1.json",
+  "id": "every-square",
+  "name": "Every Square",
+  "version": "1.0.0",
+  "sdk": "^1.0.0",
+  "entry": "index.html",
+  "description": "a knight, sixty-four squares and a patient clock. visit each one once; today everyone starts on the same square.",
+  "tags": [
+    "puzzle",
+    "chess",
+    "brain",
+    "daily",
+    "calm"
+  ],
+  "accentColor": "#B9432C",
+  "icon": "assets/icon.png",
+  "ageRating": "4+",
+  "controls": {
+    "vertical": false,
+    "horizontal": false,
+    "multitouch": false,
+    "inputs": [
+      "tap"
+    ]
+  },
+  "session": "medium",
+  "audio": true,
+  "orientation": "portrait",
+  "score": {
+    "order": "desc",
+    "max": 154,
+    "format": "integer"
+  }
+}

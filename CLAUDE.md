@@ -74,5 +74,6 @@ Contract rules:
 - No stubbed UI: a control on screen works end to end, or it is removed and listed in `docs/GAPS.md`.
 - Design rules: `THUMBCADE_BUILD_PROMPT.md` §12. Tokens come from `@thumbcade/design-tokens`; never hardcode colors
   or font names. Brand assets (logo, app icon, splash, favicons, OG card) are in `packages/design-tokens/brand/`
-  (regenerate with `pnpm --filter @thumbcade/design-tokens brand`).
+  (regenerate with `bash scripts/brand.sh`, which also refreshes the app copies). The logo has variants, `classic`
+  (five fine ridges) and `bold` (three wide ridges); switch with `bash scripts/brand.sh bold|classic`.
 - Log decisions in `docs/DECISIONS.md`, gaps in `docs/GAPS.md`. No AI attribution anywhere.

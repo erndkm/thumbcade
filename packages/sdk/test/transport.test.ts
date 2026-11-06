@@ -40,14 +40,14 @@ describe("React Native WebView transport", () => {
   it("sends JSON strings and accepts object or string MessageEvents", async () => {
     const win = makeWindow({ rn: true });
     const tc = createThumbcade(win);
-    const ctxP = tc.init({ manifestId: "lane-rush" });
+    const ctxP = tc.init({ manifestId: "duskrail" });
     await tick();
     const [hello] = rnSent(win);
-    expect(hello).toMatchObject({ ch: "tc", v: 1, type: "hello", payload: { sdkVersion: "1.0.0", manifestId: "lane-rush" } });
+    expect(hello).toMatchObject({ ch: "tc", v: 1, type: "hello", payload: { sdkVersion: "1.0.0", manifestId: "duskrail" } });
     // Reply delivered as a JSON string (some shells stringify).
     rnDeliver(win, "reply", { ok: true, result: CONTEXT }, hello!.id, true);
     const ctx = await ctxP;
-    expect(ctx.gameId).toBe("lane-rush");
+    expect(ctx.gameId).toBe("duskrail");
     expect(tc.host).toBe("rn");
     // Object form.
     const onPause = vi.fn();
@@ -83,7 +83,7 @@ describe("iframe transport", () => {
     win.dispatchEvent(new win.MessageEvent("message", { data: { ...reply, payload: { ok: true, result: { ...CONTEXT, gameId: "evil" } } }, source: stranger as unknown as Window }));
     win.dispatchEvent(new win.MessageEvent("message", { data: reply, source: parent as unknown as Window }));
     const ctx = await ctxP;
-    expect(ctx.gameId).toBe("lane-rush");
+    expect(ctx.gameId).toBe("duskrail");
     expect(tc.host).toBe("iframe");
   });
 

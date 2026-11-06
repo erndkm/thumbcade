@@ -31,6 +31,8 @@ const gameUrl = q.get("game") ?? "";
 const device = DEVICES[(q.get("device") ?? "iphone") as keyof typeof DEVICES] ?? DEVICES.iphone;
 const mode = q.get("mode") ?? "feed";
 const muted = q.get("muted") !== "0";
+/** The player's reduce-motion setting, as the app passes it (`?reducedMotion=1`). */
+const reducedMotion = q.get("reducedMotion") === "1";
 const statusBar = device.statusBar;
 const vp = mode === "poster" ? { width: innerWidth, height: innerHeight } : gameViewport(device);
 
@@ -97,7 +99,7 @@ const host = createIframeHost({
       player: { id: "reviewer-0000-0001", name: "Reviewer", avatarUrl: null, guest: false },
       insets: feedInsets(statusBar, insetsCurrent),
       audio: { muted },
-      reducedMotion: false,
+      reducedMotion,
       launchReason: "feed",
       host: "web",
       seed: 1234,

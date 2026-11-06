@@ -10,7 +10,7 @@ Everything stream B owns, how to run it, and the APIs other streams consume.
 | `packages/create-game` | `create-thumbcade-game` + 5 templates |
 | `supabase/functions/creator-publish`, `creator-review-callback` | Publish API + review callback (Deno) |
 | `services/reviewer` | Automated review (Playwright) + `review_jobs` worker + screenshot/poster tooling |
-| `games/_kit`, `games/<slug>` | Shared game kit + 12 launch games |
+| `games/_kit`, `games/<slug>` | Shared game kit + 39 games (12 launch, 14 added 2026-10-17, 3 on 2026-10-24, 10 on 2026-11-06) |
 | `scripts/games-index.ts` | `pnpm games:build` → `dist/games/` + `games-index.json` |
 
 ## Quick commands
@@ -200,7 +200,9 @@ the GPU on macOS.
 
 | Check | How |
 |---|---|
-| manifest, size, static_scan | `@thumbcade/cli/checks` (same rules as `thumbcade validate`) + gzip bytes actually requested before `ready()` + runtime off-origin requests (blocked and recorded) |
+| manifest, size, static_scan | `@thumbcade/cli/checks` (same rules as `thumbcade validate`): allowed file types and no native executables (`bundleFileProblem`/`executableKind` in the protocol; `creator-publish` refuses both at upload), remote loads, `eval`, WebRTC, obfuscator/packer fingerprints (fail), page navigation (warn) + gzip bytes actually requested before `ready()` |
+| network | runtime off-origin requests, frame navigations included (blocked and recorded by the reviewer's routing), and WebRTC calls recorded by the probe (hooked on `RTCPeerConnection.prototype`, reported from same-origin child frames too) |
+| flashes | CDP screencast of the page at 60 fps (3 s of attract mode, up to 30 s of the run) → `src/flashes.ts`: WCAG 2.3.1 general and red flashes per 10 px cell, a quarter of a 320 px field (10° at 30 cm) in the same second; more than 3 fails |
 | loads, ready_budget | hello / ready under 4× CPU + Fast 4G (9 Mbps / 1.5 Mbps / 165 ms) |
 | long_tasks | PerformanceObserver in the game frame, everything after `ready()` (throttled while in attract) |
 | fps | rAF frames over 3 s of attract mode, unthrottled on the GPU (≥ 55, warn 45–54) |
@@ -230,29 +232,145 @@ pnpm --filter @thumbcade/reviewer worker --once                     # -> pending
 Verified by hand on the local stack (scaffold → publish → worker → callback → `pending_review`, screenshots in
 storage, status endpoint), then cleaned up.
 
-## 9. Launch games
+## 9. Games
+
+Rows 1–15, Laddersnap, Curlwall, Rimflare, Weavefire and Clatterlane are in the house style (Thumbcade Studio); 16–30, Brinebop, Halftune, Spotfall, Lintstorm, Pinchbake, Clackwood, Overstamp, Frostwhisk and Tumbledoodle are creator games (Lanternline excepted: its own look, published by the studio), each creator with a look of their own (see "Library expansion" in `docs/DECISIONS.md`).
 
 | # | Game | Slug | Tech | Input | `vertical` | Accent | Creator |
 |---|---|---|---|---|---|---|---|
 | 1 | Flapjack | `flapjack` | Canvas 2D | tap | false | #FFB23F | thumbcade |
-| 2 | Stackd | `stackd` | Three.js | tap | false | #3DE0FF | lowpolyfox |
-| 3 | Lane Rush | `lane-rush` | Three.js | 4-way swipe | **true** | #FF6A1A | thumbcade |
-| 4 | Gambit | `gambit` | DOM + chess.js | drag / tap-tap | **true** | #5CF2B8 | quietmoves |
-| 5 | Pairs | `pairs` | DOM + CSS 3D | tap | false | #FF6FB5 | pixelwitch |
-| 6 | Merge | `merge` | Canvas 2D | 4-way swipe | **true** | #B48CFF | pixelwitch |
-| 7 | Snek | `snek` | Canvas 2D | 4-way swipe | **true** | #4DFF88 | bitbybit |
-| 8 | Slice | `slice` | PixiJS | drag | **true** | #FF3D6E | juicefactory |
-| 9 | Breakout Neo | `breakout-neo` | PixiJS | horizontal drag | false | #4D8DFF | juicefactory |
-| 10 | Helix Fall | `helix-fall` | Three.js | horizontal drag | false | #FFE14D | lowpolyfox |
-| 11 | Reflex | `reflex` | Canvas 2D | tap | false | #00E5C7 | bitbybit |
-| 12 | Mines | `mines` | DOM | tap / long-press | false | #7CC4FF | quietmoves |
+| 2 | Stackd | `stackd` | Three.js | tap | false | #3DE0FF | thumbcade |
+| 3 | Duskrail | `duskrail` | Three.js | 4-way swipe | **true** | #FF6A1A | thumbcade |
+| 4 | Kingsnare | `kingsnare` | DOM + chess.js | drag / tap-tap | **true** | #5CF2B8 | thumbcade |
+| 5 | Pairs | `pairs` | DOM + CSS 3D | tap | false | #FF6FB5 | thumbcade |
+| 6 | Shortwick | `shortwick` | Canvas 2D | 4-way swipe | **true** | #B48CFF | thumbcade |
+| 7 | Snek | `snek` | Canvas 2D | 4-way swipe | **true** | #4DFF88 | thumbcade |
+| 8 | Neon Chop | `neon-chop` | PixiJS | drag | **true** | #FF3D6E | thumbcade |
+| 9 | Voltbrick | `voltbrick` | PixiJS | horizontal drag | false | #4D8DFF | thumbcade |
+| 10 | Heatfall | `heatfall` | Three.js | horizontal drag | false | #FFE14D | thumbcade |
+| 11 | Kneejerk | `kneejerk` | Canvas 2D | tap | false | #00E5C7 | thumbcade |
+| 12 | Mines | `mines` | DOM | tap / long-press | false | #7CC4FF | thumbcade |
+| 13 | Clearcut | `clearcut` | Canvas 2D | drag | **true** | #A6F23D | thumbcade |
+| 14 | Spindart | `spindart` | Three.js | tap | false | #EE55FF | thumbcade |
+| 15 | Six Seven | `six-seven` | Canvas 2D | tap (two thumbs) | false | #8C6CFF | thumbcade |
+| 16 | Stirabout | `stirabout` | Canvas 2D (pixel art) | horizontal drag | false | #E8893C | pixelwitch |
+| 17 | Bobberlight | `bobberlight` | Canvas 2D (pixel art) | tap | false | #8CC7B8 | pixelwitch |
+| 18 | Foxbend | `foxbend` | Three.js (voxel, isometric) | tap | false | #F68A4A | lowpolyfox |
+| 19 | Paddlefox | `paddlefox` | Three.js (voxel, isometric) | horizontal drag | false | #4FB6D9 | lowpolyfox |
+| 20 | Every Square | `every-square` | Canvas 2D | tap | false | #B9432C | quietmoves |
+| 21 | Unbroken | `unbroken` | Canvas 2D | drag | **true** | #B9432C | quietmoves |
+| 22 | Thunkfest | `thunkfest` | Three.js (cel shaded) | tap | false | #FF4A38 | juicefactory |
+| 23 | Wobble Up | `wobble-up` | Canvas 2D | horizontal drag | false | #FF7CC6 | juicefactory |
+| 24 | Lanternline | `lanternline` | Canvas 2D | hold | false | #F2A65E | thumbcade |
+| 25 | Squishputt | `squishputt` | Three.js (clay, 12 fps) | drag | **true** | #F2A08A | softbake |
+| 26 | Doodlebow | `doodlebow` | Canvas 2D | drag | **true** | #2747B5 | marginalia |
+| 27 | Leapwater | `leapwater` | Canvas 2D (riso print) | hold | false | #FF48B0 | bitbybit |
+| 28 | Longhop | `longhop` | Canvas 2D (riso print) | hold | false | #FF6C2F | bitbybit |
+| 29 | Pagewing | `pagewing` | Canvas 2D | hold | false | #D7392F | marginalia |
+| 30 | Fair Copy | `fair-copy` | Canvas 2D | drag | **true** | #4D6584 | quietmoves |
+| 31 | Laddersnap | `laddersnap` | Canvas 2D | tap | false | #7A86FF | thumbcade |
+| 32 | Curlwall | `curlwall` | Three.js | flick (swipe) | **true** | #E4FF3A | thumbcade |
+| 33 | Brinebop | `brinebop` | Canvas 2D | drag / tap-tap | **true** | #2ED3E6 | juicefactory |
+| 34 | Rimflare | `rimflare` | Three.js | flick (swipe) | **true** | #EC1380 | thumbcade |
+| 35 | Halftune | `halftune` | Canvas 2D (riso print) | tap / hold | false | #0078BF | bitbybit |
+| 36 | Spotfall | `spotfall` | Canvas 2D (riso print) | drag (aim) / tap | **true** | #00873A | bitbybit |
+| 37 | Lintstorm | `lintstorm` | Canvas 2D | drag (relative) | **true** | #B13DFF | juicefactory |
+| 38 | Weavefire | `weavefire` | PixiJS | drag (relative) | **true** | #38FFD0 | thumbcade |
+| 39 | Pinchbake | `pinchbake` | Canvas 2D (clay sprites) | horizontal drag / tap | **true** | #E86F87 | softbake |
+| 40 | Clackwood | `clackwood` | Three.js (voxel, near top-down) | drag (aim + pull back) / tap | **true** | #D2C3F3 | lowpolyfox |
+| 41 | Clatterlane | `clatterlane` | Three.js | flick (swipe) | **true** | #08A0F0 | thumbcade |
+| 42 | Frostwhisk | `frostwhisk` | Canvas 2D (pixel art) | drag | **true** | #C6E6F5 | pixelwitch |
+| 43 | Tumbledoodle | `tumbledoodle` | Canvas 2D | drag (relative) | **true** | #54BF66 | marginalia |
+| 44 | Overstamp | `overstamp` | Canvas 2D | tap | false | #7D5BA6 | quietmoves |
 
-All 12 pass `thumbcade validate` and the full reviewer with no failed checks (ready 0.7–1.2 s under the mid-tier
-profile, 60 fps, no long tasks, 4–13 MB heap, 15–152 KB gzipped before ready). Screenshots (attract + mid-run):
+All 26 pass `thumbcade validate` and the full reviewer with no failed checks (ready 0.4–1.1 s under the mid-tier
+profile, 60 fps, no long tasks, 5–18 MB heap, 15–172 KB gzipped before ready; 2026-10-17); Leapwater, Longhop and
+Pagewing likewise on 2026-10-24 (ready 0.75–0.77 s, 60 fps, 6–9 MB heap, 28–32 KB gzipped); Fair Copy and Laddersnap on
+2026-11-06 (ready 0.89 / 0.75 s, 60 fps, 13 / 5 MB heap, 38 / 23 KB gzipped; Fair Copy's 468 KB gz dictionary loads after
+`ready()`); Curlwall and Brinebop the same day (ready 1.0–1.3 / 0.77 s, 60 fps, 10 / 6 MB heap, 162 / 34 KB gzipped).
+Lintstorm likewise on 2026-11-06 (ready 0.72–0.78 s, 60 fps, no long tasks, 6.5 MB heap, 36 KB gzipped, 0 flashes).
+Weavefire likewise on 2026-11-06 (ready 1.27 s, 60 fps, no long tasks, 15.5 MB heap, 177 KB gzipped, 0 flashes; at most 1 a
+second across a whole autoplayed run); it tests its simulation (waves, hitbox and sweeps, grazes, the chain, upgrades and
+the gun level you can catch back, scoring, the Loom, determinism, pilot run lengths) and the Swipe Contract, and has a
+headless `pilot`.
+Rimflare likewise on 2026-11-06 (ready 1.03–1.15 s, 60 fps, no long tasks, 11–13 MB heap, 162 KB gzipped, 0 flashes; also 0
+across 33 s of an autoplayed run with fire, swishes and tier-ups, `VITE_AUTOPLAY=good`); it tests its camera framing, flick
+reading, aim assist (monotonic, moving-hoop lead), shot physics (swish/rim/bank/miss windows, determinism), run economy
+(clock, refills, streak tiers, frenzy, buzzer beater, stages, bonus balls) and pilot bands, plus the Swipe Contract (30
+tests), and has a headless `pilot`.
+Clackwood likewise on 2026-11-06 (ready 0.95 s, 60 fps, no long tasks, 10.5–10.8 MB heap, 161 KB gzipped, 0 flashes; also 0
+across 33 s of an autoplayed run with pots and a rack clear, `VITE_AUTOPLAY=good`); it tests its table (no ball ever leaves
+the cloth unpotted, corner and side pockets, jaws, cushions), ball physics (head-on, the ghost-ball cut rule, banks and
+combos, determinism), the guide against real first contacts, racks (legal layouts, escalation, cue respawn), the pilot's
+planned pots, the run economy (pots, streak tiers, multi-pots, banks/combos/long pots, rack clear, scratch, clutch, cap,
+drain, buzzer) and pacing, plus the Swipe Contract (27 tests), and has a headless `pilot`. Its mid-run docs shots come from
+an autoplay build with `shoot.qa.json`; `pnpm --filter @thumbcade-games/clackwood icon` regenerates its iso-voxel icon.
+Overstamp likewise on 2026-11-06 (ready 0.74–0.78 s, 60 fps, no long tasks, 5.6–6.1 MB heap, 29 KB gzipped, 0 flashes; at most
+1 a second across 33 s of an autoplayed run with four cleared sheets, `VITE_AUTOPLAY=expert`; the idle run's bell rings after
+21 s); it tests its heaps (exact slip counts, one slip per spot, upper slips resting on the layer below, mirroring, cover and
+free), dealing (960 dealt sheets whose witness clears them with the real tray, the solver on small sheets and on a heap it must
+refuse, the dealer's tray cap, the riffle keeping the kinds and leaving a clearable heap, determinism), the run (covered taps,
+seals, the multiplier tiers and window, grouping in the tray, sheet clears with the clock waiting, the grace, the paper clip
+and the end on a full tray, the early forgiveness, the clock's burn and the idle end, layers, determinism, both helpers by
+hand), its pilots and the Swipe Contract (31 tests), has a headless `playtest`, and `scripts/shoot-plan.ts` writes its
+`shoot.json`.
+Frostwhisk likewise on 2026-11-06 (ready 0.53–0.56 s, 60 fps, no long tasks, 6.7–7.2 MB heap, 32 KB gzipped, 0 flashes; also 0
+across 33 s of an autoplayed run with goals, blocks and three knockouts, `VITE_AUTOPLAY=expert`; the idle run ends after 30 s);
+it tests its rink (1,500 full-speed shots with moving mallets at 1/240 and 1/30 s steps that never leave the ice and never
+need the safety net, no shot passing through a mallet, swing speed to puck speed and the cap, board angles, posts and mouths,
+mallet halves and corners, a pinned puck, determinism), the critters (saves, reaction time, personalities, all beatable), the
+run (clock and burn, goal time, mouths, zingers, knockouts and bouts, the lost-bout penalty and its grace, comebacks, the
+final seconds, the buzzer, the champion ending, drift, determinism), pilot run lengths, copy and game-over lines that fit
+their plates, HUD lanes that never touch (130-188 px screens) and the Swipe Contract (37 tests), and has a headless `pilot`. Its mid-run docs shots (`frostwhisk-ladder`, `-late`) come from an
+autoplay build with `shoot.qa.json`.
+Clatterlane likewise on 2026-11-06 (ready 1.03–1.05 s, 60 fps, no long tasks, 9.3–10.4 MB heap, 163 KB gzipped, 0 flashes;
+also 0 across 33 s of an autoplayed run with strikes and a turkey, `VITE_AUTOPLAY=expert`; the idle run's buzzer sounds after
+20 s); it tests its rack and split rule, the ball's late hook, the pin solver (frame-for-frame determinism, pocket carry
+against head-on splits, chain reactions, no pin ending inside another, what stands stands upright on its spot, a leave counts
+only what stood, the clatter's impact count, cost per throw), flick reading (direction, speed, bow and hook sign, the ghost
+finger), the aiming view on five screen shapes, the assist (monotonic end to end, tightening by rack, the pocket and the
+spare's key pin, balls landing where it sends them), the run (clock, drain, cap, strikes and named chains, leaves, spares,
+open frames, splits and the 7-10, bumpers, the free re-roll, glow racks, the clutch, the buzzer ball, hints), pilot run
+lengths and the Swipe Contract (46 tests), and has a headless `pilot`. Its mid-run docs shots (`clatterlane-split`, `-glow`,
+`-summary`) come from a `VITE_AUTOPLAY=expert` build with `shoot.qa.json` (each run draws from its own seed, so they repeat).
+Tumbledoodle likewise on 2026-11-06 (ready 0.81–0.82 s, 60 fps, no long tasks, 6.4–7.1 MB heap, 37–38 KB gzipped, 0 flashes; also 0
+across 33 s of an autoplayed run with feasts, tier-ups and an eraser eaten, `VITE_AUTOPLAY=good`; the idle run ends
+after 34 s); it tests its sizes (the fit rule, growth inside a tier and the burst at a tier-up, every kind unlocked by its
+own tier and no earlier, each eraser edible one or two tiers after it appears), swallowing (tipping in, the pull over the
+rim, the swept test for a fast hole, too-big doodles that only wobble, determinism), growing and the tier cap, combos and
+feasts (×2/×3/×4, the burp, dust that doesn't count), the erasers (walking in, chasing, the scrub's cost and the back-off,
+rubbing out small doodles only, fleeing once you're bigger, being eaten, the next one waiting for a bigger hole), the page
+drawing itself back in, the last bites and the final gulp, the starting page and the hints, pilot run lengths and skill
+bands, hints that quote the real rules, and the Swipe Contract (36 tests), and has a headless `pilot`. Its mid-run docs shots (`tumbledoodle-combo`,
+`-bigger`, `-late`, `-results`) come from a `VITE_AUTOPLAY=good` build with `shoot.qa.json`.
+Spotfall likewise on 2026-11-06 (ready 0.73–0.77 s, 58–60 fps, no long tasks, 6–9 MB heap, 29 KB gzipped, at most 1 flash a
+second; 0 across 33 s of an autoplayed run with 13-dot drops, `VITE_AUTOPLAY=good`); it tests its sheet (hex neighbours, the
+press feed, wall bounces, ~800 traced shots that never pass through a dot and land touching where they stopped), the run
+(press meter, warm-up, idle jam inside 25 s, pops, escalating drops, combo, specials, clean sheet, swap), its pilots and the
+Swipe Contract (37 tests), has a headless `pilot`, and `scripts/shoot-plan.ts` writes its `shoot.json`.
+Halftune likewise on 2026-11-06 (ready 0.75–0.77 s, 60 fps, no long tasks, 10–12 MB heap, 26 KB gzipped, at most 1 flash a
+second across 30 s of an autoplayed run, `VITE_AUTOPLAY=expert`); it tests its transcriptions (every bar against its time
+signature, chords, range), the chart (one tile per note, lanes, spacing, holds, the finale's speed-up, determinism), judging
+(windows, timing at the touch, lane and neighbour forgiveness), lives, holds, tune clears and the encore, pilot run lengths
+and the manifest (45 tests), has a headless `playtest`, and `scripts/shoot-plan.ts` writes its `shoot.json`.
+Pinchbake likewise on 2026-11-06 (ready 0.76 s, 60 fps, no long tasks, 7 MB heap, 33 KB gzipped, 0 flashes); it tests its
+circle solver (resting piles settle with no jitter or creep, no tunnelling, swelling merges lift the pile without throwing
+it, the rising floor, determinism), the run (merges at the contact point, chains, the party cake and the showstopper, the
+starter's rise and knock-back, the rim grace and spill, the opening drops, cooldown and aim), its pilots and the Swipe
+Contract (31 tests), and has a headless `playtest`.
+Fair Copy and Laddersnap have unit tests for their boards, dictionary filtering, solver and scoring
+(`pnpm --filter @thumbcade-games/<slug> test`) and a headless `playtest` script; Curlwall tests its ball flight, curl,
+aim assist, keeper and economy plus the Swipe Contract (`test/contract.test.ts`), Brinebop its board (matches,
+specials, combos, cascades, dead boards and reshuffles), run (clock, frenzy, cash-out) and pilots, and both have a
+headless pilot (`pilot` / `playtest`). Brinebop's `shoot.json` is written by `scripts/shoot-plan.ts`. Screenshots (attract + mid-run):
 `docs/screenshots/games/`. Adding a game: copy the shape of `games/flapjack` (package `@thumbcade-games/<slug>`,
 `vite.config.ts` → `defineGame()`, `thumbcade.json`, `art/icon.svg`, `shoot.json`), use `@thumbcade-games/kit`
 (`createSession` for the run lifecycle, `createAudio`, particles, shake, recognizers, fonts), and assign a creator in
 `scripts/games-index.ts`. `pnpm --filter @thumbcade/reviewer shoot ../../games/<slug>/dist --actions ../../games/<slug>/shoot.json --out ../../docs/screenshots/games`.
+A game by a creator other than the studio must not look like the house: it imports only the kit's non-visual
+modules by subpath (`kit/session`, `kit/audio`, `kit/input`, `kit/particles`, …; never the package root, `kit/ui` or
+`kit/fonts`) and loads a library font (`games/_kit/assets/fonts/library/`, `pnpm --filter @thumbcade-games/kit
+fonts:library`) through `kit/font-faces`; the kit plugin adds its `licenses/OFL-<family>.txt`.
 
 ## 10. Tests
 
@@ -264,7 +382,7 @@ profile, 60 fps, no long tasks, 4–13 MB heap, 15–152 KB gzipped before ready
 | simulator | 8: controller in happy-dom with a fake frame + probe (handshake, retroactive claim, spring-back, vertical games + Dock, violations, result card, sheets) |
 | reviewer | 4: static server (CSP/gzip/paths), full Playwright review of a good and a deliberately bad fixture game |
 | kit | 17: rng, easing/springs, particles, shake/hit-stop, counter, colors, recognizers |
-| gambit | 65: every puzzle verified with chess.js (unique mating move, forced mate, legal position) |
+| kingsnare | 65: every puzzle verified with chess.js (unique mating move, forced mate, legal position) |
 
 ## Status
 

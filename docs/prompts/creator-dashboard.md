@@ -187,7 +187,7 @@ Keep thresholds in a config table so they can change without a deploy.
 - Add a `milestone` value to `notification_type`. Each new milestone creates an inbox notification and a push
   through the existing `dispatch_push`. Send at most one push per game per day, batching several milestones
   into one message.
-- Copy is short, confident and a little playful. Examples: "Lane Rush just passed 10K players." / "1,000 hours
+- Copy is short, confident and a little playful. Examples: "Duskrail just passed 10K players." / "1,000 hours
   played in Stackd. That's six weeks, nonstop." / "Snek is taking off: 3.4× your usual players today."
 
 ### 5.2 Where it shows up

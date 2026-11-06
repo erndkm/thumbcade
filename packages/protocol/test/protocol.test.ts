@@ -1,7 +1,9 @@
 import { describe, expect, it } from "vitest";
 import {
+  bundleFileProblem,
   createRateLimiter,
   envelope,
+  executableKind,
   formatCount,
   formatScore,
   gameEntryUrl,
@@ -16,8 +18,8 @@ import {
 } from "../src/index.ts";
 
 const manifest = {
-  id: "lane-rush",
-  name: "Lane Rush",
+  id: "duskrail",
+  name: "Duskrail",
   version: "1.0.0",
   sdk: "^1.0.0",
   description: "Three lanes. Zero chill.",
@@ -40,7 +42,7 @@ describe("manifest", () => {
     }
   });
   it("rejects bad slugs, hashtags and absolute paths", () => {
-    const r = validateManifest({ ...manifest, id: "Lane Rush", tags: ["#Runner"], icon: "/etc/passwd" });
+    const r = validateManifest({ ...manifest, id: "Dusk Rail", tags: ["#Runner"], icon: "/etc/passwd" });
     expect(r.ok).toBe(false);
     if (!r.ok) expect(r.issues.length).toBeGreaterThanOrEqual(3);
   });
@@ -115,9 +117,9 @@ describe("creator analytics", () => {
   });
 
   it("writes milestone copy that never claims more than happened", () => {
-    expect(milestoneCopy({ kind: "players", threshold: 10_000, value: 10_212, detail: {} }, "Lane Rush")).toMatchObject({
+    expect(milestoneCopy({ kind: "players", threshold: 10_000, value: 10_212, detail: {} }, "Duskrail")).toMatchObject({
       title: "10K players",
-      body: "Lane Rush just passed 10,000 players.",
+      body: "Duskrail just passed 10,000 players.",
       figureText: "10,000",
     });
     expect(milestoneCopy({ kind: "playtime", threshold: 1000, value: 1003, detail: {} }, "Stackd").body).toBe(
@@ -139,5 +141,32 @@ describe("creator analytics", () => {
     expect(rateOrNull(5, 19, 20)).toBeNull();
     expect(rateOrNull(5, 20, 20)).toBe(0.25);
     expect(rateOrNull(0, 0, 0)).toBeNull();
+  });
+});
+
+describe("bundle files", () => {
+  it("allows web code and media, refuses everything else", () => {
+    for (const ok of ["index.html", "assets/index-D0z.js", "licenses/OFL.txt", "a/b/model.glb", "Sound.OGG", "fonts/x.woff2"]) expect(bundleFileProblem(ok)).toBeNull();
+    expect(bundleFileProblem("tools/setup.exe")).toBe(".exe files are not allowed");
+    expect(bundleFileProblem("payload.zip")).toBe(".zip files are not allowed");
+    expect(bundleFileProblem("server.php")).toBe(".php files are not allowed");
+    expect(bundleFileProblem(".env")).toBe("hidden files are not allowed");
+    expect(bundleFileProblem("assets/.DS_Store")).toBe("hidden files are not allowed");
+    expect(bundleFileProblem("LICENSE")).toBe("files need an extension");
+  });
+
+  it("recognises native executables by their bytes", () => {
+    const pe = new Uint8Array(256);
+    pe.set([0x4d, 0x5a]);
+    pe.set([0x80, 0, 0, 0], 60);
+    pe.set([0x50, 0x45, 0, 0], 0x80);
+    expect(executableKind(pe)).toBe("a Windows executable");
+    expect(executableKind(new Uint8Array([0x7f, 0x45, 0x4c, 0x46, 2, 1]))).toBe("a Linux (ELF) executable");
+    expect(executableKind(new Uint8Array([0xcf, 0xfa, 0xed, 0xfe, 7, 0]))).toBe("a macOS (Mach-O) executable");
+    // "MZ" by chance (say, the start of a binary buffer) is not enough.
+    const mz = new Uint8Array(256);
+    mz.set([0x4d, 0x5a]);
+    expect(executableKind(mz)).toBeNull();
+    expect(executableKind(new Uint8Array([0x89, 0x50, 0x4e, 0x47]))).toBeNull();
   });
 });

@@ -1,0 +1,18 @@
+{
+  "$schema": "https://thumbcade.com/schema/manifest-v1.json",
+  "id": "lintstorm",
+  "name": "Lintstorm",
+  "version": "1.0.0",
+  "sdk": "^1.0.0",
+  "entry": "index.html",
+  "description": "THE DRYER BURST! DRAG YOUR STEAM IRON, BLAST THE SOCK GANG, SCOOP THE LOOSE CHANGE AND PRESS EVERY BOSS FLAT!",
+  "tags": ["shooter", "arcade", "cartoon", "bossfight"],
+  "accentColor": "#B13DFF",
+  "icon": "assets/icon.png",
+  "ageRating": "4+",
+  "controls": { "vertical": true, "horizontal": true, "multitouch": false, "inputs": ["drag"] },
+  "session": "short",
+  "audio": true,
+  "orientation": "portrait",
+  "score": { "order": "desc", "max": 10000000, "format": "integer" }
+}

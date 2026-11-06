@@ -10,7 +10,6 @@ import {
   drawTapPrompt,
   drawTitle,
   easeOutBack,
-  easeOutCubic,
   FONT_MONO,
   HitStop,
   lerp,
@@ -19,6 +18,7 @@ import {
   onPress,
   Particles,
   PENTATONIC,
+  Photosafe,
   midiToFreq,
   Popups,
   rgba,
@@ -33,10 +33,7 @@ import {
   CanvasTexture,
   Color,
   DirectionalLight,
-  EdgesGeometry,
   HemisphereLight,
-  LineBasicMaterial,
-  LineSegments,
   Mesh,
   MeshLambertMaterial,
   OrthographicCamera,
@@ -59,6 +56,10 @@ const PERFECT = 0.1;
 const MAX_SWEEPS = 5;
 const ACCENT = "#3DE0FF";
 const VIEW_H = 19;
+const ACCENT_GLOW = new Color(ACCENT);
+const WARN_GLOW = new Color("#FF4A3D");
+/** The warning starts at its dark point so it fades in instead of popping on. */
+const WARN_PULSE = { phase: -Math.PI / 2 };
 
 const speedFor = (n: number) => lerp(2.7, 6.4, clamp(n / 45));
 const rangeFor = (n: number) => lerp(4.6, 5.6, clamp(n / 60));
@@ -132,6 +133,10 @@ async function main() {
   const audio = createAudio();
   const rng = createRng(session.ctx.seed);
   const shake = new Shake(10, 0.02, 1.9, session.reducedMotion);
+  // Glows and warnings go through Photosafe: capped at 2 Hz, slower and softer under reduced motion.
+  const light = new Photosafe(session.reducedMotion);
+  /** The perfect-drop light-up: roof glow and window blaze, each fading over its own time (s). */
+  const PERFECT_FX = light.reduced ? { roof: 0.3, roofT: 0.6, windows: 0.9, windowsT: 0.8 } : { roof: 0.8, roofT: 0.25, windows: 2.4, windowsT: 0.5 };
   const hitStop = new HitStop();
   const fx = new Particles(500);
   const popups = new Popups();
@@ -195,14 +200,13 @@ async function main() {
     }
   }
 
-  // Ripple: a square outline that grows and fades around a perfect drop.
-  const ripples: Array<{ line: LineSegments; t: number; w: number; d: number }> = [];
-  const rippleGeo = new EdgesGeometry(new BoxGeometry(1, 0.001, 1));
-  function ripple(s: Slab) {
-    const line = new LineSegments(rippleGeo, new LineBasicMaterial({ color: ACCENT, transparent: true, opacity: 1 }));
-    line.position.set(s.x, s.y + LAYER_H / 2 + 0.01, s.z);
-    scene.add(line);
-    ripples.push({ line, t: 0, w: s.w, d: s.d });
+  /** A perfect drop lights the new floor: the roof flashes and every window blazes, then settles to its night glow. */
+  function settleFlash() {
+    if (!flashSlab) return;
+    const mats = flashSlab.slab.mesh.material as MeshLambertMaterial[];
+    mats[2]!.emissive.setRGB(0, 0, 0);
+    for (const i of [0, 4]) mats[i]!.emissiveIntensity = 0.9;
+    flashSlab = null;
   }
 
   // ---------------------------------------------------------------------------
@@ -225,6 +229,8 @@ async function main() {
   let aiError = 0;
   /** Direction flips of the current slab. The crane lets go after MAX_SWEEPS — no stalling forever. */
   let sweeps = 0;
+  /** Seconds the last-sweep warning has been glowing. */
+  let warnT = 0;
   let flashSlab: { slab: Slab; t: number } | null = null;
 
   const top = () => tower[tower.length - 1]!;
@@ -233,11 +239,7 @@ async function main() {
     for (const s of tower) disposeMesh(s.mesh);
     for (const p of pieces) disposeMesh(p.mesh);
     if (moving) disposeMesh(moving.mesh);
-    for (const r of ripples) {
-      scene.remove(r.line);
-      (r.line.material as Material).dispose();
-    }
-    ripples.length = 0;
+    flashSlab = null;
     tower = [];
     pieces = [];
     moving = null;
@@ -291,6 +293,7 @@ async function main() {
     aiError = (rng() - 0.5) * (rng.chance(0.3) ? 0.05 : 0.5);
     aiTimer = 0;
     sweeps = 0;
+    warnT = 0;
   }
 
   function screenOf(x: number, y: number, z: number): { x: number; y: number } {
@@ -320,7 +323,7 @@ async function main() {
       const slab = makeSlab(t.x, t.y + LAYER_H, t.z, w, d, m.color);
       tower.push(slab);
       slab.squash.snap(0.72);
-      ripple(slab);
+      settleFlash();
       flashSlab = { slab, t: 0 };
       if (mode === "play") {
         score += 1;
@@ -420,10 +423,12 @@ async function main() {
       }
     }
     if (mode === "play") {
-      // Last sweep: the slab glows hot as a warning.
+      // Last sweep: the slab glows hot as a warning (rising from dark at 1.8 Hz; 0.5 Hz under reduced motion).
       const roof = (m.mesh.material as MeshLambertMaterial[])[2]!;
-      if (sweeps >= MAX_SWEEPS - 1) roof.emissive.set("#FF4A3D").multiplyScalar(0.35 + 0.35 * Math.sin(time * 18));
-      else roof.emissive.setRGB(0, 0, 0);
+      if (sweeps >= MAX_SWEEPS - 1) {
+        warnT += dt;
+        roof.emissive.copy(WARN_GLOW).multiplyScalar(0.08 + 0.62 * light.pulse(warnT, 1.8, WARN_PULSE));
+      } else roof.emissive.setRGB(0, 0, 0);
     }
     const t = top();
     if (m.axis === "x") m.mesh.position.set(t.x + m.pos, t.y + LAYER_H, t.z);
@@ -457,22 +462,11 @@ async function main() {
     if (flashSlab) {
       flashSlab.t += rawDt;
       const mats = flashSlab.slab.mesh.material as MeshLambertMaterial[];
-      const v = Math.max(0, 1 - flashSlab.t / 0.25);
-      mats[2]!.emissive.set(ACCENT).multiplyScalar(v * 0.8);
-      if (v <= 0) flashSlab = null;
-    }
-    for (const r of ripples) {
-      r.t += rawDt;
-      const k = easeOutCubic(Math.min(1, r.t / 0.6));
-      r.line.scale.set(r.w + k * 1.6, 1, r.d + k * 1.6);
-      (r.line.material as LineBasicMaterial).opacity = 1 - k;
-    }
-    for (let i = ripples.length - 1; i >= 0; i--) {
-      if (ripples[i]!.t > 0.6) {
-        scene.remove(ripples[i]!.line);
-        (ripples[i]!.line.material as Material).dispose();
-        ripples.splice(i, 1);
-      }
+      const roof = Math.max(0, 1 - flashSlab.t / PERFECT_FX.roofT);
+      const windows = Math.max(0, 1 - flashSlab.t / PERFECT_FX.windowsT);
+      mats[2]!.emissive.copy(ACCENT_GLOW).multiplyScalar(roof * PERFECT_FX.roof);
+      for (const i of [0, 4]) mats[i]!.emissiveIntensity = 0.9 + windows * PERFECT_FX.windows;
+      if (windows <= 0) settleFlash();
     }
     for (const p of pieces) {
       p.vel.y -= 16 * dt;
@@ -604,16 +598,10 @@ async function main() {
     drawTapPrompt(g, cx, r.y + r.h - 20, time, "#F3F0E8");
   }
 
-  // Compile every shader variant up front (slab, ripple line, falling piece) so no frame after ready() stalls.
-  ripple(top());
+  // Compile every shader variant up front (slab, falling piece) so no frame after ready() stalls.
   update(0);
   renderer.compile(scene, camera);
   renderer.render(scene, camera);
-  for (const r of ripples) {
-    scene.remove(r.line);
-    (r.line.material as Material).dispose();
-  }
-  ripples.length = 0;
   let frames = 0;
   tc.loop((dt) => {
     update(dt);

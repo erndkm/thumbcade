@@ -3,6 +3,13 @@
  *
  * The mark: a top-down red arcade button whose concentric rings form a thumbprint whorl. Toward the bottom the
  * ridges resolve into pixels (smooth, then half pixels, then full pixels): a real thumb turning into a game.
+ *
+ * The print comes in variants (VARIANTS below). The chosen one is remembered in brand/variant.txt.
+ *   pnpm --filter @thumbcade/design-tokens brand            rebuild the current variant
+ *   pnpm --filter @thumbcade/design-tokens brand bold       switch to a variant
+ *   pnpm --filter @thumbcade/design-tokens brand bold --out <dir>   preview into another directory, no switch
+ * `bash scripts/brand.sh [variant]` at the repo root does the same and also refreshes the app copies.
+ *
  * Outputs (brand/):
  *   mark.svg                  the button alone, transparent background
  *   app-icon.svg / .png       1024 iOS app icon (ink background, full bleed)
@@ -15,15 +22,18 @@
  *   lockup.svg                mark + wordmark
  *   og-default.png            1200x630 social card
  */
-import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
+import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
+import { parseArgs } from "node:util";
 import opentype from "opentype.js";
 import sharp from "sharp";
 import { palette } from "../src/tokens.ts";
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), "..");
-const out = resolve(root, "brand");
+const cli = parseArgs({ args: process.argv.slice(2).filter((a) => a !== "--"), allowPositionals: true, options: { out: { type: "string" } } });
+const brandDir = resolve(root, "brand");
+const out = cli.values.out ? resolve(process.cwd(), cli.values.out) : brandDir;
 mkdirSync(out, { recursive: true });
 
 const INK = palette.ink1;
@@ -46,17 +56,6 @@ function shade(hex: string, amount: number): string {
 // Whorl geometry
 // ---------------------------------------------------------------------------
 
-/**
- * The print is authored on a pixel grid (for a cap radius of 300) so its lower part can resolve into pixels:
- * ring k is a circle of radius (2k + 1) * CELL around the print center and one CELL wide, so a ridge is exactly
- * one full pixel and every ring runs through pixel centers.
- */
-const CELL = 28;
-
-/** Where the ridges change resolution, measured down from the print center: smooth, then half pixels, then full pixels. */
-const HALF_PIXELS_FROM = 1.5 * CELL;
-const FULL_PIXELS_FROM = 4.5 * CELL;
-
 interface Ring {
   k: number;
   /** Gap center angle in degrees (0 = 3 o'clock, clockwise). */
@@ -65,14 +64,62 @@ interface Ring {
   gap: number;
 }
 
-/** Ridges of the print, innermost first. Gaps are staggered so the rings read as one whorl. */
-const RINGS: Ring[] = [
-  { k: 0, gapAt: 205, gap: 150 },
-  { k: 1, gapAt: 22, gap: 50 },
-  { k: 2, gapAt: 232, gap: 34 },
-  { k: 3, gapAt: 120, gap: 28 },
-  { k: 4, gapAt: 320, gap: 24 },
-];
+/**
+ * A print is authored on a pixel grid (for a cap radius of 300) so its lower part can resolve into pixels:
+ * ring k is a circle of radius (2k + 1) * cell around the print center and one cell wide, so a ridge is exactly
+ * one full pixel and every ring runs through pixel centers.
+ */
+interface Print {
+  cell: number;
+  /**
+   * Where the ridges change resolution, in cells down from the print center: smooth, then half pixels, then full
+   * pixels. Half pixels start on a half-cell line, full pixels on a full-pixel row edge (n + 0.5).
+   */
+  halfPixelsFrom: number;
+  fullPixelsFrom: number;
+  /** Ridges of the print, innermost first. Gaps are staggered so the rings read as one whorl. */
+  rings: Ring[];
+}
+
+const VARIANTS = {
+  /** Five fine ridges: the most detail, but they blur together at small sizes. */
+  classic: {
+    cell: 28,
+    halfPixelsFrom: 1.5,
+    fullPixelsFrom: 4.5,
+    rings: [
+      { k: 0, gapAt: 205, gap: 150 },
+      { k: 1, gapAt: 22, gap: 50 },
+      { k: 2, gapAt: 232, gap: 34 },
+      { k: 3, gapAt: 120, gap: 28 },
+      { k: 4, gapAt: 320, gap: 24 },
+    ],
+  },
+  /** Three wide ridges (about 1.6x the classic weight): fewer details, so the print reads at icon and favicon sizes. */
+  bold: {
+    cell: 46,
+    halfPixelsFrom: 1,
+    fullPixelsFrom: 2.5,
+    rings: [
+      { k: 0, gapAt: 205, gap: 150 },
+      { k: 1, gapAt: 340, gap: 50 },
+      { k: 2, gapAt: 220, gap: 36 },
+    ],
+  },
+} satisfies Record<string, Print>;
+
+type Variant = keyof typeof VARIANTS;
+const isVariant = (v: string): v is Variant => Object.hasOwn(VARIANTS, v);
+
+const variantFile = resolve(brandDir, "variant.txt");
+const VARIANT = cli.positionals[0] ?? (existsSync(variantFile) ? readFileSync(variantFile, "utf8").trim() : "classic");
+if (!isVariant(VARIANT)) throw new Error(`unknown logo variant "${VARIANT}"; expected one of: ${Object.keys(VARIANTS).join(", ")}`);
+const PRINT: Print = VARIANTS[VARIANT];
+
+const CELL = PRINT.cell;
+const HALF_PIXELS_FROM = PRINT.halfPixelsFrom * CELL;
+const FULL_PIXELS_FROM = PRINT.fullPixelsFrom * CELL;
+const RINGS = PRINT.rings;
 
 const radius = (ring: Ring) => (2 * ring.k + 1) * CELL;
 
@@ -311,7 +358,8 @@ async function main() {
   await png(ogSvg, "og-default.png", undefined, 144);
   await png(ogSvg, "og-default-1200.png", { w: 1200, h: 630 }, 144);
 
-  console.log(`brand assets written to ${out}`);
+  if (out === brandDir) writeFileSync(variantFile, `${VARIANT}\n`);
+  console.log(`brand assets (${VARIANT}) written to ${out}`);
 }
 
 void main();

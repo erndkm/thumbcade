@@ -16,7 +16,9 @@ import { gzipSync, unzipSync } from "fflate";
 import {
   adminClient,
   BUDGETS,
+  bundleFileProblem,
   bundleObjectPath,
+  executableKind,
   HttpError,
   json,
   MANIFEST_FILENAME,
@@ -67,8 +69,13 @@ async function publish(req: Request): Promise<Response> {
   // Drop directory entries; refuse anything that could escape the version folder.
   const entries = Object.entries(files).filter(([p]) => !p.endsWith("/"));
   const issues: string[] = [];
-  for (const [path] of entries) {
+  for (const [path, data] of entries) {
     if (path.startsWith("/") || path.split("/").includes("..") || path.includes("\\") || /[\u0000-\u001f]/.test(path)) issues.push(`Unsafe path in zip: ${path}`);
+    // Web code, data and media only; native programs are refused whatever they're called.
+    const problem = bundleFileProblem(path);
+    if (problem) issues.push(`${path}: ${problem}`);
+    const exe = executableKind(data);
+    if (exe) issues.push(`${path} is ${exe}`);
   }
   if (entries.length === 0) issues.push("The zip is empty.");
   if (entries.length > MAX_FILES) issues.push(`The bundle has ${entries.length} files; the limit is ${MAX_FILES}.`);

@@ -1,0 +1,84 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" width="1024" height="1024">
+  <defs>
+    <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#05070D"/>
+      <stop offset="0.55" stop-color="#0E1730"/>
+      <stop offset="1" stop-color="#0A1020"/>
+    </linearGradient>
+    <linearGradient id="grass" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#174428"/>
+      <stop offset="1" stop-color="#0F2E1C"/>
+    </linearGradient>
+    <radialGradient id="lamp" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0" stop-color="#FFF6DC" stop-opacity="0.75"/>
+      <stop offset="1" stop-color="#FFF6DC" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="halo" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0.55" stop-color="#E4FF3A" stop-opacity="0.55"/>
+      <stop offset="1" stop-color="#E4FF3A" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="trail" x1="0" y1="1" x2="1" y2="0">
+      <stop offset="0" stop-color="#E4FF3A" stop-opacity="0"/>
+      <stop offset="0.5" stop-color="#E4FF3A" stop-opacity="0.75"/>
+      <stop offset="1" stop-color="#E4FF3A"/>
+    </linearGradient>
+    <pattern id="net" width="34" height="34" patternUnits="userSpaceOnUse">
+      <path d="M0 0 H34 M0 0 V34" stroke="#C9D3E4" stroke-width="3" stroke-opacity="0.45" fill="none"/>
+    </pattern>
+    <g id="man">
+      <ellipse cx="0" cy="246" rx="62" ry="16" fill="#000" opacity="0.35"/>
+      <rect x="-50" y="40" width="100" height="206" rx="50" fill="#3A4254"/>
+      <rect x="-51" y="110" width="102" height="18" fill="#E4FF3A"/>
+      <rect x="-13" y="14" width="26" height="34" fill="#2C3242"/>
+      <circle cx="0" cy="0" r="30" fill="#3A4254"/>
+    </g>
+  </defs>
+  <rect width="1024" height="1024" fill="url(#sky)"/>
+  <!-- the stand: rows of heads under the roof lights -->
+  <g fill="#161C2C">
+    <rect x="0" y="210" width="1024" height="300"/>
+  </g>
+  <g fill="#222A40">
+    <rect x="0" y="236" width="1024" height="14"/>
+    <rect x="0" y="292" width="1024" height="14"/>
+    <rect x="0" y="348" width="1024" height="14"/>
+    <rect x="0" y="404" width="1024" height="14"/>
+    <rect x="0" y="460" width="1024" height="14"/>
+  </g>
+  <rect x="0" y="150" width="1024" height="60" fill="#070A12"/>
+  <ellipse cx="200" cy="200" rx="200" ry="120" fill="url(#lamp)"/>
+  <ellipse cx="824" cy="200" rx="200" ry="120" fill="url(#lamp)"/>
+  <g fill="#FFF8E2">
+    <rect x="140" y="182" width="36" height="28"/><rect x="184" y="182" width="36" height="28"/><rect x="228" y="182" width="36" height="28"/>
+    <rect x="760" y="182" width="36" height="28"/><rect x="804" y="182" width="36" height="28"/><rect x="848" y="182" width="36" height="28"/>
+  </g>
+  <!-- pitch -->
+  <rect x="0" y="560" width="1024" height="464" fill="url(#grass)"/>
+  <rect x="0" y="560" width="1024" height="60" fill="#1B4A30"/>
+  <rect x="0" y="690" width="1024" height="90" fill="#1B4A30"/>
+  <rect x="0" y="880" width="1024" height="144" fill="#1B4A30"/>
+  <!-- LED boards -->
+  <rect x="0" y="500" width="1024" height="62" fill="#0B0F1A"/>
+  <g fill="#E4FF3A" opacity="0.85">
+    <rect x="30" y="516" width="120" height="30"/><rect x="190" y="516" width="70" height="30"/><rect x="300" y="516" width="150" height="30"/>
+    <rect x="640" y="516" width="110" height="30"/><rect x="790" y="516" width="80" height="30"/><rect x="910" y="516" width="100" height="30"/>
+  </g>
+  <!-- goal: net, then frame -->
+  <rect x="96" y="322" width="832" height="248" fill="url(#net)"/>
+  <path d="M96 584 V322 H928 V584" fill="none" stroke="#F3F0E8" stroke-width="22" stroke-linejoin="round"/>
+  <!-- the ring in the top corner, with the ball in it -->
+  <circle cx="838" cy="402" r="104" fill="url(#halo)"/>
+  <circle cx="838" cy="402" r="64" fill="none" stroke="#E4FF3A" stroke-width="16"/>
+  <!-- the curl: from the bottom left, out round the wall and back into the corner -->
+  <path d="M232 1010 C 150 760, 300 470, 838 402" fill="none" stroke="url(#trail)" stroke-width="40" stroke-linecap="round"/>
+  <g transform="translate(838 402)">
+    <circle r="40" fill="#F3F0E8"/>
+    <path d="M-20 -12 L4 -26 L22 -4 L-2 12 Z" fill="#151923"/>
+    <rect x="-40" y="14" width="80" height="9" fill="#E4FF3A"/>
+    <circle r="40" fill="none" stroke="#151923" stroke-width="5"/>
+  </g>
+  <!-- the wall -->
+  <use href="#man" transform="translate(470 598)"/>
+  <use href="#man" transform="translate(592 598)"/>
+  <use href="#man" transform="translate(714 598)"/>
+</svg>

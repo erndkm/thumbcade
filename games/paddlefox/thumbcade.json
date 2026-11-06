@@ -1,0 +1,35 @@
+{
+  "$schema": "https://thumbcade.com/schema/manifest-v1.json",
+  "id": "paddlefox",
+  "name": "Paddlefox",
+  "version": "1.0.0",
+  "sdk": "^1.0.0",
+  "entry": "index.html",
+  "description": "A fox, a canoe and a river made of cubes. Drag to steer, respect the beaver dams, grab a fish or two.",
+  "tags": [
+    "3d",
+    "voxel",
+    "river",
+    "dodge",
+    "chill"
+  ],
+  "accentColor": "#4FB6D9",
+  "icon": "assets/icon.png",
+  "ageRating": "4+",
+  "controls": {
+    "vertical": false,
+    "horizontal": true,
+    "multitouch": false,
+    "inputs": [
+      "drag"
+    ]
+  },
+  "session": "short",
+  "audio": true,
+  "orientation": "portrait",
+  "score": {
+    "order": "desc",
+    "max": 100000,
+    "format": "integer"
+  }
+}

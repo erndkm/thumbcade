@@ -1,4 +1,4 @@
-import { readFileSync } from "node:fs";
+import { readdirSync, readFileSync } from "node:fs";
 import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { QUALIFIED_PLAY_MS } from "@thumbcade/protocol";
@@ -8,7 +8,10 @@ import { DEMO_PEOPLE, DEMO_PLAYER } from "../seed/people.ts";
 import { clampScore, formatSeedScore, mulberry32, plausibleScore, sample, worseScore, type ScoreShape } from "../seed/random.ts";
 import { SEED_STAT_DAYS, seedStatDays, seedTotals } from "../seed/stats.ts";
 
-const LAUNCH = ["flapjack", "stackd", "lane-rush", "gambit", "pairs", "merge", "snek", "slice", "breakout-neo", "helix-fall", "reflex", "mines"];
+/** Every game in games/ (what `pnpm games:build` indexes and `pnpm seed` seeds). */
+const GAMES = readdirSync(resolve(dirname(fileURLToPath(import.meta.url)), "../../games"), { withFileTypes: true })
+  .filter((e) => e.isDirectory() && !e.name.startsWith("_") && !e.name.startsWith("."))
+  .map((e) => e.name);
 const EMOJI = /\p{Extended_Pictographic}/u;
 
 describe("seed people", () => {
@@ -25,8 +28,9 @@ describe("seed people", () => {
 });
 
 describe("seed comments", () => {
-  it("covers every launch game and the fixtures, without emoji or lorem", () => {
-    for (const slug of [...LAUNCH, "fixture-tap", "fixture-swipe"]) {
+  it("covers every game and the fixtures, without emoji or lorem", () => {
+    expect(GAMES.length).toBeGreaterThanOrEqual(25);
+    for (const slug of [...GAMES, "fixture-tap", "fixture-swipe"]) {
       const pool = COMMENT_POOLS[slug];
       expect(pool, slug).toBeDefined();
       expect(pool!.top.length).toBeGreaterThanOrEqual(8);
@@ -49,13 +53,13 @@ describe("seed scores", () => {
   it("is deterministic and respects max and order", () => {
     const a = mulberry32(42);
     const b = mulberry32(42);
-    expect(plausibleScore(a, "merge", desc, 0.5)).toBe(plausibleScore(b, "merge", desc, 0.5));
+    expect(plausibleScore(a, "shortwick", desc, 0.5)).toBe(plausibleScore(b, "shortwick", desc, 0.5));
     const rng = mulberry32(7);
     for (let i = 0; i < 500; i++) {
       const s = plausibleScore(rng, "flapjack", { order: "desc", max: 200, format: "integer" }, rng());
       expect(s).toBeGreaterThanOrEqual(0);
       expect(s).toBeLessThanOrEqual(200);
-      const t = plausibleScore(rng, "reflex", asc, rng());
+      const t = plausibleScore(rng, "kneejerk", asc, rng());
       expect(t).toBeGreaterThanOrEqual(1);
       expect(t).toBeLessThanOrEqual(asc.max);
     }
@@ -66,7 +70,7 @@ describe("seed scores", () => {
     const avg = (skill: number, shape: ScoreShape, slug: string) =>
       Array.from({ length: 300 }, () => plausibleScore(rng, slug, shape, skill)).reduce((x, y) => x + y, 0) / 300;
     expect(avg(0.9, desc, "snek")).toBeGreaterThan(avg(0.1, desc, "snek"));
-    expect(avg(0.9, asc, "reflex")).toBeLessThan(avg(0.1, asc, "reflex"));
+    expect(avg(0.9, asc, "kneejerk")).toBeLessThan(avg(0.1, asc, "kneejerk"));
   });
 
   it("produces worse runs than the best", () => {

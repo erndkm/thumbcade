@@ -22,6 +22,8 @@ export interface ShootOptions {
   device?: "iphone" | "promax" | "android";
   insetsOverlay?: boolean;
   muted?: boolean;
+  /** Launch with the reduce-motion setting on. */
+  reducedMotion?: boolean;
 }
 
 /** Loads a built bundle in the review harness and captures named screenshots along a scripted run. */
@@ -38,6 +40,7 @@ export async function shoot(o: ShootOptions): Promise<{ files: string[]; console
       device: o.device,
       muted: o.muted ?? true,
       insetsOverlay: o.insetsOverlay,
+      reducedMotion: o.reducedMotion,
       id: o.slug,
     });
     const ready = await s.waitFor("ready", 10_000);

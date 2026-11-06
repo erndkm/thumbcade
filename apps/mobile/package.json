@@ -14,7 +14,8 @@
     "export": "expo export --platform ios --platform android --output-dir dist-export",
     "e2e:android": "bash maestro/run.sh android",
     "start:sim": "REACT_NATIVE_PACKAGER_HOSTNAME=127.0.0.1 expo start --port 8081",
-    "brand": "node scripts/gen-brand.mjs"
+    "brand": "node scripts/gen-brand.mjs",
+    "notices": "node ../../scripts/licenses/collect.ts . src/features/licenses/notices.generated.ts"
   },
   "dependencies": {
     "@expo/metro-runtime": "57.0.16",

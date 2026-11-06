@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64"><rect width="64" height="64" fill="#0D0D10"/><defs>
+  <radialGradient id="f-cap" cx="0.38" cy="0.32" r="0.85">
+    <stop offset="0" stop-color="#FF928B"/>
+    <stop offset="0.45" stop-color="#FF4A3D"/>
+    <stop offset="1" stop-color="#DB4034"/>
+  </radialGradient>
+  <linearGradient id="f-housing" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0" stop-color="#2E2E36"/>
+    <stop offset="1" stop-color="#141418"/>
+  </linearGradient>
+  <linearGradient id="f-side" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0" stop-color="#942B23"/>
+    <stop offset="1" stop-color="#571915"/>
+  </linearGradient>
+  <clipPath id="f-clip"><circle cx="32" cy="31.303333333333335" r="19"/></clipPath>
+</defs>
+<g>
+  <circle cx="32" cy="32" r="21.78666666666667" fill="url(#f-housing)"/>
+  <circle cx="32" cy="32" r="21.69166666666667" fill="none" stroke="#3A3A44" stroke-width="0.19" stroke-opacity="0.9"/>
+  <circle cx="32" cy="32" r="20.203333333333333" fill="#08080A"/>
+  <circle cx="32" cy="32.696666666666665" r="19" fill="url(#f-side)"/>
+  <circle cx="32" cy="31.303333333333335" r="19" fill="url(#f-cap)"/>
+  <g clip-path="url(#f-clip)" opacity="0.94"><path d="M22.5 30.54L32 21.04L41.5 30.54" fill="none" stroke="#0D0D10" stroke-width="4.43" stroke-linecap="round" stroke-linejoin="round"/><path d="M24.08 37.83h3.17v3.17h-3.17zM27.25 34.66h3.17v3.17h-3.17zM30.42 31.49h3.17v3.17h-3.17zM33.58 34.66h3.17v3.17h-3.17zM36.75 37.83h3.17v3.17h-3.17z" fill="#0D0D10"/></g>
+  <path d="M20.22 19.523333333333333 A16.72 16.72 0 0 1 35.8 14.963333333333335" fill="none" stroke="#FFEDEC" stroke-width="0.44333333333333336" stroke-linecap="round" stroke-opacity="0.32"/>
+</g></svg>

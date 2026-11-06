@@ -25,6 +25,15 @@ describe("documents", () => {
     }
   });
 
+  it("the terms carry the photosensitive epilepsy warning and point to Reduce Motion", () => {
+    const section = LEGAL_DOCS.terms.sections.find((s) => s.heading === "Health and safety");
+    const warning = text({ title: "", updated: LEGAL_DOCS.terms.updated, sections: section ? [section] : [] });
+    expect(warning).toContain("photosensitive epilepsy");
+    expect(warning).toContain("Stop playing");
+    expect(warning).toContain("Reduce Motion in your device's accessibility settings");
+    expect(warning).toContain("Settings → Reduce motion");
+  });
+
   it("the privacy policy names the controller and states the enforced retention periods", () => {
     const privacy = text(LEGAL_DOCS.privacy);
     expect(privacy).toContain(OPERATOR.name);

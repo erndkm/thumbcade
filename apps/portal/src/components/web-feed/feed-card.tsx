@@ -112,6 +112,12 @@ export function FeedCard({
   const stateRef = useRef<CardState>(createCardState());
   const [state, setState] = useState<CardState>(stateRef.current);
   const [reloadKey, setReloadKey] = useState(0);
+  // A game can navigate its own frame. The portal's frame-src refuses anything off the games origin before a
+  // request leaves, and the frame then loads the browser's error page. A frame load and a frame-src violation
+  // within a second of each other (either may come first) is this game trying to get out: drop the frame.
+  const frameLoadAt = useRef(-Infinity);
+  const frameViolationAt = useRef(-Infinity);
+  const [escaped, setEscaped] = useState(false);
   const [result, setResult] = useState<{ score: number; best: number; isNew: boolean } | null>(null);
   const [frameVisible, setFrameVisible] = useState(false);
   const accent = safeAccent(card.accentColor);
@@ -313,6 +319,16 @@ export function FeedCard({
     onPhase(cardKey, state.phase);
   }, [cardKey, state.phase, onPhase]);
 
+  useEffect(() => {
+    const onViolation = (e: SecurityPolicyViolationEvent) => {
+      if (e.effectiveDirective !== "frame-src") return;
+      frameViolationAt.current = performance.now();
+      if (frameViolationAt.current - frameLoadAt.current < 1000) setEscaped(true);
+    };
+    document.addEventListener("securitypolicyviolation", onViolation);
+    return () => document.removeEventListener("securitypolicyviolation", onViolation);
+  }, []);
+
   // Load timeout.
   useEffect(() => {
     if (state.ready) return;
@@ -369,19 +385,25 @@ export function FeedCard({
         />
       ) : null}
 
-      <iframe
-        key={reloadKey}
-        ref={iframe}
-        src={card.version.entryUrl}
-        title={card.name}
-        className="absolute inset-0 size-full border-0"
-        style={{ opacity: frameVisible ? 1 : 0, transition: "opacity 260ms ease-out", colorScheme: "normal" }}
-        sandbox="allow-scripts allow-same-origin allow-pointer-lock"
-        allow="autoplay; fullscreen; gamepad"
-        referrerPolicy="no-referrer"
-        loading="eager"
-        tabIndex={active && playing ? 0 : -1}
-      />
+      {escaped ? null : (
+        <iframe
+          key={reloadKey}
+          ref={iframe}
+          src={card.version.entryUrl}
+          onLoad={() => {
+            frameLoadAt.current = performance.now();
+            if (frameLoadAt.current - frameViolationAt.current < 1000) setEscaped(true);
+          }}
+          title={card.name}
+          className="absolute inset-0 size-full border-0"
+          style={{ opacity: frameVisible ? 1 : 0, transition: "opacity 260ms ease-out", colorScheme: "normal" }}
+          sandbox="allow-scripts allow-same-origin allow-pointer-lock"
+          allow="autoplay; fullscreen; gamepad"
+          referrerPolicy="no-referrer"
+          loading="eager"
+          tabIndex={active && playing ? 0 : -1}
+        />
+      )}
 
       {/* Scanline wipe on poster → live. */}
       {frameVisible ? (
@@ -479,6 +501,14 @@ export function FeedCard({
           >
             <Icon name="play" active size={18} /> Resume
           </button>
+        </div>
+      ) : null}
+
+      {/* The game tried to leave its frame */}
+      {escaped ? (
+        <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 bg-black/80 px-10 text-center">
+          <p className="font-wide text-[20px] font-extrabold text-paper">We stopped this game.</p>
+          <p className="text-[14px] text-paper/70">It tried to leave the player. Swipe on to the next one.</p>
         </div>
       ) : null}
 

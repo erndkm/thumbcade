@@ -6,7 +6,7 @@
 import { readdir, readFile, stat } from "node:fs/promises";
 import { extname, join, posix, relative, sep } from "node:path";
 import { gzipSync } from "node:zlib";
-import { BUDGETS, MANIFEST_FILENAME, validateManifest, type Manifest } from "@thumbcade/protocol";
+import { BUDGETS, bundleFileProblem, executableKind, MANIFEST_FILENAME, validateManifest, type Manifest } from "@thumbcade/protocol";
 
 export type CheckStatus = "pass" | "fail" | "warn";
 
@@ -42,11 +42,15 @@ export interface BundleReport {
 
 const TEXT = new Set([".html", ".js", ".mjs", ".css", ".json", ".svg", ".txt", ".map"]);
 
+/** Files the operating system drops into folders on its own; never part of a bundle. */
+const OS_LITTER = new Set([".DS_Store", "Thumbs.db", "desktop.ini"]);
+
 export async function readBundle(dir: string): Promise<BundleFile[]> {
   const out: BundleFile[] = [];
   async function walk(d: string) {
     for (const entry of await readdir(d, { withFileTypes: true })) {
       const full = join(d, entry.name);
+      if (OS_LITTER.has(entry.name)) continue;
       if (entry.isDirectory()) await walk(full);
       else if (entry.isFile()) {
         const data = await readFile(full);
@@ -82,6 +86,25 @@ export function imageSize(buf: Buffer): { width: number; height: number; type: "
 const BENIGN_HOSTS = /^(www\.)?(w3\.org|thumbcade\.com|schema\.org|purl\.org|ns\.adobe\.com|xmlns\.com|developer\.mozilla\.org|github\.com|reactjs\.org|react\.dev|threejs\.org|pixijs\.com|phaser\.io|tc39\.es|json-schema\.org|feross\.org|jquery\.(com|org)|opensource\.org|spdx\.org|mths\.be|fb\.me|creativecommons\.org|jcgt\.org|khronos\.org)$/;
 
 const NETWORK_CALL = /(fetch|XMLHttpRequest|\.open|import|importScripts|WebSocket|EventSource|sendBeacon|loadScript|src\s*=)\s*\(?\s*["'`]?$/;
+
+const WEBRTC = /\b(?:webkit|moz)?RTC(?:PeerConnection|DataChannel|IceCandidate|SessionDescription)\b/;
+/** The page's own location, assigned or replaced (not `obj.location = …`, a local `const location`, or GLSL's `layout(location = 0)`). */
+const NAVIGATION = /(?:^|[^.\w$])(?<!(?:\bvar|\blet|\bconst)\s+)(?<!layout\s*\(\s*)(?:(?:window|top|parent|document|globalThis)\.)?location(?:(?:\.href)?\s*=(?!=)(?!\s*\d)|\.(?:assign|replace)\s*\()/;
+
+/**
+ * Why a script looks deliberately obfuscated, or null. Ordinary minified output (Vite, esbuild, terser) never
+ * matches: these are the fingerprints of obfuscators and packers, which exist to hide what code does.
+ */
+export function obfuscationSign(code: string): string | null {
+  const hexNames = new Set(code.match(/\b_0x[0-9a-f]{4,6}\b/gi) ?? []);
+  if (hexNames.size >= 10) return `${hexNames.size} hex-named identifiers (_0x…)`;
+  if (/\beval\s*\(\s*function\s*\(\s*p\s*,\s*a\s*,\s*c\s*,\s*k\s*,\s*e\s*,/.test(code)) return "a packer (eval(function(p,a,c,k,e,…)))";
+  if (/[[\]()!+]{500,}/.test(code)) return "code written only in []()!+ characters";
+  if (/\b(?:eval|Function)\s*\(\s*(?:atob|unescape|decodeURIComponent)\s*\(/.test(code)) return "code decoded from a string and run";
+  const escapes = code.match(/\\x[0-9a-f]{2}/gi)?.length ?? 0;
+  if (escapes >= 500 && (escapes * 4) / code.length >= 0.08) return `${escapes} \\x escapes (strings hidden as hex)`;
+  return null;
+}
 
 /**
  * Scans HTML, JS and CSS for code that loads remote resources, uses eval, or relies on inline scripts.
@@ -141,6 +164,26 @@ export function staticScan(files: BundleFile[]): Finding[] {
       }
       if (/\bwindow\.open\s*\(/.test(text)) {
         findings.push({ status: "warn", file: f.path, message: "Calls window.open()", fix: "Games can't open windows or navigate away. Use tc.share.challenge() for sharing." });
+      }
+      if (WEBRTC.test(text)) {
+        findings.push({
+          status: "fail",
+          file: f.path,
+          message: "Uses WebRTC (RTCPeerConnection)",
+          fix: "Games get no network access, and WebRTC would get around the content security policy. Remove it; if a library brings it in, drop that library.",
+        });
+      }
+      if (NAVIGATION.test(text)) {
+        findings.push({ status: "warn", file: f.path, message: "Navigates the page (location = …)", fix: "Games can't leave their page: the app blocks it and the web player stops the game. Remove it." });
+      }
+      const obfuscated = ext === ".html" ? null : obfuscationSign(text);
+      if (obfuscated) {
+        findings.push({
+          status: "fail",
+          file: f.path,
+          message: `Looks obfuscated: ${obfuscated}`,
+          fix: "Upload a normal build (Vite, esbuild and terser minification are fine). Obfuscated code can't be reviewed, so it can't be published.",
+        });
       }
       for (const m of ext === ".html" ? [] : text.matchAll(/https?:\/\/([a-z0-9.-]+\.[a-z]{2,})(?::\d+)?[^\s"'`)<>]*/gi)) {
         const host = (m[1] ?? "").toLowerCase();
@@ -211,6 +254,25 @@ export function initialFiles(entry: string, files: BundleFile[]): string[] {
   return [...seen];
 }
 
+/** Files that can't be in a bundle at all: unknown types, hidden files and native executables (by their bytes). */
+export function fileFindings(files: BundleFile[]): Finding[] {
+  const findings: Finding[] = [];
+  for (const f of files) {
+    const problem = bundleFileProblem(f.path);
+    if (problem) {
+      findings.push({
+        status: "fail",
+        file: f.path,
+        message: `${f.path}: ${problem}`,
+        fix: "Bundles hold web code, data and media only (the review guidelines list every allowed type). Remove the file, or rename a data file to a matching type.",
+      });
+    }
+    const exe = executableKind(f.data);
+    if (exe) findings.push({ status: "fail", file: f.path, message: `${f.path} is ${exe}`, fix: "Games can't ship native programs. Remove it." });
+  }
+  return findings;
+}
+
 function worst(findings: Finding[]): CheckStatus {
   if (findings.some((f) => f.status === "fail")) return "fail";
   if (findings.some((f) => f.status === "warn")) return "warn";
@@ -264,6 +326,8 @@ export async function checkBundle(dir: string): Promise<BundleReport> {
     }
   }
 
+  manifestFindings.push(...fileFindings(files));
+
   const totalBytes = files.reduce((n, f) => n + f.size, 0);
   const gzipBytes = files.reduce((n, f) => n + f.gzip, 0);
   const initial = manifest && byPath.has(manifest.entry) ? initialFiles(manifest.entry, files) : [];
@@ -300,7 +364,7 @@ export function mb(bytes: number): string {
 export function manifestFix(issue: string): string | undefined {
   const key = issue.split(":")[0] ?? "";
   const fixes: Record<string, string> = {
-    id: 'Lowercase letters, digits and dashes, 3-40 characters, e.g. "lane-rush". It becomes your game\'s address and can never change.',
+    id: 'Lowercase letters, digits and dashes, 3-40 characters, e.g. "neon-chop". It becomes your game\'s address and can never change.',
     name: "1-32 characters. This is the big name in the feed caption.",
     version: 'Use semver, e.g. "1.0.0", and bump it for every publish.',
     sdk: 'The SDK range you built against, e.g. "^1.0.0".',

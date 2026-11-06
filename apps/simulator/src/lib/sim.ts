@@ -484,6 +484,9 @@ export class Simulator {
     if (snap.foreignRequests.length) {
       this.violate("network", "error", "Request to another origin", `${snap.foreignRequests[0]} — the game CSP blocks every request off the game's own origin.`);
     }
+    if (snap.webrtc?.length) {
+      this.violate("webrtc", "error", "Uses WebRTC", `${snap.webrtc[0]} — games get no network access, and the reviewer fails any WebRTC use.`);
+    }
     this.patch({
       perf: {
         fps: running ? snap.fps : 0,

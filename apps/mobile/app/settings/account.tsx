@@ -94,7 +94,7 @@ export default function EditProfile() {
           </T>
           <Field label="Display name" value={name} onChangeText={setName} maxLength={40} />
           <Field label="Handle" value={handle} onChangeText={(v) => setHandle(v.toLowerCase())} autoCapitalize="none" autoCorrect={false} maxLength={24} error={error} />
-          <Field label="Bio" value={bio} onChangeText={setBio} maxLength={160} multiline placeholder="Speedrunner. Merge enjoyer. Has never lost at Pairs." style={{ minHeight: 88, textAlignVertical: "top" }} />
+          <Field label="Bio" value={bio} onChangeText={setBio} maxLength={160} multiline placeholder="Speedrunner. Shortwick enjoyer. Has never lost at Pairs." style={{ minHeight: 88, textAlignVertical: "top" }} />
           <T variant="mono" color="textDim" align="right">
             {bio.length}/160
           </T>

@@ -1,11 +1,18 @@
 import createMDX from "@next/mdx";
 import type { NextConfig } from "next";
+import { portalCsp } from "./src/lib/frame-policy";
+
+/** Same default as `env.gameHost` (LOCAL_ENDPOINTS.gameHost). */
+const GAME_HOST = process.env.NEXT_PUBLIC_GAME_HOST ?? "http://localhost:5555";
 
 const config: NextConfig = {
   pageExtensions: ["ts", "tsx", "mdx"],
   transpilePackages: ["@thumbcade/protocol", "@thumbcade/design-tokens", "@thumbcade/legal", "@thumbcade/swipe-contract", "@thumbcade/sdk"],
   typedRoutes: false,
   agentRules: false,
+  async headers() {
+    return [{ source: "/:path*", headers: [{ key: "Content-Security-Policy", value: portalCsp(GAME_HOST) }] }];
+  },
   images: {
     remotePatterns: [
       { protocol: "http", hostname: "127.0.0.1", port: "54321" },

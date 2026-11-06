@@ -1,0 +1,86 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 1024 1024" width="1024" height="1024">
+  <!-- Three spot inks on warm paper: blue #0078BF, bright red #F15060, yellow #FFE800.
+       Overprints are their multiply mixes (blue over red #00264A); tints are halftone dots; the red plate sits a hair
+       off register. -->
+  <defs>
+    <pattern id="yel" width="24" height="24" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+      <circle cx="12" cy="12" r="5.6" fill="#FFE800"/>
+    </pattern>
+    <pattern id="yelDense" width="24" height="24" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+      <circle cx="12" cy="12" r="9" fill="#FFE800"/>
+    </pattern>
+    <pattern id="blueDots" width="18" height="18" patternUnits="userSpaceOnUse" patternTransform="rotate(15)">
+      <circle cx="9" cy="9" r="3.4" fill="#0078BF"/>
+    </pattern>
+    <pattern id="blueRule" width="14" height="14" patternUnits="userSpaceOnUse" patternTransform="rotate(15)">
+      <circle cx="7" cy="7" r="4.4" fill="#0078BF"/>
+    </pattern>
+    <pattern id="redDots" width="18" height="18" patternUnits="userSpaceOnUse" patternTransform="rotate(75)">
+      <circle cx="9" cy="9" r="5.2" fill="#F15060"/>
+    </pattern>
+    <filter id="grain" x="0" y="0" width="1" height="1">
+      <feTurbulence type="fractalNoise" baseFrequency="0.05" numOctaves="2" seed="5" result="n"/>
+      <feColorMatrix in="n" type="matrix" values="0 0 0 0 0.953  0 0 0 0 0.929  0 0 0 0 0.878  0 0 0 2.2 -1.42"/>
+    </filter>
+    <!-- An eighth note, knocked out of the ink: head, stem, flag. Drawn at size 100 around (0, 0). -->
+    <g id="note" fill="#F3EDE0">
+      <ellipse cx="-17" cy="30" rx="27" ry="19" transform="rotate(-24 -17 30)"/>
+      <rect x="5" y="-55" width="9" height="86"/>
+      <path d="M13 -55 Q52 -30 38 0 Q40 -22 13 -30 Z"/>
+    </g>
+  </defs>
+
+  <rect width="1024" height="1024" fill="#F3EDE0"/>
+
+  <!-- The record behind the roll. -->
+  <circle cx="512" cy="420" r="440" fill="url(#yel)"/>
+  <circle cx="512" cy="420" r="280" fill="url(#yelDense)"/>
+  <circle cx="512" cy="420" r="92" fill="url(#redDots)"/>
+  <g fill="none" stroke="#F15060" stroke-width="5">
+    <circle cx="518" cy="424" r="330"/>
+    <circle cx="518" cy="424" r="372"/>
+  </g>
+
+  <!-- Lane rules and the press bed under the line. -->
+  <rect x="308" y="0" width="9" height="1024" fill="url(#blueRule)"/>
+  <rect x="508" y="0" width="9" height="1024" fill="url(#blueRule)"/>
+  <rect x="708" y="0" width="9" height="1024" fill="url(#blueRule)"/>
+  <rect x="0" y="770" width="1024" height="254" fill="url(#blueDots)"/>
+
+  <!-- The roll: a staircase of ink, the lowest note being played at the line. -->
+  <rect x="724" y="-40" width="176" height="270" rx="34" fill="#0078BF"/>
+  <use xlink:href="#note" transform="translate(812 110) scale(1.15)"/>
+  <rect x="524" y="262" width="176" height="236" rx="34" fill="#0078BF"/>
+  <use xlink:href="#note" transform="translate(612 380) scale(1.15)"/>
+
+  <!-- The note in the press: blue, with the red plate printed over it a hair off. -->
+  <rect x="314" y="520" width="196" height="262" rx="38" fill="#0078BF"/>
+  <rect x="322" y="526" width="196" height="262" rx="38" fill="#F15060"/>
+  <rect x="322" y="526" width="188" height="256" rx="34" fill="#00264A"/>
+  <use xlink:href="#note" transform="translate(414 650) scale(1.2)"/>
+
+  <!-- The strike line, and the burst where the note meets it. -->
+  <rect x="96" y="762" width="832" height="18" fill="#F15060"/>
+  <circle cx="416" cy="771" r="168" fill="none" stroke="#FFE800" stroke-width="16"/>
+  <g fill="#FFE800">
+    <circle cx="232" cy="690" r="18"/>
+    <circle cx="610" cy="672" r="14"/>
+    <circle cx="186" cy="800" r="11"/>
+    <circle cx="640" cy="824" r="16"/>
+    <circle cx="300" cy="610" r="10"/>
+  </g>
+  <g fill="#F15060">
+    <circle cx="260" cy="636" r="12"/>
+    <circle cx="590" cy="610" r="10"/>
+    <circle cx="214" cy="742" r="9"/>
+    <circle cx="666" cy="740" r="12"/>
+  </g>
+  <g fill="#FFE800">
+    <circle cx="212" cy="771" r="9"/>
+    <circle cx="416" cy="771" r="9"/>
+    <circle cx="612" cy="771" r="9"/>
+    <circle cx="812" cy="771" r="9"/>
+  </g>
+
+  <rect width="1024" height="1024" filter="url(#grain)" opacity="0.5"/>
+</svg>

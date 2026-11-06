@@ -3,7 +3,6 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { Avatar } from "@/components/avatar";
 import { GameHero } from "@/components/game-hero";
-import { Icon } from "@/components/icon";
 import { ButtonLink } from "@/components/ui";
 import { PhoneFeed } from "@/components/web-feed/phone-feed";
 import { getChallenge, getLeaders, getLiveGames } from "@/lib/data";
@@ -55,11 +54,8 @@ export default async function ChallengePage({ params }: { params: Promise<{ code
         }
       >
         <div className="flex flex-wrap gap-3">
-          <ButtonLink href={`/play?g=${c.game.slug}`} size="lg">
-            <Icon name="play" size={18} active /> Accept the challenge
-          </ButtonLink>
-          <ButtonLink href="/#get" size="lg" variant="secondary">
-            Get the app
+          <ButtonLink href="/#get" size="lg">
+            Accept in the app
           </ButtonLink>
         </div>
       </GameHero>

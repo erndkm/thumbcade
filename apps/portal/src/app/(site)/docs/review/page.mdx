@@ -10,13 +10,15 @@ Every version is checked by a machine and then played by a person before it reac
 
 | Check | Passes when |
 | --- | --- |
-| Manifest | `thumbcade.json` is valid and the `id` is yours |
+| Manifest and files | `thumbcade.json` is valid, the `id` is yours, and every file is an [allowed type](#files) |
 | Size | Inside the [budgets](/docs/budgets) |
-| Static scan | No remote URLs, `eval`, or network calls to other origins |
+| Static scan | No remote URLs, `eval`, network calls to other origins, WebRTC, or obfuscated code |
+| Network | Nothing is requested from another origin and no WebRTC connection is opened while the game runs |
 | Loads & ready | The game calls `ready()` within budget, with no uncaught errors |
 | Tap starts a run | A synthetic tap triggers `gameplay.start()` — and a swipe doesn't |
 | Pause | Your loop and audio stop on `pause` |
 | Performance | Frame rate, long tasks and heap within budget |
+| Flashes | Nothing flashes more than 3 times a second over a large part of the screen, in attract mode or in play |
 
 ## A person plays it
 
@@ -26,5 +28,23 @@ Every version is checked by a machine and then played by a person before it reac
 - **Honest controls.** `controls` matches how the game actually plays.
 - **No dark patterns.** No fake buttons, no tricking players into sharing, no pretending to be the app's UI.
 - **No data collection.** Games can't collect personal data. The SDK's player id is already anonymous — keep it that way.
+
+## Files
+
+A bundle holds web code, data and media, nothing else. Uploads with any other file are refused, and so is a native program under any name.
+
+- **Code and data:** `.html` `.htm` `.js` `.mjs` `.css` `.json` `.map` `.txt` `.xml` `.csv` `.wasm` `.glsl` `.vert` `.frag` `.wgsl`
+- **Images:** `.png` `.jpg` `.jpeg` `.webp` `.avif` `.gif` `.svg` `.ico` `.ktx2` `.basis` `.hdr` `.exr`
+- **Audio and video:** `.mp3` `.ogg` `.oga` `.opus` `.wav` `.m4a` `.aac` `.flac` `.weba` `.mp4` `.m4v` `.webm`
+- **Fonts:** `.woff` `.woff2` `.ttf` `.otf` `.fnt`
+- **Models and engine formats:** `.glb` `.gltf` `.bin` `.obj` `.mtl` `.fbx` `.drc` `.atlas` `.skel` `.tmj` `.tsj` `.ldtk` `.riv`
+
+Hidden files (`.env`, `.htaccess`) and files without an extension are refused too; `thumbcade publish` leaves out `.DS_Store` and `Thumbs.db` for you. Need another format? Write to us.
+
+## Readable code, no way out
+
+- **Minified is fine, obfuscated isn't.** A normal Vite, esbuild or terser build passes. Code run through an obfuscator or packer can't be reviewed, so it can't be published.
+- **Games stay in their page.** No requests to other servers, no WebRTC, no navigating away. The app blocks all of it; the web player stops a game that tries.
+- **Flashing:** keep anything that flashes over a large part of the screen to 3 times a second or fewer, and go easy on saturated red ([WCAG 2.3.1](https://www.w3.org/WAI/WCAG22/Understanding/three-flashes-or-below-threshold.html)). Respect `reducedMotion` in the launch context.
 
 Rejections always come with a note that says what to fix. Fix it, bump the version, publish again.

@@ -18,8 +18,8 @@ html, body { margin: 0; height: 100%; background: var(--ink); overflow: hidden; 
 html:not(.playing) #hud { opacity: 0; transform: translateY(-8px); }
 #timebar { height: 10px; border-radius: 999px; background: #2A1525; overflow: hidden; box-shadow: inset 0 0 0 1px rgba(255,111,181,0.15); }
 #timefill { height: 100%; width: 100%; background: var(--accent); border-radius: 999px; transform-origin: left center; }
-#timebar.low #timefill { background: #FF5A4E; animation: lowpulse 0.5s ease-in-out infinite alternate; }
-@keyframes lowpulse { from { opacity: 0.6; } to { opacity: 1; } }
+/* Low time: red, with a breathing opacity driven from main.ts through the kit's Photosafe (reduced-motion aware). */
+#timebar.low #timefill { background: #FF5A4E; }
 #row { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; margin-top: 10px; }
 #score { font-size: 28px; letter-spacing: -0.02em; }
 #level { font-size: 12px; letter-spacing: 0.14em; color: var(--dim); }

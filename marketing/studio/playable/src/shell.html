@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<!--HEAD-->
+<title>Thumbcade: three games, one swipe</title>
+<style>/*CSS*/</style>
+</head>
+<body>
+<div id="app">
+  <aside id="side-l" aria-hidden="true">
+    <div class="side-mark"><!--MARK--></div>
+    <div class="side-word"><!--WORDMARK--></div>
+    <p class="mono-label">Swipe up for the next game</p>
+  </aside>
+  <main id="stage" aria-label="Thumbcade playable ad">
+    <div id="track"></div>
+    <div id="scrim-top"></div>
+    <div id="scrim-bottom"></div>
+    <div id="hint" aria-hidden="true"><i></i></div>
+    <header id="top">
+      <span id="counter" class="chip mono">01 / 03</span>
+      <button id="sound" class="round" type="button" aria-label="Mute sound"></button>
+      <button id="cta-top" class="pill heat" type="button">Get Thumbcade</button>
+    </header>
+    <section id="caption" aria-live="polite">
+      <p class="handle">@thumbcade <span class="badge" aria-label="verified"></span></p>
+      <h1 id="cap-name"></h1>
+      <p id="cap-desc"></p>
+      <p id="cap-tags"></p>
+      <p id="cap-hint" class="mono-label"><span class="arrow"></span>Swipe up for the next game</p>
+    </section>
+    <div id="dock" aria-hidden="true"><b></b><span class="mono-label">Swipe up for the next game</span></div>
+    <section id="result" role="dialog" aria-label="Run over">
+      <p class="mono-label row"><span id="res-title"></span><span id="res-count"></span></p>
+      <p id="res-score" class="mono"></p>
+      <p id="res-best" class="mono-label"></p>
+      <button id="res-again" class="btn accent" type="button"></button>
+      <button id="res-next" class="btn ghost" type="button"></button>
+      <p class="mono-label swipe"><span class="arrow"></span>Swipe up for the next game</p>
+    </section>
+    <div id="toast" role="status"></div>
+  </main>
+  <aside id="side-r">
+    <p class="side-head">The feed is now playable.</p>
+    <button id="cta-side" class="btn heat" type="button">Get Thumbcade · Free</button>
+    <p class="mono-label">iPhone + Android</p>
+  </aside>
+  <section id="end" aria-label="Get Thumbcade">
+    <div class="end-in">
+      <div class="end-a">
+        <div class="end-mark"><!--MARK--></div>
+        <div class="end-word"><!--WORDMARK--></div>
+        <h2 id="end-head"></h2>
+      </div>
+      <div class="end-b">
+        <div id="end-icons" aria-hidden="true"></div>
+        <p id="end-count" class="mono-label"></p>
+        <p id="end-sub"></p>
+        <button id="cta-end" class="btn heat big" type="button">Get Thumbcade · Free</button>
+        <p class="mono-label dim">iPhone + Android</p>
+        <button id="replay" class="link mono-label" type="button"></button>
+      </div>
+    </div>
+  </section>
+</div>
+<!--GAMES-->
+<!--SDK-->
+<script>/*CONFIG*/</script>
+<script>/*DATA*/</script>
+<script>window.TC_PROBE = /*PROBE*/;</script>
+<script>/*ADAPTER*/</script>
+<script>/*SHELL*/</script>
+<!--NOTICES-->
+</body>
+</html>

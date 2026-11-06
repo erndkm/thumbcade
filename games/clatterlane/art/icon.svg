@@ -1,0 +1,88 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" width="1024" height="1024">
+  <defs>
+    <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#03040A"/>
+      <stop offset="0.5" stop-color="#070B1A"/>
+      <stop offset="1" stop-color="#0B1430"/>
+    </linearGradient>
+    <linearGradient id="lane" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#131C3A"/>
+      <stop offset="1" stop-color="#0C1226"/>
+    </linearGradient>
+    <radialGradient id="sheen" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0" stop-color="#3D63B8" stop-opacity="0.55"/>
+      <stop offset="1" stop-color="#3D63B8" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="pool" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0" stop-color="#BFD0FF" stop-opacity="0.5"/>
+      <stop offset="1" stop-color="#BFD0FF" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="ball" cx="0.34" cy="0.3" r="0.8">
+      <stop offset="0" stop-color="#3FB9FF"/>
+      <stop offset="0.45" stop-color="#0A57B8"/>
+      <stop offset="1" stop-color="#061A45"/>
+    </radialGradient>
+    <radialGradient id="halo" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0.45" stop-color="#08A0F0" stop-opacity="0.6"/>
+      <stop offset="1" stop-color="#08A0F0" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="trail" x1="0" y1="1" x2="0" y2="0">
+      <stop offset="0" stop-color="#08A0F0" stop-opacity="0"/>
+      <stop offset="0.55" stop-color="#08A0F0" stop-opacity="0.7"/>
+      <stop offset="1" stop-color="#7FD6FF"/>
+    </linearGradient>
+    <linearGradient id="pinShade" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#C9CCD8"/>
+      <stop offset="0.45" stop-color="#F3F0E8"/>
+      <stop offset="1" stop-color="#9DA3B8"/>
+    </linearGradient>
+    <g id="pin">
+      <path d="M-17 0 C-30 -40 -44 -92 -42 -122 C-40 -152 -23 -166 -16 -178 C-12 -190 -21 -208 -21 -226 C-21 -252 21 -252 21 -226 C21 -208 12 -190 16 -178 C23 -166 40 -152 42 -122 C44 -92 30 -40 17 0 Z" fill="url(#pinShade)"/>
+      <rect x="-17" y="-176" width="34" height="7" fill="#08A0F0"/>
+      <rect x="-15" y="-189" width="30" height="7" fill="#08A0F0"/>
+    </g>
+  </defs>
+  <rect width="1024" height="1024" fill="url(#sky)"/>
+  <!-- the lane, running up the frame to the deck -->
+  <path d="M120 1024 L404 330 L620 330 L904 1024 Z" fill="url(#lane)"/>
+  <g stroke="#1B2648" stroke-width="3">
+    <path d="M290 1024 L446 330"/><path d="M420 1024 L480 330"/><path d="M604 1024 L544 330"/><path d="M734 1024 L578 330"/>
+  </g>
+  <ellipse cx="512" cy="720" rx="230" ry="300" fill="url(#sheen)"/>
+  <!-- gutter lights -->
+  <g fill="#08A0F0">
+    <path d="M116 1004 L132 966 L146 966 L130 1004 Z"/><path d="M152 917 L166 883 L178 883 L164 917 Z"/><path d="M186 834 L198 805 L208 805 L196 834 Z"/>
+    <path d="M216 761 L226 737 L235 737 L225 761 Z"/><path d="M243 695 L251 675 L259 675 L251 695 Z"/>
+    <path d="M908 1004 L892 966 L878 966 L894 1004 Z"/><path d="M872 917 L858 883 L846 883 L860 917 Z"/><path d="M838 834 L826 805 L816 805 L828 834 Z"/>
+    <path d="M808 761 L798 737 L789 737 L799 761 Z"/><path d="M781 695 L773 675 L765 675 L773 695 Z"/>
+  </g>
+  <!-- arrows on the lane -->
+  <g fill="#08A0F0" opacity="0.85">
+    <path d="M512 590 l12 40 h-24 z"/><path d="M452 606 l11 38 h-22 z"/><path d="M572 606 l11 38 h-22 z"/>
+  </g>
+  <ellipse cx="512" cy="360" rx="250" ry="90" fill="url(#pool)"/>
+  <!-- the ball's hook: in from the right, bending into the pocket -->
+  <path d="M700 1024 C690 820 660 640 560 470" stroke="url(#trail)" stroke-width="26" stroke-linecap="round" fill="none"/>
+  <!-- back pins still standing, front pins flying -->
+  <use href="#pin" transform="translate(436 352) scale(0.62)"/>
+  <use href="#pin" transform="translate(620 348) scale(0.62)"/>
+  <use href="#pin" transform="translate(372 330) scale(0.58) rotate(-38)"/>
+  <use href="#pin" transform="translate(690 300) scale(0.6) rotate(52)"/>
+  <use href="#pin" transform="translate(300 250) scale(0.62) rotate(-78)"/>
+  <use href="#pin" transform="translate(760 220) scale(0.56) rotate(112)"/>
+  <use href="#pin" transform="translate(500 196) scale(0.7) rotate(-152)"/>
+  <use href="#pin" transform="translate(600 410) scale(0.78) rotate(28)"/>
+  <!-- the ball, just through the pocket -->
+  <circle cx="530" cy="470" r="180" fill="url(#halo)"/>
+  <circle cx="530" cy="470" r="104" fill="url(#ball)"/>
+  <path d="M446 520 C480 450 540 470 566 400" stroke="#62D2FF" stroke-width="10" stroke-linecap="round" fill="none" opacity="0.5"/>
+  <path d="M470 556 C520 520 580 540 612 470" stroke="#62D2FF" stroke-width="6" stroke-linecap="round" fill="none" opacity="0.35"/>
+  <g fill="#02060F" transform="rotate(-32 588 430)">
+    <ellipse cx="576" cy="414" rx="10" ry="7"/><ellipse cx="602" cy="414" rx="10" ry="7"/><ellipse cx="589" cy="444" rx="11" ry="8"/>
+  </g>
+  <circle cx="484" cy="424" r="18" fill="#E8F6FF" opacity="0.65"/>
+  <!-- the crack of contact -->
+  <g stroke="#F3F0E8" stroke-width="9" stroke-linecap="round">
+    <path d="M612 396 L660 350"/><path d="M628 420 L690 412"/><path d="M600 372 L612 312"/>
+  </g>
+</svg>

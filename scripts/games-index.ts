@@ -21,35 +21,120 @@ const ROOT = resolve(fileURLToPath(new URL("..", import.meta.url)));
 const GAMES = join(ROOT, "games");
 const OUT = join(ROOT, "dist", "games");
 
-/** Who "made" each launch game in the seeded world (spread across SEED_CREATORS; the studio owns a few). */
+/**
+ * Who "made" each game in the seeded world. Everything in the house style (games/_kit fonts and UI) belongs to the
+ * studio; each other creator has a visual identity of their own that none of the others share.
+ */
 const CREATORS: Record<string, SeedCreatorHandle> = {
+  // Thumbcade Studio: the house style.
   flapjack: "thumbcade",
-  "lane-rush": "thumbcade",
-  stackd: "lowpolyfox",
-  "helix-fall": "lowpolyfox",
-  gambit: "quietmoves",
-  mines: "quietmoves",
-  pairs: "pixelwitch",
-  merge: "pixelwitch",
-  slice: "juicefactory",
-  "breakout-neo": "juicefactory",
-  reflex: "bitbybit",
-  snek: "bitbybit",
+  duskrail: "thumbcade",
+  stackd: "thumbcade",
+  heatfall: "thumbcade",
+  kingsnare: "thumbcade",
+  mines: "thumbcade",
+  pairs: "thumbcade",
+  shortwick: "thumbcade",
+  "neon-chop": "thumbcade",
+  voltbrick: "thumbcade",
+  kneejerk: "thumbcade",
+  snek: "thumbcade",
+  clearcut: "thumbcade",
+  spindart: "thumbcade",
+  "six-seven": "thumbcade",
+  laddersnap: "thumbcade",
+  curlwall: "thumbcade",
+  weavefire: "thumbcade",
+  rimflare: "thumbcade",
+  clatterlane: "thumbcade",
+  // Hand-placed pixel art, bitmap type, cozy palette.
+  stirabout: "pixelwitch",
+  bobberlight: "pixelwitch",
+  frostwhisk: "pixelwitch",
+  // Voxel dioramas under an isometric camera.
+  foxbend: "lowpolyfox",
+  paddlefox: "lowpolyfox",
+  clackwood: "lowpolyfox",
+  // Paper, ink and a serif.
+  "every-square": "quietmoves",
+  unbroken: "quietmoves",
+  "fair-copy": "quietmoves",
+  overstamp: "quietmoves",
+  // Loud cartoon: thick outlines, halftone, sticker type.
+  thunkfest: "juicefactory",
+  "wobble-up": "juicefactory",
+  brinebop: "juicefactory",
+  lintstorm: "juicefactory",
+  // Layered silhouettes against a moving sky. Its own look, but published by the studio.
+  lanternline: "thumbcade",
+  // Claymation: sculpted clay, soft studio light, thumbprints, Fredoka on clay plaques.
+  squishputt: "softbake",
+  pinchbake: "softbake",
+  // Ballpoint doodles on notebook paper.
+  doodlebow: "marginalia",
+  pagewing: "marginalia",
+  tumbledoodle: "marginalia",
+  // Risograph prints: a few spot inks overprinting on warm paper, halftone tints, slightly off register.
+  leapwater: "bitbybit",
+  longhop: "bitbybit",
+  halftune: "bitbybit",
+  spotfall: "bitbybit",
 };
 
 const NOTES: Record<string, string> = {
   flapjack: "Opening night at the diner. The forks are polished and the syrup is warm.",
   stackd: "First tower. Perfect drops grow the slab back, so stay sharp.",
-  "lane-rush": "The viaduct is open. Rovers show up once you get fast.",
-  gambit: "64 hand-checked mates, plus a new opener every day.",
+  duskrail: "The viaduct is open. Rovers show up once you get fast.",
+  kingsnare: "64 hand-checked mates, plus a new opener every day.",
   pairs: "Five board sizes and a lot of very similar shapes.",
-  merge: "The fuse is lit. Merges buy you time, dead swipes burn it.",
+  shortwick: "The fuse is lit. Merges buy you time, dead swipes burn it.",
   snek: "Golden bonus every fifth bite. Rocks after the sixth.",
-  slice: "The Glow Market is open. Mind the static.",
-  "breakout-neo": "Seven layouts, five power-ups, one very angry chain multiplier.",
-  "helix-fall": "Ring colours change every ten. The heat front doesn't wait.",
-  reflex: "Four tests, one thumb, three lives.",
+  "neon-chop": "The Glow Market is open. Surge cells arc into the produce around them. Mind the static.",
+  voltbrick: "Seven layouts, five power-ups, one very angry chain multiplier.",
+  heatfall: "New alloy every ten grates. Melting through one vents the heat front.",
+  kneejerk: "Four tests, one thumb, three lives.",
   mines: "8×12, fifteen mines, first tap always safe.",
+  clearcut: "First board. Cut on back-to-back drops and the streak multiplies, so don't let the fuse catch you thinking.",
+  spindart: "First disc. Lit cells pay three, bosses pay five, steel pays nothing.",
+  "six-seven": "First bell. Left hand six, right hand seven, hands still when the teacher looks. Sixty-seven gets a party.",
+  laddersnap: "First deal. Kings go on aces, every hand can be cleared, and the next card is always face up. Chain without drawing.",
+  curlwall: "Floodlights on. Two free kicks to find your flick, three balls after that, and the rings in the top corners hand one back.",
+  weavefire: "First thread. Five gun levels to fly into, pink to skim for sparks, a Loom with six arms to break, and an overdrive that never cools.",
+  rimflare: "Lights on over the rooftop court. Swishes buy back the most time, three in a row sets the ball alight, and the city wakes up one window per bucket.",
+  clatterlane: "Lane lights on. Strikes buy time, a turkey turns the lights pink, every fifth rack glows, and the bumpers stay up for your first two racks.",
+  lanternline: "first light. one line, one thumb, one long day. the lanterns are waiting.",
+  leapwater: "first print: one koi, a long stream, and falls that climb on into the night. dive deep, let go, leap.",
+  longhop: "first print run. one kangaroo, one joey, and a horizon that keeps going. hold as you land, let go at the bottom.",
+  halftune: "first pressing: four old tunes, one strike line, and an encore if you make it through the mountain king. every tile you tap is a note.",
+  spotfall: "first sheet off the drum: six inks from three, a squid who supplies them, and a press that never waits. pop three, and whatever hung from them falls.",
+  doodlebow:
+    "Version 1.0: I drew a tiny archer in the margin of my math homework, gave him ten arrows, and he has not stopped asking for more targets since.",
+  pagewing:
+    "Version 1.0: I folded last week's homework into a plane, drew it some warm air to ride, and it has been doing loops in the margins ever since. Please don't tell my teacher.",
+  tumbledoodle:
+    "Version 1.0: a hole tore open in the middle of my homework and started eating the margins. Thirty-one doodles, three erasers and, once, the moon. I keep drawing more.",
+  "every-square": "first edition: one knight, sixty-four squares, and a clock that burns quietly along the edge of the board.",
+  unbroken: "first printing: grids from four by four to six by eight, a pen that never lifts, and a seal for every puzzle you finish.",
+  "fair-copy": "first proof: sixteen letters, seventy seconds on the clock, a dictionary that forgives, and a seal for every fourth word you write.",
+  overstamp: "first filing: twelve marks of my own, a tray of seven, and a heap that only ever deals what can be cleared. three alike get the seal.",
+  foxbend: "First release: the pond is fully voxelized, the stones place themselves, and the fox now treads water instead of quietly vanishing.",
+  paddlefox: "First release: procedurally meandering river, beaver dams with exactly one gap, and a canoe that capsizes with as much dignity as I could model.",
+  clackwood:
+    "First release: a pool table built from logs in a clearing, knot-hole pockets, a clock that every pot winds back, and a beaver who has opinions about bank shots.",
+  stirabout: "first brew is out ~ seven ingredients, one very unhelpful cat, and a little waltz i hummed while drawing the cauldron.",
+  bobberlight: "a quiet night on the pond ~ four kinds of fish (one of them golden), fireflies, and the same cat, now holding a rod.",
+  frostwhisk:
+    "the pond froze over ~ so the cat got a copper lid, the moon lent us a stone, and five critters lined up to play. pip is a pushover. rascal is not.",
+  thunkfest:
+    "HARD HATS ON, GOPHERS: VERSION ONE SWINGS IN WITH A GIANT MALLET, GOLDEN GOPHERS WORTH A FORTUNE AND BUNNIES YOU ABSOLUTELY SHOULD NOT THUNK!",
+  "wobble-up":
+    "FRESH OUT OF THE MOLD: one pink jelly, a pocket full of springs and a sky full of grumpy clouds, so DRAG, BOING AND GO GET THOSE CHERRIES!",
+  brinebop:
+    "LOW TIDE, HIGH SCORES: SIX GOOGLY CRITTERS, ONE VERY LOUD CONCH AND SIXTY SECONDS ON THE CLOCK. EVERY SPECIAL YOU SAVE GOES KA-BLAM AT THE BUZZER!",
+  lintstorm:
+    "THE DRYER BURST AND THE SOCKS WANT REVENGE: VERSION ONE IRONS IN WITH ONE BRAVE STEAM IRON, A POCKET FULL OF LOOSE CHANGE AND THREE BOSSES WHO REALLY NEED A PRESS!",
+  squishputt: "Our first batch is out of the oven: twelve hand-squished holes, one very nosy frog, and a windmill we only had to rebuild four times.",
+  pinchbake: "Second batch is out: nine clay bakes, one sourdough starter that will not stop rising, and a party cake we have only made twice. Squish twins, keep it down.",
 };
 
 async function listFiles(dir: string): Promise<string[]> {

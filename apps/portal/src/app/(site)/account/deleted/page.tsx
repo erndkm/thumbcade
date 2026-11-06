@@ -9,10 +9,10 @@ export default function AccountDeleted() {
       <span className="label">Account deleted</span>
       <h1 className="display text-[clamp(40px,6vw,80px)] text-text">Game over.</h1>
       <p className="max-w-[480px] text-[17px] leading-7 text-text-dim">
-        Your account and everything tied to it are gone. Thanks for playing. You can still play without an account anytime.
+        Your account and everything tied to it are gone. Thanks for playing. You can still play in the app without an account anytime.
       </p>
-      <ButtonLink href="/play" className="self-start">
-        Play without an account
+      <ButtonLink href="/" className="self-start">
+        Back to home
       </ButtonLink>
     </section>
   );

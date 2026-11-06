@@ -1,0 +1,34 @@
+{
+  "$schema": "https://thumbcade.com/schema/manifest-v1.json",
+  "id": "thunkfest",
+  "name": "Thunkfest",
+  "version": "1.0.0",
+  "sdk": "^1.0.0",
+  "entry": "index.html",
+  "description": "GOPHERS IN HARD HATS POP UP. THUNK 'EM FLAT! SPARE THE BUNNIES, GRAB THE GOLDEN ONES, KEEP THAT COMBO ROLLING!",
+  "tags": [
+    "reflex",
+    "3d",
+    "cartoon",
+    "arcade"
+  ],
+  "accentColor": "#FF4A38",
+  "icon": "assets/icon.png",
+  "ageRating": "9+",
+  "controls": {
+    "vertical": false,
+    "horizontal": false,
+    "multitouch": false,
+    "inputs": [
+      "tap"
+    ]
+  },
+  "session": "short",
+  "audio": true,
+  "orientation": "portrait",
+  "score": {
+    "order": "desc",
+    "max": 100000,
+    "format": "integer"
+  }
+}

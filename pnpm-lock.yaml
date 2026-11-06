@@ -506,6 +506,9 @@ importers:
       '@types/subset-font':
         specifier: 2.3.0
         version: 2.3.0
+      fontverter:
+        specifier: 2.0.0
+        version: 2.0.0
       happy-dom:
         specifier: 21.0.1
         version: 21.0.1
@@ -522,7 +525,7 @@ importers:
         specifier: 8.3.4
         version: 8.3.4(@types/node@26.6.5)(esbuild@0.28.2)(jiti@2.7.0)(terser@5.51.2)(tsx@4.23.15)(yaml@2.9.1)
 
-  games/breakout-neo:
+  games/bobberlight:
     dependencies:
       '@thumbcade-games/kit':
         specifier: workspace:*
@@ -530,9 +533,128 @@ importers:
       '@thumbcade/sdk':
         specifier: workspace:*
         version: link:../../packages/sdk
-      pixi.js:
-        specifier: 8.22.0
-        version: 8.22.0
+
+  games/brinebop:
+    dependencies:
+      '@thumbcade-games/kit':
+        specifier: workspace:*
+        version: link:../_kit
+      '@thumbcade/sdk':
+        specifier: workspace:*
+        version: link:../../packages/sdk
+    devDependencies:
+      '@thumbcade/swipe-contract':
+        specifier: workspace:*
+        version: link:../../packages/swipe-contract
+
+  games/clackwood:
+    dependencies:
+      '@thumbcade-games/kit':
+        specifier: workspace:*
+        version: link:../_kit
+      '@thumbcade/sdk':
+        specifier: workspace:*
+        version: link:../../packages/sdk
+      three:
+        specifier: 0.186.1
+        version: 0.186.1
+    devDependencies:
+      '@thumbcade/swipe-contract':
+        specifier: workspace:*
+        version: link:../../packages/swipe-contract
+      '@types/three':
+        specifier: 0.186.0
+        version: 0.186.0
+
+  games/clatterlane:
+    dependencies:
+      '@thumbcade-games/kit':
+        specifier: workspace:*
+        version: link:../_kit
+      '@thumbcade/sdk':
+        specifier: workspace:*
+        version: link:../../packages/sdk
+      three:
+        specifier: 0.186.1
+        version: 0.186.1
+    devDependencies:
+      '@thumbcade/swipe-contract':
+        specifier: workspace:*
+        version: link:../../packages/swipe-contract
+      '@types/three':
+        specifier: 0.186.0
+        version: 0.186.0
+
+  games/clearcut:
+    dependencies:
+      '@thumbcade-games/kit':
+        specifier: workspace:*
+        version: link:../_kit
+      '@thumbcade/sdk':
+        specifier: workspace:*
+        version: link:../../packages/sdk
+
+  games/curlwall:
+    dependencies:
+      '@thumbcade-games/kit':
+        specifier: workspace:*
+        version: link:../_kit
+      '@thumbcade/sdk':
+        specifier: workspace:*
+        version: link:../../packages/sdk
+      three:
+        specifier: 0.186.1
+        version: 0.186.1
+    devDependencies:
+      '@thumbcade/swipe-contract':
+        specifier: workspace:*
+        version: link:../../packages/swipe-contract
+      '@types/three':
+        specifier: 0.186.0
+        version: 0.186.0
+
+  games/doodlebow:
+    dependencies:
+      '@thumbcade-games/kit':
+        specifier: workspace:*
+        version: link:../_kit
+      '@thumbcade/sdk':
+        specifier: workspace:*
+        version: link:../../packages/sdk
+
+  games/duskrail:
+    dependencies:
+      '@thumbcade-games/kit':
+        specifier: workspace:*
+        version: link:../_kit
+      '@thumbcade/sdk':
+        specifier: workspace:*
+        version: link:../../packages/sdk
+      three:
+        specifier: 0.186.1
+        version: 0.186.1
+    devDependencies:
+      '@types/three':
+        specifier: 0.186.0
+        version: 0.186.0
+
+  games/every-square:
+    dependencies:
+      '@thumbcade-games/kit':
+        specifier: workspace:*
+        version: link:../_kit
+      '@thumbcade/sdk':
+        specifier: workspace:*
+        version: link:../../packages/sdk
+
+  games/fair-copy:
+    dependencies:
+      '@thumbcade-games/kit':
+        specifier: workspace:*
+        version: link:../_kit
+      '@thumbcade/sdk':
+        specifier: workspace:*
+        version: link:../../packages/sdk
 
   games/flapjack:
     dependencies:
@@ -543,7 +665,61 @@ importers:
         specifier: workspace:*
         version: link:../../packages/sdk
 
-  games/gambit:
+  games/foxbend:
+    dependencies:
+      '@thumbcade-games/kit':
+        specifier: workspace:*
+        version: link:../_kit
+      '@thumbcade/sdk':
+        specifier: workspace:*
+        version: link:../../packages/sdk
+      three:
+        specifier: 0.186.1
+        version: 0.186.1
+    devDependencies:
+      '@types/three':
+        specifier: 0.186.0
+        version: 0.186.0
+
+  games/frostwhisk:
+    dependencies:
+      '@thumbcade-games/kit':
+        specifier: workspace:*
+        version: link:../_kit
+      '@thumbcade/sdk':
+        specifier: workspace:*
+        version: link:../../packages/sdk
+    devDependencies:
+      '@thumbcade/swipe-contract':
+        specifier: workspace:*
+        version: link:../../packages/swipe-contract
+
+  games/halftune:
+    dependencies:
+      '@thumbcade-games/kit':
+        specifier: workspace:*
+        version: link:../_kit
+      '@thumbcade/sdk':
+        specifier: workspace:*
+        version: link:../../packages/sdk
+
+  games/heatfall:
+    dependencies:
+      '@thumbcade-games/kit':
+        specifier: workspace:*
+        version: link:../_kit
+      '@thumbcade/sdk':
+        specifier: workspace:*
+        version: link:../../packages/sdk
+      three:
+        specifier: 0.186.1
+        version: 0.186.1
+    devDependencies:
+      '@types/three':
+        specifier: 0.186.0
+        version: 0.186.0
+
+  games/kingsnare:
     dependencies:
       '@thumbcade-games/kit':
         specifier: workspace:*
@@ -555,7 +731,7 @@ importers:
         specifier: 1.4.0
         version: 1.4.0
 
-  games/helix-fall:
+  games/kneejerk:
     dependencies:
       '@thumbcade-games/kit':
         specifier: workspace:*
@@ -563,15 +739,8 @@ importers:
       '@thumbcade/sdk':
         specifier: workspace:*
         version: link:../../packages/sdk
-      three:
-        specifier: 0.186.1
-        version: 0.186.1
-    devDependencies:
-      '@types/three':
-        specifier: 0.186.0
-        version: 0.186.0
 
-  games/lane-rush:
+  games/laddersnap:
     dependencies:
       '@thumbcade-games/kit':
         specifier: workspace:*
@@ -579,15 +748,39 @@ importers:
       '@thumbcade/sdk':
         specifier: workspace:*
         version: link:../../packages/sdk
-      three:
-        specifier: 0.186.1
-        version: 0.186.1
-    devDependencies:
-      '@types/three':
-        specifier: 0.186.0
-        version: 0.186.0
 
-  games/merge:
+  games/lanternline:
+    dependencies:
+      '@thumbcade-games/kit':
+        specifier: workspace:*
+        version: link:../_kit
+      '@thumbcade/sdk':
+        specifier: workspace:*
+        version: link:../../packages/sdk
+
+  games/leapwater:
+    dependencies:
+      '@thumbcade-games/kit':
+        specifier: workspace:*
+        version: link:../_kit
+      '@thumbcade/sdk':
+        specifier: workspace:*
+        version: link:../../packages/sdk
+
+  games/lintstorm:
+    dependencies:
+      '@thumbcade-games/kit':
+        specifier: workspace:*
+        version: link:../_kit
+      '@thumbcade/sdk':
+        specifier: workspace:*
+        version: link:../../packages/sdk
+    devDependencies:
+      '@thumbcade/swipe-contract':
+        specifier: workspace:*
+        version: link:../../packages/swipe-contract
+
+  games/longhop:
     dependencies:
       '@thumbcade-games/kit':
         specifier: workspace:*
@@ -605,25 +798,7 @@ importers:
         specifier: workspace:*
         version: link:../../packages/sdk
 
-  games/pairs:
-    dependencies:
-      '@thumbcade-games/kit':
-        specifier: workspace:*
-        version: link:../_kit
-      '@thumbcade/sdk':
-        specifier: workspace:*
-        version: link:../../packages/sdk
-
-  games/reflex:
-    dependencies:
-      '@thumbcade-games/kit':
-        specifier: workspace:*
-        version: link:../_kit
-      '@thumbcade/sdk':
-        specifier: workspace:*
-        version: link:../../packages/sdk
-
-  games/slice:
+  games/neon-chop:
     dependencies:
       '@thumbcade-games/kit':
         specifier: workspace:*
@@ -635,6 +810,103 @@ importers:
         specifier: 8.22.0
         version: 8.22.0
 
+  games/overstamp:
+    dependencies:
+      '@thumbcade-games/kit':
+        specifier: workspace:*
+        version: link:../_kit
+      '@thumbcade/sdk':
+        specifier: workspace:*
+        version: link:../../packages/sdk
+    devDependencies:
+      '@thumbcade/swipe-contract':
+        specifier: workspace:*
+        version: link:../../packages/swipe-contract
+
+  games/paddlefox:
+    dependencies:
+      '@thumbcade-games/kit':
+        specifier: workspace:*
+        version: link:../_kit
+      '@thumbcade/sdk':
+        specifier: workspace:*
+        version: link:../../packages/sdk
+      three:
+        specifier: 0.186.1
+        version: 0.186.1
+    devDependencies:
+      '@types/three':
+        specifier: 0.186.0
+        version: 0.186.0
+
+  games/pagewing:
+    dependencies:
+      '@thumbcade-games/kit':
+        specifier: workspace:*
+        version: link:../_kit
+      '@thumbcade/sdk':
+        specifier: workspace:*
+        version: link:../../packages/sdk
+
+  games/pairs:
+    dependencies:
+      '@thumbcade-games/kit':
+        specifier: workspace:*
+        version: link:../_kit
+      '@thumbcade/sdk':
+        specifier: workspace:*
+        version: link:../../packages/sdk
+
+  games/pinchbake:
+    dependencies:
+      '@thumbcade-games/kit':
+        specifier: workspace:*
+        version: link:../_kit
+      '@thumbcade/sdk':
+        specifier: workspace:*
+        version: link:../../packages/sdk
+    devDependencies:
+      '@thumbcade/swipe-contract':
+        specifier: workspace:*
+        version: link:../../packages/swipe-contract
+
+  games/rimflare:
+    dependencies:
+      '@thumbcade-games/kit':
+        specifier: workspace:*
+        version: link:../_kit
+      '@thumbcade/sdk':
+        specifier: workspace:*
+        version: link:../../packages/sdk
+      three:
+        specifier: 0.186.1
+        version: 0.186.1
+    devDependencies:
+      '@thumbcade/swipe-contract':
+        specifier: workspace:*
+        version: link:../../packages/swipe-contract
+      '@types/three':
+        specifier: 0.186.0
+        version: 0.186.0
+
+  games/shortwick:
+    dependencies:
+      '@thumbcade-games/kit':
+        specifier: workspace:*
+        version: link:../_kit
+      '@thumbcade/sdk':
+        specifier: workspace:*
+        version: link:../../packages/sdk
+
+  games/six-seven:
+    dependencies:
+      '@thumbcade-games/kit':
+        specifier: workspace:*
+        version: link:../_kit
+      '@thumbcade/sdk':
+        specifier: workspace:*
+        version: link:../../packages/sdk
+
   games/snek:
     dependencies:
       '@thumbcade-games/kit':
@@ -643,6 +915,51 @@ importers:
       '@thumbcade/sdk':
         specifier: workspace:*
         version: link:../../packages/sdk
+
+  games/spindart:
+    dependencies:
+      '@thumbcade-games/kit':
+        specifier: workspace:*
+        version: link:../_kit
+      '@thumbcade/sdk':
+        specifier: workspace:*
+        version: link:../../packages/sdk
+      three:
+        specifier: 0.186.1
+        version: 0.186.1
+    devDependencies:
+      '@types/three':
+        specifier: 0.186.0
+        version: 0.186.0
+
+  games/spotfall:
+    dependencies:
+      '@thumbcade-games/kit':
+        specifier: workspace:*
+        version: link:../_kit
+      '@thumbcade/sdk':
+        specifier: workspace:*
+        version: link:../../packages/sdk
+    devDependencies:
+      '@thumbcade/swipe-contract':
+        specifier: workspace:*
+        version: link:../../packages/swipe-contract
+
+  games/squishputt:
+    dependencies:
+      '@thumbcade-games/kit':
+        specifier: workspace:*
+        version: link:../_kit
+      '@thumbcade/sdk':
+        specifier: workspace:*
+        version: link:../../packages/sdk
+      three:
+        specifier: 0.186.1
+        version: 0.186.1
+    devDependencies:
+      '@types/three':
+        specifier: 0.186.0
+        version: 0.186.0
 
   games/stackd:
     dependencies:
@@ -659,6 +976,90 @@ importers:
       '@types/three':
         specifier: 0.186.0
         version: 0.186.0
+
+  games/stirabout:
+    dependencies:
+      '@thumbcade-games/kit':
+        specifier: workspace:*
+        version: link:../_kit
+      '@thumbcade/sdk':
+        specifier: workspace:*
+        version: link:../../packages/sdk
+
+  games/thunkfest:
+    dependencies:
+      '@thumbcade-games/kit':
+        specifier: workspace:*
+        version: link:../_kit
+      '@thumbcade/sdk':
+        specifier: workspace:*
+        version: link:../../packages/sdk
+      three:
+        specifier: 0.186.1
+        version: 0.186.1
+    devDependencies:
+      '@types/three':
+        specifier: 0.186.0
+        version: 0.186.0
+
+  games/tumbledoodle:
+    dependencies:
+      '@thumbcade-games/kit':
+        specifier: workspace:*
+        version: link:../_kit
+      '@thumbcade/sdk':
+        specifier: workspace:*
+        version: link:../../packages/sdk
+    devDependencies:
+      '@thumbcade/swipe-contract':
+        specifier: workspace:*
+        version: link:../../packages/swipe-contract
+
+  games/unbroken:
+    dependencies:
+      '@thumbcade-games/kit':
+        specifier: workspace:*
+        version: link:../_kit
+      '@thumbcade/sdk':
+        specifier: workspace:*
+        version: link:../../packages/sdk
+
+  games/voltbrick:
+    dependencies:
+      '@thumbcade-games/kit':
+        specifier: workspace:*
+        version: link:../_kit
+      '@thumbcade/sdk':
+        specifier: workspace:*
+        version: link:../../packages/sdk
+      pixi.js:
+        specifier: 8.22.0
+        version: 8.22.0
+
+  games/weavefire:
+    dependencies:
+      '@thumbcade-games/kit':
+        specifier: workspace:*
+        version: link:../_kit
+      '@thumbcade/sdk':
+        specifier: workspace:*
+        version: link:../../packages/sdk
+      pixi.js:
+        specifier: 8.22.0
+        version: 8.22.0
+    devDependencies:
+      '@thumbcade/swipe-contract':
+        specifier: workspace:*
+        version: link:../../packages/swipe-contract
+
+  games/wobble-up:
+    dependencies:
+      '@thumbcade-games/kit':
+        specifier: workspace:*
+        version: link:../_kit
+      '@thumbcade/sdk':
+        specifier: workspace:*
+        version: link:../../packages/sdk
 
   packages/cli:
     dependencies:
