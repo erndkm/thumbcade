@@ -828,6 +828,25 @@ importers:
         specifier: workspace:*
         version: link:../../packages/swipe-contract
 
+  games/long-suit:
+    dependencies:
+      '@thumbcade-games/kit':
+        specifier: workspace:*
+        version: link:../_kit
+      '@thumbcade/sdk':
+        specifier: workspace:*
+        version: link:../../packages/sdk
+    devDependencies:
+      '@thumbcade/swipe-contract':
+        specifier: workspace:*
+        version: link:../../packages/swipe-contract
+      fontverter:
+        specifier: 2.0.0
+        version: 2.0.0
+      opentype.js:
+        specifier: 2.0.0
+        version: 2.0.0
+
   games/longhop:
     dependencies:
       '@thumbcade-games/kit':
@@ -988,6 +1007,19 @@ importers:
       '@types/three':
         specifier: 0.186.0
         version: 0.186.0
+
+  games/ringblot:
+    dependencies:
+      '@thumbcade-games/kit':
+        specifier: workspace:*
+        version: link:../_kit
+      '@thumbcade/sdk':
+        specifier: workspace:*
+        version: link:../../packages/sdk
+    devDependencies:
+      '@thumbcade/swipe-contract':
+        specifier: workspace:*
+        version: link:../../packages/swipe-contract
 
   games/rowlock:
     dependencies:

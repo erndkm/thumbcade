@@ -1,0 +1,52 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" width="1024" height="1024">
+  <!-- Three spot inks and a key on warm paper: bright red #F15060 (the player), blue #0078BF and sunflower #FFB511
+       (the rivals), black #2B2A2A. A red print with its halftone tint, a wet red line walking a loop out of it and
+       almost home, the red beetle at its head, and a blue print in the corner. The red plate sits a little off
+       register. -->
+  <defs>
+    <pattern id="red" width="24" height="24" patternUnits="userSpaceOnUse" patternTransform="rotate(15)">
+      <circle cx="12" cy="12" r="9.6" fill="#F15060"/>
+    </pattern>
+    <pattern id="blue" width="24" height="24" patternUnits="userSpaceOnUse" patternTransform="rotate(75)">
+      <circle cx="12" cy="12" r="9" fill="#0078BF"/>
+    </pattern>
+    <pattern id="sun" width="24" height="24" patternUnits="userSpaceOnUse">
+      <circle cx="12" cy="12" r="10.6" fill="#FFB511"/>
+    </pattern>
+  </defs>
+  <rect width="1024" height="1024" fill="#F3EDE0"/>
+  <!-- the dot grid -->
+  <g fill="#2B2A2A" opacity="0.34">
+    <circle cx="128" cy="128" r="6"/><circle cx="384" cy="128" r="6"/><circle cx="640" cy="128" r="6"/><circle cx="896" cy="128" r="6"/>
+    <circle cx="128" cy="384" r="6"/><circle cx="384" cy="384" r="6"/><circle cx="640" cy="384" r="6"/><circle cx="896" cy="384" r="6"/>
+    <circle cx="128" cy="640" r="6"/><circle cx="384" cy="640" r="6"/><circle cx="640" cy="640" r="6"/><circle cx="896" cy="640" r="6"/>
+    <circle cx="128" cy="896" r="6"/><circle cx="384" cy="896" r="6"/><circle cx="640" cy="896" r="6"/><circle cx="896" cy="896" r="6"/>
+  </g>
+  <!-- a rival's print, top right, and the sunflower one peeping in bottom right -->
+  <g style="mix-blend-mode:multiply">
+    <path d="M640 -20 H1044 V384 H768 V256 H640 Z" fill="url(#blue)"/>
+    <path d="M640 -20 H1044 V384 H768 V256 H640 Z" fill="none" stroke="#0078BF" stroke-width="20"/>
+    <path d="M768 768 H1044 V1044 H768 Z" fill="url(#sun)"/>
+    <path d="M768 768 H1044 V1044 H768 Z" fill="none" stroke="#FFB511" stroke-width="20"/>
+  </g>
+  <!-- the player's print, bottom left, a hair off register -->
+  <g transform="translate(7 5)" style="mix-blend-mode:multiply">
+    <path d="M-20 512 H384 V768 H512 V1044 H-20 Z" fill="url(#red)"/>
+    <path d="M-20 512 H384 V768 H512 V1044 H-20 Z" fill="none" stroke="#F15060" stroke-width="22"/>
+    <!-- the wet line: out of the print, up, across, down, and nearly home -->
+    <path d="M256 512 V208 H640 V640 H520" fill="none" stroke="#F15060" stroke-width="64" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+  <!-- the beetle at the head of the line, walking left toward the print -->
+  <g transform="translate(470 640) rotate(-90)">
+    <circle r="150" fill="#F3EDE0"/>
+    <g stroke="#2B2A2A" stroke-width="20" stroke-linecap="round" fill="none">
+      <path d="M-52 -42 L-122 -70 M52 -42 L122 -70 M-56 10 L-128 0 M56 10 L128 0 M-52 62 L-122 84 M52 62 L122 84"/>
+      <path d="M-18 -104 L-50 -146 M18 -104 L50 -146"/>
+    </g>
+    <circle cx="0" cy="-82" r="44" fill="#2B2A2A"/>
+    <g transform="translate(6 4)" style="mix-blend-mode:multiply">
+      <ellipse cx="0" cy="18" rx="80" ry="94" fill="#F15060"/>
+    </g>
+    <rect x="-7" y="-58" width="14" height="164" fill="#F3EDE0"/>
+  </g>
+</svg>

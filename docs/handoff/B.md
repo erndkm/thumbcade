@@ -10,7 +10,7 @@ Everything stream B owns, how to run it, and the APIs other streams consume.
 | `packages/create-game` | `create-thumbcade-game` + 5 templates |
 | `supabase/functions/creator-publish`, `creator-review-callback` | Publish API + review callback (Deno) |
 | `services/reviewer` | Automated review (Playwright) + `review_jobs` worker + screenshot/poster tooling |
-| `games/_kit`, `games/<slug>` | Shared game kit + 56 games (12 launch, 14 added 2026-10-17, 3 on 2026-10-24, 15 on 2026-11-06, 8 on 2026-11-07, 4 on 2026-11-14) |
+| `games/_kit`, `games/<slug>` | Shared game kit + 58 games (12 launch, 14 added 2026-10-17, 3 on 2026-10-24, 15 on 2026-11-06, 8 on 2026-11-07, 6 on 2026-11-14) |
 | `scripts/games-index.ts` | `pnpm games:build` → `dist/games/` + `games-index.json` |
 
 ## Quick commands
@@ -234,7 +234,7 @@ storage, status endpoint), then cleaned up.
 
 ## 9. Games
 
-Rows 1–15, Laddersnap, Curlwall, Rimflare, Weavefire, Clatterlane, Rowlock, Galebell and Hotband are in the house style (Thumbcade Studio); 16–30, Brinebop, Halftune, Spotfall, Lintstorm, Pinchbake, Clackwood, Overstamp, Frostwhisk, Tumbledoodle, Lumphop, Galley Proof, Pittermoon, Saltbend, Platterbang, Snapwad, Scootpurr, Rattlepile and Scribbledelve are creator games (Lanternline excepted: its own look, published by the studio), each creator with a look of their own (see "Library expansion" in `docs/DECISIONS.md`).
+Rows 1–15, Laddersnap, Curlwall, Rimflare, Weavefire, Clatterlane, Rowlock, Galebell and Hotband are in the house style (Thumbcade Studio); 16–30, Brinebop, Halftune, Spotfall, Lintstorm, Pinchbake, Clackwood, Overstamp, Frostwhisk, Tumbledoodle, Lumphop, Galley Proof, Pittermoon, Saltbend, Platterbang, Snapwad, Scootpurr, Rattlepile, Scribbledelve, Long Suit and Ringblot are creator games (Lanternline excepted: its own look, published by the studio), each creator with a look of their own (see "Library expansion" in `docs/DECISIONS.md`).
 
 | # | Game | Slug | Tech | Input | `vertical` | Accent | Creator |
 |---|---|---|---|---|---|---|---|
@@ -294,6 +294,8 @@ Rows 1–15, Laddersnap, Curlwall, Rimflare, Weavefire, Clatterlane, Rowlock, Ga
 | 54 | Scootpurr | `scootpurr` | Canvas 2D (pixel art) | tap | false | #9B5F7C | pixelwitch |
 | 55 | Rattlepile | `rattlepile` | Canvas 2D | drag (pull back or point, let go) | **true** | #3B74FF | juicefactory |
 | 56 | Scribbledelve | `scribbledelve` | Canvas 2D | 4-way swipe | **true** | #E0A21B | marginalia |
+| 57 | Long Suit | `long-suit` | Canvas 2D | tap | false | #5C7F67 | quietmoves |
+| 58 | Ringblot | `ringblot` | Canvas 2D (riso print) | 4-way swipe | **true** | #F15060 | bitbybit |
 
 All 26 pass `thumbcade validate` and the full reviewer with no failed checks (ready 0.4–1.1 s under the mid-tier
 profile, 60 fps, no long tasks, 5–18 MB heap, 15–172 KB gzipped before ready; 2026-10-17); Leapwater, Longhop and
@@ -447,6 +449,27 @@ Scribbledelve likewise on 2026-11-14 (ready 0.75-0.76 s, 60 fps, no long tasks, 
 - reading the thumb (`test/swipe.test.ts`), the copy (line lengths, lowercase, no other game named, nine hints each reachable), pilots (nobody steering out inside 12 s, the idle end, random swipes ending inside the reviewer's window, run-length bands, score and floors ordered by skill, every scribble catching somebody) and the Swipe Contract against the shipped manifest.
 
 It has a headless `pilot` and `scripts/shoot-plan.ts`, which replays the harness seed's expert run and writes `shoot.qa.json` (`scribbledelve-streak`, `-sword`, `-poof`, `-floor2`, `-late`, `-over`, from a `VITE_AUTOPLAY=expert` build made outside the package); `shoot.json` shoots `-attract`, `-teach`, `-play` and `-idle` from the normal build.
+
+Ringblot likewise on 2026-11-14 (ready 0.72-0.75 s, 60 fps, no task over 50 ms, 5.7-5.8 MB heap, 25 KB gzipped before ready, 0 flashes; also 0 across 33 s of an autoplayed expert run, `VITE_AUTOPLAY=expert`, 5.7-6.3 MB heap, whose `gameplay.end` arrived after 70.0 s on sheet 4 with the score the headless replay predicted; the reviewer's idle run ended by itself after 19.5 s; `thumbcade validate`: 333 KB total, 285 KB gzipped). It tests (47 tests in 7 files):
+- the sheet and its escalation (the goal, the drying, the refill, the rivals by sheet, the player always the quickest);
+- walking: setting off, stopping at the edge, the turn at the next square, the late turn, turning round on its own print, no way back along a wet line, no steering outside play;
+- printing: a line that comes home prints itself and what it encloses (squares, tier, points, ink back); the edge of the sheet closing nothing; the pull tiers and the ink limits; the finished sheet (bonus, refill, the pause in which the ink doesn't dry, a fresh sheet with a second rival);
+- smudging: a rival's line (its print gone, points, ink, its return far from the player), the player's line (back to where it began, four seconds of ink), his own line as a wall and a walled-in line lost, rivals stepping over each other's lines, the close shave;
+- the ink: an idle run dry at exactly 20 s, the low warning once, the last five ticks, the clock stopping with the run;
+- whole runs: squares held, wet lines and the score adding up tick by tick; determinism and the same run at 30, 60 and 120 frames a second;
+- pilots (60 seeds): the idle end on every seed, random swipes ending inside the reviewer's window, nobody steering dry inside 15 s, the bands (novice median 30-50 s, good 50-75 s and more than ten seconds over the novice, expert above good and under 90 s at p90), score, loop size and sheets ordered by skill, the novice on the second sheet in at least three runs of four;
+- cues: every kind of event has its sounds and they exist, actions heard, rewards and losses felt, the print's note climbing with its size, a whole run playing a cue for everything, the bed's states and key;
+- copy against Jost's advance widths at 360 pt: all ten tips (each reachable from a run), the stat line and bar label, banners, both HUD tickets side by side, the title card, the hint, every popup, no other game named;
+- the layout on the three phone profiles (the sheet inside the screen, at least nine tenths of the room under the tickets and three quarters of the whole viewport, squares of 22 px or more), the swipe reader and the Swipe Contract against the shipped manifest.
+
+It has a headless `pilot` and `scripts/shoot-plan.ts`, which replays the harness seed's expert run and writes `shoot.qa.json` (`ringblot-line`, `-print`, `-printed`, `-sheet2`, `-smudge`, `-late`, `-over`, from a `VITE_AUTOPLAY=expert` build made outside the package); `shoot.json` shoots `-attract`, `-teach`, `-play` and `-idle` from the normal build. The same two scripts were shot on the 360 and 430 pt profiles (`--device android|promax`) and with `--reduced-motion` to check the layout; those shots are not kept in `docs/`.
+Long Suit likewise on 2026-11-14 (ready 0.74 s, 60 fps, no task over 50 ms, 7.4 MB heap, 25 KB gzipped before ready, 0 flashes and 0 red flashes; at most 1 flash and 0 red in any second across 33 s of an autoplayed expert run, heap 8.5 MB, `VITE_AUTOPLAY=expert`; the idle run ends without input after 23.5 s; `thumbcade validate`: 214 KB total, 166 KB gzipped). It tests (64 tests):
+- the pack and the rules (four suits, the usual layout, laying a card one lower of the other colour, the short pack's top card as king, suits home from the ace, when a card may go home of its own accord), what a tap does (the top card home and the card under it turned up, a run moved from the tapped card, the generous fallbacks, no pointless move to an empty column, the drawn cards, the pack drawn and turned in the same order, cards going home by themselves) and the sweep at the end of a deal;
+- dealing: the five packs, 200 deals laid out the usual way from a whole pack, the witness of 600 dealt deals played tap for tap to a win through the game's own tap function, 3,000 further random-order natural playouts (under 1.5 % may lose), the solver's line valid on the real table whenever it finds one (over 80 % of 200 deals within 6,000 tables), plain shuffles turned down more often than not, the same deal however the work is split over frames, a deal under 60 ms;
+- the solver: a win and its line, a proven dead end and the same table freed, the pack and drawn cards as one hand, the node limit, the same answer run a little at a time, a move turned into its tap;
+- the run: taps waiting for the deal to be laid, a tap that fits nowhere, what a card home and a card turned up pay and buy, the chain's tiers and its break, a deal cleared along its witness with the sweep and the held clock, the next deal, the cap and the shrinking refund, a dead end noticed both ways and dealt afresh with the clock held, a winnable table left alone with a hint that works, the idle end between 10 and 26 s on every one of 200 seeds, random tapping ending between 10 and 70 s over 60 seeds, determinism and deals that depend only on seed, level and redeal;
+- pilots (the demo player; a novice's median inside 30-50 s, a good player's inside 50-75 s, an expert's ninth decile under 90 s and longest under 100 s, medians and scores climbing with skill, nobody out before 10 s; rewards per skill and dead ends under 0.2 a run), the layout on three phones for all five deals (the table spans at least 93 % of the width from the HUD to the bottom edge, cards at least 44 pt wide and at least 80 pt on four columns, the tallest possible column above the pack with every rank showing, the fan, the drawn cards, the HUD's lanes, the attract screen inside the preview insets, the game-over slip), copy set in Instrument Serif's own advance widths with kerning (every tip reached by a run and fitting the slip at full size, the game-over lines, every line of news in the lane, the title block and prompt, no other game or maker named) and the Swipe Contract against the shipped manifest (tap only; the feed keeps a deliberate swipe in PLAYING).
+It has a headless `pilot` and `pnpm --filter @thumbcade-games/long-suit icon`. Docs shots: `shoot.json` (`long-suit-attract`, `-teach`, `-idle`) from the normal build and `shoot.qa.json` (`-play`, `-runs`, `-late`, `-over`) from a `VITE_AUTOPLAY=good` build made outside the package, at 390 pt; the same two scripts shot at 360 and 430 pt (`--device android|promax`) and with `--reduced-motion` are kept as `long-suit-360-*`, `long-suit-430-*` and `long-suit-reduced-*` (attract, a mid-run table, game over each), plus `long-suit-360-seven` and `-360-pack` (the two seven-column deals in play, from a `VITE_AUTOPLAY=expert` build).
 Fair Copy and Laddersnap have unit tests for their boards, dictionary filtering, solver and scoring
 (`pnpm --filter @thumbcade-games/<slug> test`) and a headless `playtest` script; Curlwall tests its ball flight, curl,
 aim assist, keeper and economy plus the Swipe Contract (`test/contract.test.ts`), Brinebop its board (matches,

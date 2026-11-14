@@ -66,6 +66,7 @@ const CREATORS: Record<string, SeedCreatorHandle> = {
   "fair-copy": "quietmoves",
   overstamp: "quietmoves",
   "galley-proof": "quietmoves",
+  "long-suit": "quietmoves",
   // Loud cartoon: thick outlines, halftone, sticker type.
   thunkfest: "juicefactory",
   "wobble-up": "juicefactory",
@@ -91,6 +92,7 @@ const CREATORS: Record<string, SeedCreatorHandle> = {
   halftune: "bitbybit",
   spotfall: "bitbybit",
   saltbend: "bitbybit",
+  ringblot: "bitbybit",
 };
 
 const NOTES: Record<string, string> = {
@@ -165,6 +167,8 @@ const NOTES: Record<string, string> = {
     "THE TOY BOX TIPPED OVER AND THE NUMBER BLOCKS ARE CREEPING DOWN THE PLAY MAT: ONE WIND-UP CANNON, ONE BAG OF MARBLES, AND EVERY +1 RING MAKES THE NEXT VOLLEY LOUDER. RATTLE 'EM!",
   scribbledelve:
     "Version 1.0: I mapped a dungeon in my maths book. One stick knight, a coin in every square, four scribbles that each hunt their own way, and two swords a floor. Do not tell Ms. K.",
+  ringblot: "first pull: three beetles got into the ink. walk a loop, come home, and the press prints inside it. four inks, one sheet after another, and the ink dries as you go.",
+  "long-suit": "first deal: patience in ink, from a short pack on four columns to the whole one on seven. every deal can be won by playing what fits, and the last cards see themselves home.",
 };
 
 async function listFiles(dir: string): Promise<string[]> {

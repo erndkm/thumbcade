@@ -1,0 +1,12 @@
+[
+  {"wait": 1500},
+  {"tap": [195, 470]},
+  {"wait": 6000},
+  {"shot": "play"},
+  {"wait": 16000},
+  {"shot": "runs"},
+  {"wait": 22000},
+  {"shot": "late"},
+  {"wait": 60000},
+  {"shot": "over"}
+]

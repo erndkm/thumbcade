@@ -19,7 +19,7 @@ The app and the website show every third-party notice to users; see
 | Fredoka (The Fredoka Project Authors) | SIL Open Font License 1.1, no Reserved Font Name | games by softbake | `games/_kit/assets/fonts/library/fredoka/OFL.txt` |
 | Caveat (The Caveat Project Authors) | SIL Open Font License 1.1, no Reserved Font Name | games by marginalia | `games/_kit/assets/fonts/library/caveat/OFL.txt` |
 | Rubik (The Rubik Project Authors) | SIL Open Font License 1.1, no Reserved Font Name | games by lowpolyfox | `games/_kit/assets/fonts/library/rubik/OFL.txt` |
-| Jost (The Jost Project Authors) | SIL Open Font License 1.1, no Reserved Font Name | Lanternline; Spotfall and Saltbend (bitbybit) | `games/_kit/assets/fonts/library/jost/OFL.txt` |
+| Jost (The Jost Project Authors) | SIL Open Font License 1.1, no Reserved Font Name | Lanternline; Spotfall, Saltbend and Ringblot (bitbybit) | `games/_kit/assets/fonts/library/jost/OFL.txt` |
 | Bungee (The Bungee Project Authors) | SIL Open Font License 1.1, no Reserved Font Name | games by juicefactory | `games/_kit/assets/fonts/library/bungee/OFL.txt` |
 | Bricolage Grotesque (The Bricolage Grotesque Project Authors) | SIL Open Font License 1.1, no Reserved Font Name | games by bitbybit | `games/_kit/assets/fonts/library/bricolage/OFL.txt` |
 

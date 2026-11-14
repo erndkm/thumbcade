@@ -1,0 +1,18 @@
+[
+  {"wait":1500},
+  {"tap":[150,400]},
+  {"wait":1883},
+  {"shot":"line"},
+  {"wait":2057},
+  {"shot":"print"},
+  {"wait":6660},
+  {"shot":"printed"},
+  {"wait":4950},
+  {"shot":"sheet2"},
+  {"wait":4693},
+  {"shot":"smudge"},
+  {"wait":24173},
+  {"shot":"late"},
+  {"wait":28575},
+  {"shot":"over"}
+]

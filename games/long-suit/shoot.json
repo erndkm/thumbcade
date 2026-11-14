@@ -1,0 +1,9 @@
+[
+  {"wait": 3400},
+  {"shot": "attract"},
+  {"tap": [195, 470]},
+  {"wait": 2600},
+  {"shot": "teach"},
+  {"wait": 27000},
+  {"shot": "idle"}
+]

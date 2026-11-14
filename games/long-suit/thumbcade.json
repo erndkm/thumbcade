@@ -1,0 +1,18 @@
+{
+  "$schema": "https://thumbcade.com/schema/manifest-v1.json",
+  "id": "long-suit",
+  "name": "Long Suit",
+  "version": "1.0.0",
+  "sdk": "^1.0.0",
+  "entry": "index.html",
+  "description": "patience against the clock. red on black, one lower; turn up what's hidden and send every suit home, ace first.",
+  "tags": ["cards", "solitaire", "puzzle", "brain", "calm"],
+  "accentColor": "#5C7F67",
+  "icon": "assets/icon.png",
+  "ageRating": "4+",
+  "controls": { "vertical": false, "horizontal": false, "multitouch": false, "inputs": ["tap"] },
+  "session": "medium",
+  "audio": true,
+  "orientation": "portrait",
+  "score": { "order": "desc", "max": 1000000, "format": "integer" }
+}
