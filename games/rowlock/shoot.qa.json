@@ -1,0 +1,13 @@
+[
+  {"wait": 3200},
+  {"shot": "attract"},
+  {"tap": [195, 470]},
+  {"wait": 10600},
+  {"shot": "play"},
+  {"wait": 10300},
+  {"shot": "locked"},
+  {"wait": 41000},
+  {"shot": "late"},
+  {"wait": 42000},
+  {"shot": "over"}
+]

@@ -1,0 +1,120 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" width="1024" height="1024">
+  <!-- Three spot inks on warm paper: teal #00838A, sunflower #FFB511, red #FF665E. A hairpin of the coast road seen
+       from above, a headland of lemon terraces inside it, the sea all round, and the lemon cart drifting through the
+       apex on the inside line with its skid marks behind. The red plate sits a few px off register. -->
+  <defs>
+    <pattern id="sea" width="22" height="22" patternUnits="userSpaceOnUse" patternTransform="rotate(15)">
+      <circle cx="11" cy="11" r="9.3" fill="#00838A"/>
+    </pattern>
+    <pattern id="land" width="20" height="20" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+      <circle cx="10" cy="10" r="8.2" fill="#FFB511"/>
+    </pattern>
+    <pattern id="green" width="20" height="20" patternUnits="userSpaceOnUse" patternTransform="rotate(15)">
+      <circle cx="10" cy="10" r="6.2" fill="#00838A"/>
+    </pattern>
+    <pattern id="gravel" width="16" height="16" patternUnits="userSpaceOnUse" patternTransform="rotate(75)">
+      <circle cx="8" cy="8" r="4.4" fill="#FF665E"/>
+    </pattern>
+    <pattern id="shade" width="16" height="16" patternUnits="userSpaceOnUse" patternTransform="rotate(15)">
+      <circle cx="8" cy="8" r="5.8" fill="#00838A"/>
+    </pattern>
+    <pattern id="shadeRed" width="16" height="16" patternUnits="userSpaceOnUse" patternTransform="rotate(75)">
+      <circle cx="8" cy="8" r="4.6" fill="#FF665E"/>
+    </pattern>
+    <pattern id="wood" width="14" height="14" patternUnits="userSpaceOnUse" patternTransform="rotate(75)">
+      <circle cx="7" cy="7" r="3.8" fill="#FF665E"/>
+    </pattern>
+    <filter id="grain" x="0" y="0" width="1" height="1">
+      <feTurbulence type="fractalNoise" baseFrequency="0.045" numOctaves="2" seed="7" result="n"/>
+      <feColorMatrix in="n" type="matrix" values="0 0 0 0 0.953  0 0 0 0 0.929  0 0 0 0 0.878  0 0 0 2.4 -1.6"/>
+    </filter>
+    <!-- The road's centreline: up the left, round the hairpin, down the right. -->
+    <path id="road" d="M 300 1120 L 300 470 A 212 212 0 0 1 724 470 L 724 1120"/>
+  </defs>
+
+  <rect width="1024" height="1024" fill="#F3EDE0"/>
+  <rect width="1024" height="1024" fill="url(#sea)"/>
+  <!-- Wave marks knocked out of the sea. -->
+  <g stroke="#F3EDE0" stroke-width="9" stroke-linecap="round" fill="none">
+    <path d="M 70 140 q 34 -16 68 0"/><path d="M 860 120 q 34 -16 68 0"/><path d="M 900 560 q 30 -14 60 0"/>
+    <path d="M 40 640 q 30 -14 60 0"/><path d="M 880 860 q 30 -14 60 0"/><path d="M 120 900 q 30 -14 60 0"/>
+  </g>
+
+  <!-- The headland inside the hairpin: foam, sand, terraces. -->
+  <path d="M 512 320 C 640 320 680 420 680 560 L 680 1100 L 344 1100 L 344 560 C 344 420 384 320 512 320 Z" fill="#F3EDE0"/>
+  <g fill="none" stroke-linejoin="round">
+    <use href="#road" stroke="#F3EDE0" stroke-width="430"/>
+    <use href="#road" stroke="url(#land)" stroke-width="404"/>
+  </g>
+  <path d="M 512 362 C 612 362 640 440 640 560 L 640 1100 L 384 1100 L 384 560 C 384 440 412 362 512 362 Z" fill="url(#land)"/>
+  <path d="M 512 400 C 590 400 606 470 606 560 L 606 1100 L 418 1100 L 418 560 C 418 470 434 400 512 400 Z" fill="url(#green)"/>
+  <!-- A lemon tree on the headland, its shadow on the terrace. -->
+  <circle cx="530" cy="760" r="74" fill="url(#shade)"/>
+  <circle cx="512" cy="742" r="74" fill="#FFB511"/>
+  <circle cx="500" cy="756" r="44" fill="url(#green)"/>
+  <g fill="#FFB511" stroke="#F3EDE0" stroke-width="4">
+    <ellipse cx="482" cy="720" rx="13" ry="10"/><ellipse cx="540" cy="732" rx="13" ry="10"/><ellipse cx="520" cy="782" rx="13" ry="10"/>
+  </g>
+
+  <!-- The road: gravel verge, paper tarmac, red painted edges (the red plate a hair off), sunflower dashes. -->
+  <g fill="none" stroke-linejoin="round">
+    <use href="#road" stroke="url(#gravel)" stroke-width="290"/>
+    <use href="#road" stroke="#F3EDE0" stroke-width="230"/>
+  </g>
+  <g fill="none" stroke="#FF665E" stroke-width="12">
+    <path d="M 194 1120 L 194 470 A 318 318 0 0 1 830 470 L 830 1120" transform="translate(4 3)"/>
+    <path d="M 406 1120 L 406 470 A 106 106 0 0 1 618 470 L 618 1120" transform="translate(4 3)"/>
+  </g>
+  <use href="#road" fill="none" stroke="#FFB511" stroke-width="13" stroke-dasharray="46 54"/>
+
+  <!-- Skid marks round the apex behind the cart. -->
+  <g fill="none" stroke="url(#shadeRed)" stroke-width="18" stroke-linecap="round">
+    <path d="M 252 640 C 248 520 262 420 330 330"/>
+    <path d="M 316 650 C 312 540 322 450 378 368"/>
+  </g>
+  <g fill="none" stroke="url(#shade)" stroke-width="10" stroke-linecap="round" opacity="0.9">
+    <path d="M 252 640 C 248 520 262 420 330 330"/>
+    <path d="M 316 650 C 312 540 322 450 378 368"/>
+  </g>
+
+  <!-- The cart, nose tucked toward the inside of the hairpin, tail swung out. -->
+  <g transform="translate(478 300) rotate(-17) scale(1.22)">
+    <rect x="-128" y="-80" width="256" height="160" rx="34" fill="url(#shade)" transform="translate(20 26)"/>
+    <!-- Wheels. -->
+    <rect x="-104" y="-96" width="62" height="30" rx="7" fill="#00838A"/>
+    <rect x="-104" y="66" width="62" height="30" rx="7" fill="#00838A"/>
+    <rect x="-104" y="-96" width="62" height="30" rx="7" fill="url(#shadeRed)"/>
+    <rect x="-104" y="66" width="62" height="30" rx="7" fill="url(#shadeRed)"/>
+    <rect x="112" y="-17" width="54" height="34" rx="7" fill="#00838A" transform="rotate(-22 139 0)"/>
+    <!-- Bed. -->
+    <rect x="-134" y="-74" width="162" height="148" rx="10" fill="#FFB511"/>
+    <rect x="-134" y="-74" width="162" height="148" rx="10" fill="url(#wood)"/>
+    <g stroke="#FF665E" stroke-width="6"><line x1="-128" y1="-37" x2="22" y2="-37"/><line x1="-128" y1="0" x2="22" y2="0"/><line x1="-128" y1="37" x2="22" y2="37"/></g>
+    <!-- The spare crate. -->
+    <rect x="-134" y="-66" width="62" height="132" fill="#FF665E"/>
+    <rect x="-124" y="-54" width="42" height="108" fill="#FFB511"/>
+    <line x1="-103" y1="-54" x2="-103" y2="54" stroke="#FF665E" stroke-width="7"/>
+    <!-- Lemons heaped on the bed. -->
+    <g fill="#FFB511" stroke="#F3EDE0" stroke-width="5">
+      <ellipse cx="-42" cy="-32" rx="22" ry="17"/><ellipse cx="-8" cy="22" rx="22" ry="17"/><ellipse cx="-46" cy="34" rx="22" ry="17"/>
+      <ellipse cx="-4" cy="-30" rx="22" ry="17"/>
+    </g>
+    <!-- Cab, windscreen, striped canopy, headlamp. -->
+    <path d="M 26 -72 L 104 -72 Q 160 -72 160 0 Q 160 72 104 72 L 26 72 Z" fill="#00838A"/>
+    <rect x="94" y="-52" width="24" height="104" fill="#F3EDE0"/>
+    <g stroke="#FF665E" stroke-width="11"><line x1="34" y1="-44" x2="82" y2="-44"/><line x1="34" y1="-15" x2="82" y2="-15"/><line x1="34" y1="14" x2="82" y2="14"/><line x1="34" y1="43" x2="82" y2="43"/></g>
+    <circle cx="152" cy="0" r="13" fill="#FFB511"/>
+  </g>
+
+  <!-- Lemons waiting on the inside line down the far leg. -->
+  <g fill="#FFB511" stroke="#F3EDE0" stroke-width="4">
+    <ellipse cx="650" cy="560" rx="22" ry="16" transform="rotate(-20 650 560)"/>
+    <ellipse cx="650" cy="640" rx="22" ry="16" transform="rotate(-20 650 640)"/>
+  </g>
+  <g fill="#00838A">
+    <ellipse cx="664" cy="546" rx="9" ry="5" transform="rotate(-40 664 546)"/>
+    <ellipse cx="664" cy="626" rx="9" ry="5" transform="rotate(-40 664 626)"/>
+  </g>
+
+  <rect width="1024" height="1024" filter="url(#grain)"/>
+</svg>

@@ -1,0 +1,18 @@
+{
+  "$schema": "https://thumbcade.com/schema/manifest-v1.json",
+  "id": "snapwad",
+  "name": "Snapwad",
+  "version": "1.0.0",
+  "sdk": "^1.0.0",
+  "entry": "index.html",
+  "description": "My doodles built forts on my textbooks. I have two pencils and a rubber band. Pull back, let go, knock them off.",
+  "tags": ["doodle", "physics", "aim", "topple"],
+  "accentColor": "#12A4A0",
+  "icon": "assets/icon.png",
+  "ageRating": "4+",
+  "controls": { "vertical": true, "horizontal": true, "multitouch": false, "inputs": ["drag"] },
+  "session": "short",
+  "audio": true,
+  "orientation": "portrait",
+  "score": { "order": "desc", "max": 10000000, "format": "integer" }
+}

@@ -1,0 +1,18 @@
+{
+  "$schema": "https://thumbcade.com/schema/manifest-v1.json",
+  "id": "galebell",
+  "name": "Galebell",
+  "version": "1.0.0",
+  "sdk": "^1.0.0",
+  "entry": "index.html",
+  "description": "A lighthouse table in a rising storm. Hold a side to flip, ring the buoys, moor two balls and call in the high tide.",
+  "tags": ["pinball", "arcade", "physics", "reflex"],
+  "accentColor": "#C48600",
+  "icon": "assets/icon.png",
+  "ageRating": "4+",
+  "controls": { "vertical": false, "horizontal": false, "multitouch": true, "inputs": ["tap", "hold"] },
+  "session": "medium",
+  "audio": true,
+  "orientation": "portrait",
+  "score": { "order": "desc", "max": 100000000, "format": "integer" }
+}

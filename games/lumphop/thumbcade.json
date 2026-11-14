@@ -1,0 +1,27 @@
+{
+  "$schema": "https://thumbcade.com/schema/manifest-v1.json",
+  "id": "lumphop",
+  "name": "Lumphop",
+  "version": "1.0.0",
+  "sdk": "^1.0.0",
+  "entry": "index.html",
+  "description": "Our clay lumps hopped into the wrong pots. Tap to lift, tap to plop, four alike get patted shut. Beat the clock.",
+  "tags": ["sorting", "puzzle", "claymation", "brain"],
+  "accentColor": "#B8704A",
+  "icon": "assets/icon.png",
+  "ageRating": "4+",
+  "controls": {
+    "vertical": false,
+    "horizontal": false,
+    "multitouch": false,
+    "inputs": ["tap"]
+  },
+  "session": "medium",
+  "audio": true,
+  "orientation": "portrait",
+  "score": {
+    "order": "desc",
+    "max": 1000000,
+    "format": "integer"
+  }
+}

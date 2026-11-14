@@ -1,0 +1,55 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1024" viewBox="0 0 1024 1024">
+<rect width="1024" height="1024" fill="#FBF8EF"/>
+<!-- squared paper -->
+<g fill="#709CD6" opacity="0.26">
+  <rect x="84" y="0" width="3" height="1024"/><rect x="170" y="0" width="3" height="1024"/><rect x="342" y="0" width="3" height="1024"/><rect x="428" y="0" width="3" height="1024"/><rect x="600" y="0" width="3" height="1024"/><rect x="686" y="0" width="3" height="1024"/><rect x="858" y="0" width="3" height="1024"/><rect x="944" y="0" width="3" height="1024"/>
+  <rect x="0" y="84" width="1024" height="3"/><rect x="0" y="170" width="1024" height="3"/><rect x="0" y="342" width="1024" height="3"/><rect x="0" y="428" width="1024" height="3"/><rect x="0" y="600" width="1024" height="3"/><rect x="0" y="686" width="1024" height="3"/><rect x="0" y="858" width="1024" height="3"/><rect x="0" y="944" width="1024" height="3"/>
+</g>
+<g fill="#709CD6" opacity="0.46">
+  <rect x="255" y="0" width="4" height="1024"/><rect x="513" y="0" width="4" height="1024"/><rect x="771" y="0" width="4" height="1024"/>
+  <rect x="0" y="255" width="1024" height="4"/><rect x="0" y="513" width="1024" height="4"/><rect x="0" y="771" width="1024" height="4"/>
+</g>
+<!-- the dungeon's pen lines -->
+<g fill="none" stroke="#24419A" stroke-width="20" stroke-linecap="round" stroke-linejoin="round">
+  <path d="M-20 258 C120 252 180 264 262 256 C340 250 440 262 518 257"/>
+  <path d="M772 -20 C766 90 778 170 771 258 C766 340 776 430 772 516 C900 510 960 522 1044 515"/>
+  <path d="M258 1044 C252 930 264 850 257 772 C380 766 440 778 516 772"/>
+  <path d="M-20 516 C90 510 170 522 258 515"/>
+</g>
+<g fill="none" stroke="#24419A" stroke-width="9" stroke-linecap="round" opacity="0.4">
+  <path d="M-20 266 C130 262 190 270 262 264 C350 258 430 270 520 266"/>
+  <path d="M780 -20 C776 100 784 180 779 262 C776 350 782 430 780 510"/>
+</g>
+<!-- the pencil trail and the coins still to get -->
+<path d="M388 1044 C384 960 392 900 386 646 C500 640 560 652 644 644" fill="none" stroke="#62666E" stroke-width="12" stroke-linecap="round" opacity="0.38"/>
+<g fill="#FFE9A8" stroke="#D99A12" stroke-width="9">
+  <circle cx="644" cy="388" r="30"/><circle cx="902" cy="388" r="30"/><circle cx="386" cy="130" r="30"/><circle cx="128" cy="388" r="30"/><circle cx="902" cy="646" r="30"/>
+</g>
+<!-- grumble, the red-pen scribble, coming round the corner -->
+<g transform="translate(250 150)">
+  <ellipse cx="0" cy="0" rx="118" ry="112" fill="#F9D5D2" opacity="0.85"/>
+  <path d="M-150 10 L-88 -44 L-126 -108 L-52 -98 L-22 -168 L22 -104 L96 -138 L92 -62 L162 -30 L104 16 L150 82 L74 82 L52 152 L-6 102 L-70 146 L-78 72 L-152 68 L-108 14 L-136 -56 L-66 -62 L-36 -132 L14 -78 L82 -102 L76 -34 L136 0 L84 40 L120 104 L52 98 L26 140 L-18 92 Z" fill="none" stroke="#D2332F" stroke-width="15" stroke-linejoin="round" stroke-linecap="round"/>
+  <circle cx="-42" cy="-16" r="38" fill="#FFFFFF" stroke="#1B2F74" stroke-width="10"/>
+  <circle cx="46" cy="-16" r="38" fill="#FFFFFF" stroke="#1B2F74" stroke-width="10"/>
+  <circle cx="-26" cy="-2" r="17" fill="#1B2F74"/>
+  <circle cx="62" cy="-2" r="17" fill="#1B2F74"/>
+  <path d="M-92 -74 L-18 -46 M96 -74 L22 -46" stroke="#D2332F" stroke-width="16" stroke-linecap="round"/>
+  <path d="M-46 112 L-58 168 M46 112 L58 168" stroke="#D2332F" stroke-width="14" stroke-linecap="round"/>
+</g>
+<!-- my knight, sword up, under his highlighter glow -->
+<circle cx="640" cy="640" r="232" fill="#FFE43A" opacity="0.5"/>
+<g transform="translate(640 660)" fill="none" stroke="#24419A" stroke-width="24" stroke-linecap="round" stroke-linejoin="round">
+  <path d="M0 60 L-52 196 M0 60 L62 190"/>
+  <path d="M0 -40 L0 60"/>
+  <path d="M0 -10 L-70 30"/>
+  <path d="M-130 -34 L-56 -34 L-56 42 L-93 96 L-130 42 Z" fill="#CFE0F7" stroke-width="18"/>
+  <path d="M0 -10 L84 -62"/>
+  <path d="M84 -62 L156 -236" stroke="#7C8698" stroke-width="28"/>
+  <path d="M56 -100 L120 -68" stroke-width="22"/>
+  <circle cx="0" cy="-116" r="80" fill="#FBF8EF"/>
+  <path d="M-76 -132 L80 -132" stroke-width="16"/>
+  <path d="M26 -128 L26 -62" stroke-width="14"/>
+  <circle cx="54" cy="-106" r="12" fill="#24419A" stroke="none"/>
+  <path d="M-10 -196 L-52 -254 L-96 -222 L-74 -282 L-128 -264" stroke="#D2332F"/>
+</g>
+</svg>

@@ -1,0 +1,18 @@
+{
+  "$schema": "https://thumbcade.com/schema/manifest-v1.json",
+  "id": "hotband",
+  "name": "Hotband",
+  "version": "1.0.0",
+  "sdk": "^1.0.0",
+  "entry": "index.html",
+  "description": "Drag to slide, tap to turn, flick down to slam. Fill a row to cut it, and keep the stack out of the red.",
+  "tags": ["puzzle", "blocks", "stacking", "arcade", "reflex"],
+  "accentColor": "#C9C4B8",
+  "icon": "assets/icon.png",
+  "ageRating": "4+",
+  "controls": { "vertical": true, "horizontal": true, "multitouch": false, "inputs": ["drag", "tap", "swipe"] },
+  "session": "medium",
+  "audio": true,
+  "orientation": "portrait",
+  "score": { "order": "desc", "max": 1000000, "format": "integer" }
+}

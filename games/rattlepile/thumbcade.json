@@ -1,0 +1,18 @@
+{
+  "$schema": "https://thumbcade.com/schema/manifest-v1.json",
+  "id": "rattlepile",
+  "name": "Rattlepile",
+  "version": "1.0.0",
+  "sdk": "^1.0.0",
+  "entry": "index.html",
+  "description": "DRAG BACK, AIM, LET THE WHOLE BAG OF MARBLES FLY! RATTLE THE NUMBER BLOCKS TO BITS BEFORE THE PILE HITS THE FLOOR!",
+  "tags": ["marbles", "aim", "blocks", "cartoon", "arcade"],
+  "accentColor": "#3B74FF",
+  "icon": "assets/icon.png",
+  "ageRating": "4+",
+  "controls": { "vertical": true, "horizontal": true, "multitouch": false, "inputs": ["drag"] },
+  "session": "medium",
+  "audio": true,
+  "orientation": "portrait",
+  "score": { "order": "desc", "max": 10000000, "format": "integer" }
+}

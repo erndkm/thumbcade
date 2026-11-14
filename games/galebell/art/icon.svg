@@ -1,0 +1,58 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" width="1024" height="1024">
+<defs>
+<linearGradient id="sky" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="#0E1A30"/><stop offset="0.62" stop-color="#0A1220"/><stop offset="1" stop-color="#05080F"/></linearGradient>
+<linearGradient id="beam" x1="1" x2="0" y1="0" y2="0"><stop offset="0" stop-color="#FFE3A0" stop-opacity="0.95"/><stop offset="0.3" stop-color="#FFB531" stop-opacity="0.5"/><stop offset="1" stop-color="#FFB531" stop-opacity="0.04"/></linearGradient>
+<radialGradient id="ball" cx="0.36" cy="0.32" r="0.72"><stop offset="0" stop-color="#FFFFFF"/><stop offset="0.3" stop-color="#DCDFE6"/><stop offset="0.72" stop-color="#7A8091"/><stop offset="1" stop-color="#30343F"/></radialGradient>
+<radialGradient id="halo" cx="0.5" cy="0.5" r="0.5"><stop offset="0" stop-color="#FFB531" stop-opacity="0.55"/><stop offset="1" stop-color="#FFB531" stop-opacity="0"/></radialGradient>
+<radialGradient id="lamp" cx="0.5" cy="0.5" r="0.5"><stop offset="0" stop-color="#FFF4D6"/><stop offset="0.45" stop-color="#FFB531"/><stop offset="1" stop-color="#FFB531" stop-opacity="0"/></radialGradient>
+<clipPath id="ballClip"><circle cx="420" cy="455" r="160"/></clipPath>
+</defs>
+<rect width="1024" height="1024" fill="url(#sky)"/>
+<!-- the beam sweeping from the lamp -->
+<path d="M 812 258 L -60 120 L -60 400 Z" fill="url(#beam)" opacity="0.9"/>
+<path d="M 812 250 L 1120 150 L 1120 330 Z" fill="url(#beam)" opacity="0.35"/>
+<!-- lighthouse on its rock, right -->
+<ellipse cx="812" cy="1004" rx="190" ry="60" fill="#123445"/>
+<path d="M 770 330 L 854 330 L 896 980 L 728 980 Z" fill="#1F2838" stroke="#A7A3AE" stroke-width="7"/>
+<path d="M 760 470 L 864 470 L 870 560 L 754 560 Z" fill="#F3F0E8" opacity="0.13"/>
+<path d="M 748 660 L 876 660 L 884 750 L 740 750 Z" fill="#F3F0E8" opacity="0.13"/>
+<path d="M 736 850 L 888 850 L 894 940 L 730 940 Z" fill="#F3F0E8" opacity="0.13"/>
+<rect x="734" y="306" width="156" height="26" fill="#141B28" stroke="#A7A3AE" stroke-width="7"/>
+<rect x="766" y="214" width="92" height="92" fill="#0C1019" stroke="#A7A3AE" stroke-width="7"/>
+<circle cx="812" cy="260" r="70" fill="url(#lamp)"/>
+<circle cx="812" cy="258" r="26" fill="#FFF4D6"/>
+<path d="M 752 214 L 812 162 L 872 214 Z" fill="#141B28" stroke="#A7A3AE" stroke-width="7" stroke-linejoin="round"/>
+<!-- sea -->
+<path d="M 0 850 Q 64 830 128 850 T 256 850 T 384 850 T 512 850 T 640 850 T 768 850 T 896 850 T 1024 850" fill="none" stroke="#2C8BA8" stroke-opacity="0.35" stroke-width="8"/>
+<path d="M 0 910 Q 64 890 128 910 T 256 910 T 384 910 T 512 910 T 640 910 T 768 910 T 896 910 T 1024 910" fill="none" stroke="#2C8BA8" stroke-opacity="0.25" stroke-width="8"/>
+<path d="M 0 970 Q 64 950 128 970 T 256 970 T 384 970 T 512 970 T 640 970 T 768 970 T 896 970 T 1024 970" fill="none" stroke="#2C8BA8" stroke-opacity="0.18" stroke-width="8"/>
+<!-- the flipper, bottom left, swung up -->
+<g transform="translate(130 868) rotate(-26)">
+<path d="M 0 -58 A 58 58 0 1 0 0 58 L 430 30 A 30 30 0 0 0 430 -30 Z" fill="#06080D" transform="scale(1.06)"/>
+<path d="M 0 -52 A 52 52 0 1 0 0 52 L 430 26 A 26 26 0 0 0 430 -26 Z" fill="#1F2838" stroke="#FFE3A0" stroke-width="12" stroke-linejoin="round"/>
+<line x1="30" y1="0" x2="420" y2="0" stroke="#C48600" stroke-width="14" stroke-linecap="round"/>
+<circle r="20" fill="#06080D" stroke="#F3F0E8" stroke-width="6"/>
+</g>
+<!-- speed lines: the ball has just left the rubber -->
+<g stroke="#FFB531" stroke-linecap="round">
+<line x1="548" y1="560" x2="612" y2="636" stroke-width="14" stroke-opacity="0.55"/>
+<line x1="510" y1="598" x2="556" y2="652" stroke-width="10" stroke-opacity="0.38"/>
+<line x1="576" y1="512" x2="628" y2="572" stroke-width="8" stroke-opacity="0.25"/>
+</g>
+<!-- the ball, catching the lamp -->
+<circle cx="420" cy="455" r="250" fill="url(#halo)"/>
+<circle cx="420" cy="455" r="165" fill="#06080D"/>
+<circle cx="420" cy="455" r="160" fill="url(#ball)"/>
+<g clip-path="url(#ballClip)">
+<ellipse cx="450" cy="585" rx="120" ry="44" fill="#FFB531" opacity="0.42"/>
+<path d="M 260 375 L 600 335" stroke="#FFE3A0" stroke-opacity="0.45" stroke-width="26"/>
+<circle cx="610" cy="410" r="80" fill="#FFB531" opacity="0.14"/>
+</g>
+<circle cx="365" cy="392" r="32" fill="#FFFFFF" opacity="0.92"/>
+<!-- rain -->
+<g stroke="#7FD8EC" stroke-opacity="0.35" stroke-width="5" stroke-linecap="round">
+<line x1="120" y1="120" x2="104" y2="200"/><line x1="300" y1="60" x2="284" y2="140"/><line x1="560" y1="130" x2="544" y2="210"/>
+<line x1="210" y1="330" x2="194" y2="410"/><line x1="660" y1="340" x2="644" y2="420"/><line x1="90" y1="560" x2="74" y2="640"/>
+<line x1="960" y1="420" x2="944" y2="500"/><line x1="680" y1="700" x2="664" y2="780"/><line x1="380" y1="230" x2="364" y2="310"/>
+</g>
+</svg>

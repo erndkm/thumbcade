@@ -1,0 +1,22 @@
+{
+  "name": "@thumbcade-games/scootpurr",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite --port 5182",
+    "build": "vite build",
+    "typecheck": "tsc -p tsconfig.json",
+    "lint": "eslint .",
+    "test": "vitest run",
+    "pilot": "tsx scripts/pilot.ts",
+    "icon": "tsx scripts/icon.ts"
+  },
+  "dependencies": {
+    "@thumbcade-games/kit": "workspace:*",
+    "@thumbcade/sdk": "workspace:*"
+  },
+  "devDependencies": {
+    "@thumbcade/swipe-contract": "workspace:*"
+  }
+}

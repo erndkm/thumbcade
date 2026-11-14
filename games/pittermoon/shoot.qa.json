@@ -1,0 +1,10 @@
+[
+  { "wait": 1500 },
+  { "tap": [195, 450] },
+  { "wait": 17000 },
+  { "shot": "market" },
+  { "wait": 17000 },
+  { "shot": "bog" },
+  { "wait": 13000 },
+  { "shot": "orchard" }
+]

@@ -1,0 +1,14 @@
+[
+  { "wait": 1500 },
+  { "tap": [195, 420] },
+  { "wait": 23200 },
+  { "shot": "clear" },
+  { "wait": 4600 },
+  { "shot": "aim" },
+  { "wait": 23700 },
+  { "shot": "topple" },
+  { "wait": 5200 },
+  { "shot": "late" },
+  { "wait": 21000 },
+  { "shot": "results" }
+]

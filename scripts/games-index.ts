@@ -47,10 +47,15 @@ const CREATORS: Record<string, SeedCreatorHandle> = {
   weavefire: "thumbcade",
   rimflare: "thumbcade",
   clatterlane: "thumbcade",
+  galebell: "thumbcade",
+  rowlock: "thumbcade",
+  hotband: "thumbcade",
   // Hand-placed pixel art, bitmap type, cozy palette.
   stirabout: "pixelwitch",
   bobberlight: "pixelwitch",
   frostwhisk: "pixelwitch",
+  pittermoon: "pixelwitch",
+  scootpurr: "pixelwitch",
   // Voxel dioramas under an isometric camera.
   foxbend: "lowpolyfox",
   paddlefox: "lowpolyfox",
@@ -60,25 +65,32 @@ const CREATORS: Record<string, SeedCreatorHandle> = {
   unbroken: "quietmoves",
   "fair-copy": "quietmoves",
   overstamp: "quietmoves",
+  "galley-proof": "quietmoves",
   // Loud cartoon: thick outlines, halftone, sticker type.
   thunkfest: "juicefactory",
   "wobble-up": "juicefactory",
   brinebop: "juicefactory",
   lintstorm: "juicefactory",
+  platterbang: "juicefactory",
+  rattlepile: "juicefactory",
   // Layered silhouettes against a moving sky. Its own look, but published by the studio.
   lanternline: "thumbcade",
   // Claymation: sculpted clay, soft studio light, thumbprints, Fredoka on clay plaques.
   squishputt: "softbake",
   pinchbake: "softbake",
+  lumphop: "softbake",
   // Ballpoint doodles on notebook paper.
   doodlebow: "marginalia",
   pagewing: "marginalia",
   tumbledoodle: "marginalia",
+  snapwad: "marginalia",
+  scribbledelve: "marginalia",
   // Risograph prints: a few spot inks overprinting on warm paper, halftone tints, slightly off register.
   leapwater: "bitbybit",
   longhop: "bitbybit",
   halftune: "bitbybit",
   spotfall: "bitbybit",
+  saltbend: "bitbybit",
 };
 
 const NOTES: Record<string, string> = {
@@ -135,6 +147,24 @@ const NOTES: Record<string, string> = {
     "THE DRYER BURST AND THE SOCKS WANT REVENGE: VERSION ONE IRONS IN WITH ONE BRAVE STEAM IRON, A POCKET FULL OF LOOSE CHANGE AND THREE BOSSES WHO REALLY NEED A PRESS!",
   squishputt: "Our first batch is out of the oven: twelve hand-squished holes, one very nosy frog, and a windmill we only had to rebuild four times.",
   pinchbake: "Second batch is out: nine clay bakes, one sourdough starter that will not stop rising, and a party cake we have only made twice. Squish twins, keep it down.",
+  rowlock: "First grid. Today's 4×4 is the same for everyone, every grid solves by logic alone, and a full row rings. Lock three at once for a lamp.",
+  lumphop: "Third batch is out: eight clay lumps that hopped into the wrong pots, a wall of Lisbon tiles, and a hand that pats every full pot twice. Tidy up before the timer dings.",
+  "galley-proof": "first galley: five letters, six lines, and a pen that rings, underlines and strikes. today's word comes first, the same for everyone.",
+  pittermoon:
+    "the cat's night out ~ brooms that sweep themselves, pumpkins that won't stop rolling, a bog that breathes in waves, and five fish buy a ride on the witch's broom. stay ahead of the sunrise.",
+  saltbend: "first proof of the coast road: one lemon cart, three inks, and a day that runs on into night. hold into the bend, let go to straighten up.",
+  platterbang:
+    "THE DINER'S CLOSING AND THE DISH WALL HAS TO COME DOWN: PULL THE PEGS, FILL THE JARS, AND IF THE GOOD CHINA SWINGS... LET IT SWING. THEN LET IT SMASH!",
+  snapwad:
+    "Version 1.0: my doodles built forts on my textbooks, so I stuck two pencils in an eraser and tied a rubber band between them. Paper wads only. Mostly.",
+  galebell: "Lamp's lit and the storm's coming in. Drop the flags, moor two balls for the high tide, and every shot winds the gale up a notch.",
+  hotband: "Meter's on. Eight bands, sixteen rows, seven pieces of our own. Fill a row to cut it, chain cuts for gain, and mind the noise floor: it only goes up.",
+  scootpurr:
+    "long cats nap all over the hearth rug ~ tap one whose way is clear and off it scoots. no bumps makes the purr louder, and the witch's cat likes to leave last. mind the candle.",
+  rattlepile:
+    "THE TOY BOX TIPPED OVER AND THE NUMBER BLOCKS ARE CREEPING DOWN THE PLAY MAT: ONE WIND-UP CANNON, ONE BAG OF MARBLES, AND EVERY +1 RING MAKES THE NEXT VOLLEY LOUDER. RATTLE 'EM!",
+  scribbledelve:
+    "Version 1.0: I mapped a dungeon in my maths book. One stick knight, a coin in every square, four scribbles that each hunt their own way, and two swords a floor. Do not tell Ms. K.",
 };
 
 async function listFiles(dir: string): Promise<string[]> {

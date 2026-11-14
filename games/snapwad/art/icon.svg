@@ -1,0 +1,78 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1024" viewBox="0 0 1024 1024">
+<rect width="1024" height="1024" fill="#FBF8EF"/>
+<rect x="0" y="74" width="1024" height="4" fill="#709CD6" opacity="0.42"/>
+<rect x="0" y="146" width="1024" height="4" fill="#709CD6" opacity="0.42"/>
+<rect x="0" y="218" width="1024" height="4" fill="#709CD6" opacity="0.42"/>
+<rect x="0" y="290" width="1024" height="4" fill="#709CD6" opacity="0.42"/>
+<rect x="0" y="362" width="1024" height="4" fill="#709CD6" opacity="0.42"/>
+<rect x="0" y="434" width="1024" height="4" fill="#709CD6" opacity="0.42"/>
+<rect x="0" y="506" width="1024" height="4" fill="#709CD6" opacity="0.42"/>
+<rect x="0" y="578" width="1024" height="4" fill="#709CD6" opacity="0.42"/>
+<rect x="0" y="650" width="1024" height="4" fill="#709CD6" opacity="0.42"/>
+<rect x="0" y="722" width="1024" height="4" fill="#709CD6" opacity="0.42"/>
+<rect x="0" y="794" width="1024" height="4" fill="#709CD6" opacity="0.42"/>
+<rect x="0" y="866" width="1024" height="4" fill="#709CD6" opacity="0.42"/>
+<rect x="0" y="938" width="1024" height="4" fill="#709CD6" opacity="0.42"/>
+<rect x="0" y="1010" width="1024" height="4" fill="#709CD6" opacity="0.42"/>
+<rect x="96" y="0" width="6" height="1024" fill="#DE5454" opacity="0.6"/>
+<circle cx="46" cy="200" r="24" fill="#E3DCCB"/>
+<!-- my textbooks, the fort's floor -->
+<g stroke="#24419A" stroke-width="13" stroke-linejoin="round">
+  <rect x="468" y="842" width="560" height="120" fill="#D6C2F0"/>
+  <rect x="500" y="722" width="530" height="120" fill="#FFD37A"/>
+  <rect x="972" y="738" width="60" height="88" fill="#FFF8E6" stroke-width="9"/>
+</g>
+<line x1="530" y1="722" x2="530" y2="842" stroke="#24419A" stroke-width="9"/>
+<line x1="500" y1="842" x2="500" y2="962" stroke="#24419A" stroke-width="9"/>
+<!-- a pencil leg still standing -->
+<g transform="rotate(-6 640 722)">
+  <rect x="622" y="456" width="38" height="266" fill="#F6C945" stroke="#24419A" stroke-width="11"/>
+  <rect x="622" y="456" width="38" height="20" fill="#FBE08A"/>
+  <path d="M622 456 L641 390 L660 456 Z" fill="#F1D6A8" stroke="#24419A" stroke-width="11" stroke-linejoin="round"/>
+  <path d="M634 414 L641 390 L648 414 Z" fill="#4A4E57"/>
+</g>
+<!-- the lintel pencil, flying off -->
+<g transform="rotate(-28 860 470)">
+  <rect x="700" y="452" width="290" height="38" fill="#F6C945" stroke="#24419A" stroke-width="11"/>
+  <path d="M990 452 L1052 471 L990 490 Z" fill="#F1D6A8" stroke="#24419A" stroke-width="11" stroke-linejoin="round"/>
+  <rect x="672" y="452" width="28" height="38" fill="#BFC4CC" stroke="#24419A" stroke-width="9"/>
+  <rect x="640" y="454" width="34" height="34" rx="12" fill="#F4A3AE" stroke="#24419A" stroke-width="9"/>
+</g>
+<!-- the doodle, knocked flying, surprised -->
+<g transform="rotate(26 770 270)">
+  <line x1="652" y1="250" x2="602" y2="196" stroke="#24419A" stroke-width="13" stroke-linecap="round"/>
+  <line x1="888" y1="262" x2="944" y2="222" stroke="#24419A" stroke-width="13" stroke-linecap="round"/>
+  <rect x="652" y="150" width="236" height="236" rx="56" fill="#FF9CCB" stroke="#24419A" stroke-width="17"/>
+  <ellipse cx="722" cy="236" rx="35" ry="42" fill="#FFFFFF" stroke="#24419A" stroke-width="9"/>
+  <ellipse cx="818" cy="236" rx="35" ry="42" fill="#FFFFFF" stroke="#24419A" stroke-width="9"/>
+  <circle cx="708" cy="244" r="17" fill="#1B2F74"/>
+  <circle cx="804" cy="244" r="17" fill="#1B2F74"/>
+  <path d="M686 178 Q718 158 750 176" fill="none" stroke="#24419A" stroke-width="9" stroke-linecap="round"/>
+  <path d="M790 176 Q822 158 854 178" fill="none" stroke="#24419A" stroke-width="9" stroke-linecap="round"/>
+  <ellipse cx="770" cy="326" rx="25" ry="20" fill="#1B2F74"/>
+</g>
+<!-- the wad, arriving with speed lines -->
+<g stroke="#24419A" stroke-linecap="round" fill="none" opacity="0.55">
+  <line x1="250" y1="500" x2="400" y2="420" stroke-width="11"/>
+  <line x1="262" y1="574" x2="420" y2="486" stroke-width="11"/>
+  <line x1="320" y1="630" x2="446" y2="556" stroke-width="11"/>
+</g>
+<path d="M466 382 L524 362 L578 388 L602 440 L585 498 L533 528 L475 520 L434 478 L430 422 Z" fill="#F6F2E6" stroke="#24419A" stroke-width="15" stroke-linejoin="round"/>
+<path d="M480 418 L546 460 M522 390 L500 494 M566 430 L500 506" stroke="#24419A" stroke-width="6" opacity="0.55"/>
+<path d="M450 440 L520 410" stroke="#709CD6" stroke-width="7" opacity="0.8"/>
+<g stroke="#D2332F" stroke-width="13" stroke-linecap="round">
+  <line x1="620" y1="360" x2="652" y2="330"/>
+  <line x1="628" y1="418" x2="676" y2="426"/>
+  <line x1="590" y1="312" x2="594" y2="272"/>
+</g>
+<!-- my launcher: the pencil case on a book, two pencils, the teal band, snapped forward -->
+<rect x="-20" y="900" width="430" height="140" fill="#9CC8F2" stroke="#24419A" stroke-width="13"/>
+<rect x="40" y="772" width="300" height="134" rx="44" fill="#D9CDF3" stroke="#24419A" stroke-width="13"/>
+<line x1="80" y1="808" x2="300" y2="808" stroke="#24419A" stroke-width="7"/>
+<rect x="80" y="726" width="220" height="52" fill="#F4A3AE" stroke="#24419A" stroke-width="11"/>
+<rect x="104" y="582" width="32" height="150" fill="#F6C945" stroke="#24419A" stroke-width="10"/>
+<path d="M104 582 L120 532 L136 582 Z" fill="#F1D6A8" stroke="#24419A" stroke-width="10" stroke-linejoin="round"/>
+<rect x="244" y="582" width="32" height="150" fill="#F6C945" stroke="#24419A" stroke-width="10"/>
+<path d="M244 582 L260 532 L276 582 Z" fill="#F1D6A8" stroke="#24419A" stroke-width="10" stroke-linejoin="round"/>
+<path d="M120 544 Q190 506 260 544" fill="none" stroke="#12A4A0" stroke-width="22" stroke-linecap="round"/>
+</svg>

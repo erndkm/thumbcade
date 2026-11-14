@@ -1,0 +1,16 @@
+[
+  {"wait":1500},
+  {"tap":[160,420]},
+  {"wait":2917},
+  {"shot":"streak"},
+  {"wait":3200},
+  {"shot":"sword"},
+  {"wait":483},
+  {"shot":"poof"},
+  {"wait":13617},
+  {"shot":"floor2"},
+  {"wait":43833},
+  {"shot":"late"},
+  {"wait":17658},
+  {"shot":"over"}
+]
